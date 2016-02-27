@@ -1,10 +1,10 @@
-package pt.tecnico;
+package pt.tecnico.mydrive;
 
 /**
  * Hello world!
  *
  */
-public class App 
+public class MyDriveApplication 
 {
     public static void main( String[] args )
     {
