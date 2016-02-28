@@ -75,6 +75,22 @@
           <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist178669</picUrl>
     	</properties>
       </developer>
+      <developer>
+        <id>ist79158</id>
+	<name>bernardobranco</name>
+	<email>bernardo.branco1@gmail.com</email>
+	<organization>es16 g35al</organization>
+	<roles>
+	  <role>Developer</role>
+	  <role>Architect</role>
+	  <role>Tester</role>
+	  <role>Integrator</role>
+	</roles>
+	<properties>
+          <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist179158</picUrl>
+    	</properties>
+      </developer>
+      
       <!-- TODO: Add the rest of the team members -->
     </developers>
 
