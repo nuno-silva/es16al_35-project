@@ -1,0 +1,46 @@
+class FileSystem {
+}
+
+class User {
+	String username;
+	String password;
+	String name;
+	String mask;
+}
+
+class File {
+	int fNumber;
+	String name;
+}
+
+class Directory extends File {
+}
+
+class PlainFile extends File {
+}
+
+class Link extends File {
+}
+
+class App extends File {
+}
+
+relation Users {
+	FileSystem playsRole fileSystem
+	User playsRole currentUser {multiplicity 1..*;}
+}
+
+relation HomeDir {
+	User playsRole user 
+	Directory playsRole homeDirectory 
+}
+
+relation Directories {
+	Directory playsRole directory {multiplicity 0..*;}
+	File playsRole file 
+}
+
+relation Owner{
+	User playsRole owner 
+	File playsRole file 
+}
