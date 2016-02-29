@@ -1,0 +1,63 @@
+package pt.tecnico.fileSystem.domain;
+
+class FileSystem;
+
+class User {
+	String username;
+	String password;
+	String mask;
+}
+
+relation KnownFileSystem {
+    .pt.ist.fenixframework.DomainRoot playsRole root;
+    FileSystem playsRole fileSystem;
+}
+
+class SuperUser extends User;
+
+class File {
+	Integer id;
+	String name;
+	DateTime lastModified;
+	String permissions;
+}
+
+relation FileSystemUsers {
+	FileSystem playsRole fileSystem;
+	User playsRole users { multiplicity 1..*; }
+}
+
+relation FilesInFileSystem {
+	FileSystem playsRole fileSystem;
+	File playsRole files { multiplicity 1..*; }
+}
+
+relation FileCreatedByUser {
+	File playsRole files;
+	User playsRole owner { multiplicity 1; }
+}
+
+class Directory extends File;
+
+relation DirectoryContainsFiles {
+	Directory playsRole directory;
+	File playsRole content { multiplicity 2..*; }
+}
+
+relation UserHasDirectory {
+	User playsRole user;
+	Directory playsRole home { multiplicity 1; }
+}
+
+class Link extends File {
+	String content;
+}
+
+class App extends File {
+	String content;
+}
+
+class PlainFile extends File {
+	String content;
+}
+
