@@ -1,0 +1,71 @@
+package mydrive.domain;
+
+valueType org.joda.time.DateTime as Date;
+
+class Manager;
+
+class User {
+    String username;
+    String password;
+    String name;
+    int mask;
+}
+
+class File {
+	long id; 
+    String name;
+    Date lastMod;
+    String permitions;
+}
+
+class PlainText extends File {
+	String text;
+}
+
+class Link extends File {
+	String path;
+}
+
+class App extends File {
+	String content;
+}
+
+class Directory extends File;
+
+
+
+relation ManagesUsers {
+
+    Manager playsRole manager;
+
+    User playsRole users { 
+    	multiplicity 1..*;
+    }
+}
+
+relation HomeDirectory {
+	
+	User playsRole user;
+
+	Directory playsRole homeDirectory{
+		multiplicity 1;
+	}
+}
+
+relation Owns {
+	
+	User playsRole owner;
+
+	File playsRole file {
+		multiplicity 1..*;
+	}
+}
+
+relation DirectoryContent {
+
+    Directory playsRole directory;
+
+    File playsRole content { 
+    	multiplicity *; 
+    }
+}
