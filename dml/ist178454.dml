@@ -1,0 +1,49 @@
+package pt.tecnico.mydrive.domain;
+
+class User {
+	String username;
+	String password;
+	String name;
+	String umask;
+	String home;
+}
+
+
+class File {
+	int id;
+	String name;
+	DateTime modified;
+	String perm;
+}
+
+relation UserFiles {
+	User playsRole user;
+	File playsRole files {
+		multiplicity *;
+	}
+}
+
+class TextFile extends File {
+	String content;
+}
+
+class Dir extends File {
+	
+}
+
+relation DirFiles {
+	Dir playsRole dir;
+	File playsRole files {
+		multiplicity *;
+	}
+}
+
+class Link extends File {
+	String path;
+}
+
+class App extends TextFile {
+	
+}
+
+
