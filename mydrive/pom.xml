@@ -46,6 +46,21 @@
     	</properties>
       </developer>
       <developer>
+        <id>ist178454</id>
+	<name>nuno-silva</name>
+	<email>nuno.m.ribeiro.silva@tecnico.ulisboa.pt</email>
+	<organization>es16 g35al</organization>
+	<roles>
+	  <role>Developer</role>
+	  <role>Architect</role>
+	  <role>Tester</role>
+	  <role>Integrator</role>
+	</roles>
+	<properties>
+          <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist178454</picUrl>
+    	</properties>
+      </developer>
+      <developer>
         <id>ist78749</id>
 	<name>pmcarmo</name>
 	<email>pedro.m.carmo@tecnico.ulisboa.pt</email>
