@@ -1,0 +1,58 @@
+package mydrive.domain;
+
+class File{
+
+	String username;
+	int id;
+	User owner;
+	int umask;
+
+}
+
+
+class Plain_file extends File{
+
+	
+	String content;
+
+}
+
+class Link extends File{
+
+	String pathTo;
+
+}
+
+class App extends File{
+	String pids;
+
+}
+
+class Dir extends File{}
+
+class User{
+	
+	String username;
+
+}
+
+relation DirHasFiles{
+
+	Dir playsRole dir
+	File playsRole file {multiplicity *;}
+	
+}
+
+relation FileBelongsToDir{
+	Dir playsRole dir{multiplicity 1;}
+	File playsRole file{multiplicity 1;}
+
+}
+ 
+relation UserHasDir{
+
+	User playsRole user
+	Dir playsRole home{multiplicity 1;}
+}
+
+
