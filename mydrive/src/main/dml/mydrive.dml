@@ -1,0 +1,36 @@
+package pt.tecnico.mydrive.domain;
+
+class FileSystem;
+
+class User{
+	String username;
+	String password;
+	String name;
+	byte umask;
+	String home; //discussible(please discuss thi s in issue #4 if needed
+}
+
+
+
+class File{
+
+	String fileName;
+	User owner;
+	long id;
+	byte perm;
+	DateTime lastMod;
+}
+
+
+relation FileSystemHasRootDir{
+
+	FileSystem playsRole fs{ multiplicity 1;}
+	Directory playsRole rootDir{ multiplicity 1;}
+}
+
+relation DomainRootHasFileSystem{
+	.pt.ist.fenixframework.DomainRoot playsRole root{ multiplicity 0..1;}
+	FileSystem playsRole fs{ multiplicity 0..1;}
+}
+
+
