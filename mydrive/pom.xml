@@ -110,7 +110,7 @@
     </developers>
 
     <properties>
-	<java.version>1.8</java.version>
+	<java.version>1.7</java.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -137,7 +137,25 @@
 	      <verbose>true</verbose>
 	      <fork>true</fork>
 	    </configuration>
-	  </plugin>	  
+	  </plugin>	
+	  <plugin>
+		<groupId>pt.tecnico.plugin</groupId>
+		<artifactId>dml2yuml-maven-plugin</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<configuration>
+		  <names>false</names>
+		  <outputDirectory>../info</outputDirectory>
+		  <url>http://yuml.me/diagram/scruffy;dir:lr/class/</url>
+		</configuration>
+		<executions>
+		  <execution>
+			<phase>compile</phase>
+			<goals>
+			  <goal>dml2yuml</goal>
+			</goals>
+			</execution>
+			</executions>
+		  </plugin>  
           <plugin>
             <groupId>pt.ist</groupId>
             <artifactId>ff-maven-plugin</artifactId>

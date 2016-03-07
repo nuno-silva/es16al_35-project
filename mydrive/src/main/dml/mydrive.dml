@@ -1,5 +1,7 @@
 package pt.tecnico.mydrive.domain;
 
+class Manager;
+
 class FileSystem;
 
 class User {
@@ -29,11 +31,16 @@ class Link extends File {
 
 class Directory extends File;
 
-class App extends PlainFile;
+class App extends File;
 
-relation UserOwnsFile {
+relation UserHasHomeDir {
 	User playsRole user { multiplicity 1; }
-	File playsRole file { multiplicity 1; }
+	Directory playsRole dir { multiplicity 1; }
+}
+
+relation FileSystemHasUsers{
+	User playsRole users{multiplicity 1..*;}
+	FileSystem playsRole fs{multiplicity 1;}
 }
 
 relation FileSystemHasRootDir {
@@ -49,7 +56,12 @@ relation DirectoryHasFiles {
 
 relation DomainRootHasFileSystem {
 	.pt.ist.fenixframework.DomainRoot playsRole root { multiplicity 0..1; }
-	FileSystem playsRole fs { multiplicity 0..1; }
+	Manager playsRole manager { multiplicity 0..1; }
 }
 
+relation ManagerHasFileSystems{
+	FileSystem playsRole fileSystems{multiplicity *;}
+	Manager playsRole manager{multiplicity 1;}
+
+}
 
