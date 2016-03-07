@@ -15,7 +15,6 @@ class User{
 class File{
 
 	String fileName;
-	User owner;
 	long id;
 	byte perm;
 	DateTime lastMod;
@@ -33,6 +32,11 @@ class Directory extends File;
 
 class App extends File{
 	String content;
+}
+
+relation UserOwnsFile{
+	User playsRole user{multiplicity 1;}
+	File playsRole file{multiplicity 1;}
 }
 
 relation FileSystemHasRootDir{
