@@ -21,11 +21,29 @@ class File{
 	DateTime lastMod;
 }
 
+class PlainFile extends File{
+	String content;
+}
+
+class Link extends File{
+	String path;  //also discussible
+}
+
+class Directory extends File;
+
+class App extends File{
+	String content;
+}
 
 relation FileSystemHasRootDir{
 
 	FileSystem playsRole fs{ multiplicity 1;}
 	Directory playsRole rootDir{ multiplicity 1;}
+}
+
+relation DirectoryHasFies{
+	Directory playsRole directory{multiplicity 1;}
+	File playsRole file{multiplicity 2..*;}
 }
 
 relation DomainRootHasFileSystem{
