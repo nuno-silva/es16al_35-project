@@ -2,57 +2,54 @@ package pt.tecnico.mydrive.domain;
 
 class FileSystem;
 
-class User{
+class User {
 	String username;
 	String password;
 	String name;
 	byte umask;
-	String home; //discussible(please discuss thi s in issue #4 if needed
+	String homePath; //discussible (please discuss this in issue #4 if needed)
 }
 
 
 
-class File{
-
-	String fileName;
+class File {
+	String name;
 	long id;
 	byte perm;
 	DateTime lastMod;
 }
 
-class PlainFile extends File{
+class PlainFile extends File {
 	String content;
 }
 
-class Link extends File{
-	String path;  //also discussible
+class Link extends File {
+	String path;  // also discussible
 }
 
 class Directory extends File;
 
-class App extends File{
-	String content;
+class App extends PlainFile;
+
+relation UserOwnsFile {
+	User playsRole user { multiplicity 1; }
+	File playsRole file { multiplicity 1; }
 }
 
-relation UserOwnsFile{
-	User playsRole user{multiplicity 1;}
-	File playsRole file{multiplicity 1;}
+relation FileSystemHasRootDir {
+
+	FileSystem playsRole fs { multiplicity 1; }
+	Directory playsRole rootDir{  multiplicity 1; }
 }
 
-relation FileSystemHasRootDir{
-
-	FileSystem playsRole fs{ multiplicity 1;}
-	Directory playsRole rootDir{ multiplicity 1;}
+relation DirectoryHasFiles {
+	Directory playsRole directory { multiplicity 1; }
+	File playsRole file { multiplicity 2..*; }
 }
 
-relation DirectoryHasFies{
-	Directory playsRole directory{multiplicity 1;}
-	File playsRole file{multiplicity 2..*;}
-}
-
-relation DomainRootHasFileSystem{
-	.pt.ist.fenixframework.DomainRoot playsRole root{ multiplicity 0..1;}
-	FileSystem playsRole fs{ multiplicity 0..1;}
+relation DomainRootHasFileSystem {
+	.pt.ist.fenixframework.DomainRoot playsRole root { multiplicity 0..1; }
+	FileSystem playsRole fs { multiplicity 0..1; }
 }
 
 
