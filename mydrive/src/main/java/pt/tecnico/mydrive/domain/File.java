@@ -2,18 +2,17 @@ package pt.tecnico.mydrive.domain;
 
 public class File extends File_Base {
     
-	//private byte permissions;
-	//private DateTime lastMod;
-	//private long int id;
+	public  File(){}
 
-	public File(){
-		super();
-	}
-
-    public File(String _name) {
-		super();;
-		//setName(_name);
+    public File(String name,byte perm,long id) {
+		init(name,perm,id);
 		
     }
-    
+   	protected void init(String name,byte perm,long id){
+		setName(name);
+		setId(id);
+		setPerm(perm);
+		//still need to add DateTime lastMod
+	}
+
 }
