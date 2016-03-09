@@ -33,11 +33,6 @@ class Directory extends File;
 
 class App extends PlainFile;
 
-relation UserHasHomeDir {
-	User playsRole user { multiplicity 1; }
-	Directory playsRole dir { multiplicity 1; }
-}
-
 relation FileSystemHasUsers{
 	User playsRole users{multiplicity 1..*;}
 	FileSystem playsRole fs{multiplicity 1;}
