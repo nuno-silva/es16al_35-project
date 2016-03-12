@@ -4,9 +4,11 @@ import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 
 
-public class PlainFile extends PlainFile_Base {
+public class PlainFile extends PlainFile_Base implements IXMLVisitable {
 
-	public PlainFile(){}
+    public PlainFile() {
+        super();
+    }
 
     public PlainFile(String name, byte perm, long id, String content) {
         init(name, perm, id, content);

@@ -1,5 +1,6 @@
 package pt.tecnico.mydrive.xml;
 
+import org.jdom2.Attribute;
 import org.jdom2.Element;
 import pt.tecnico.mydrive.domain.*;
 
@@ -24,6 +25,10 @@ public class XMLVisitor implements IXMLVisitor {
 
     @Override
     public Element visit(User user) {
+        Element userElement = new Element("user");
+        userElement.setAttribute(new Attribute("username", user.getUsername()));
+
+
         return null;
     }
 

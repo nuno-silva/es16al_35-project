@@ -3,13 +3,15 @@ import org.jdom2.Element;
 import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 
-public App(String name, byte perm, long id, String content) {
-        init(name, perm, id, content);
-    }
+public class App extends App_Base implements IXMLVisitable {
+
     public App() {
         super();
     }
 
+    public App(String name, byte perm, long id, String content) {
+            init(name, perm, id, content);
+    }
     @Override
     public Element accept(IXMLVisitor visitor) {
         return visitor.visit(this);
