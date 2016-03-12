@@ -2,7 +2,9 @@ package pt.tecnico.mydrive.domain;
 
 class Manager;
 
-class FileSystem;
+class FileSystem {
+    String name; // unique identifier
+}
 
 class User {
 	String username;
