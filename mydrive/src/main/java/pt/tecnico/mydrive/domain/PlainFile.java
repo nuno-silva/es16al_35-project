@@ -2,7 +2,7 @@ package pt.tecnico.mydrive.domain;
 
 public class PlainFile extends PlainFile_Base {
 
-	protected PlainFile(){}
+	public PlainFile(){}
 
     public PlainFile(String name, byte perm, long id, String content) {
         init(name, perm, id, content);
@@ -12,5 +12,6 @@ public class PlainFile extends PlainFile_Base {
 		super.init(name, perm, id);
 		setContent(content);
 	}
-    
+	
+
 }
