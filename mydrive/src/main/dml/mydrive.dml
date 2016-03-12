@@ -32,7 +32,7 @@ class Directory extends File;
 
 class App extends PlainFile;
 
-relation FileSystemHasUsers{
+relation FileSystemHasUsers {
 	User playsRole users{multiplicity 1..*;}
 	FileSystem playsRole fs{multiplicity 1;}
 }
@@ -48,12 +48,12 @@ relation DirectoryHasFiles {
 	File playsRole file { multiplicity *; }
 }
 
-relation DomainRootHasFileSystem {
+relation DomainRootHasManager {
 	.pt.ist.fenixframework.DomainRoot playsRole root { multiplicity 0..1; }
 	Manager playsRole manager { multiplicity 0..1; }
 }
 
-relation ManagerHasFileSystems{
+relation ManagerHasFileSystems {
 	FileSystem playsRole fileSystems{multiplicity *;}
 	Manager playsRole manager{multiplicity 1;}
 
