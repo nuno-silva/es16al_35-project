@@ -9,10 +9,8 @@ class User {
 	String password;
 	String name;
 	byte umask;
-	String homePath; //discussible (please discuss this in issue #4 if needed)
+	String homePath; // discussable (please discuss this in issue #4 if needed)
 }
-
-
 
 class File {
 	String name;
@@ -26,7 +24,7 @@ class PlainFile extends File {
 }
 
 class Link extends File {
-	String path;  // also discussible
+	String path;  // also discussable
 }
 
 class Directory extends File;
@@ -59,4 +57,3 @@ relation ManagerHasFileSystems{
 	Manager playsRole manager{multiplicity 1;}
 
 }
-
