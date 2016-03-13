@@ -1,5 +1,7 @@
 package pt.tecnico.mydrive.domain;
 
+import pt.tecnico.mydrive.exception.InvalidFileNameException;
+
 public abstract class File extends File_Base {
 
     public File() {
@@ -23,9 +25,12 @@ public abstract class File extends File_Base {
         deleteDomainObject();
     }
 
-	public setName(String name) throws InvalidFileNameException{
-		/*second cond might have a bug*/if(name.toLowerCase().contains('/') || name.toLowerCase().contains('\\\0') throw new InvalidFileNameException(name);
-	
-	}
+    @Override
+    public void setName(String name) throws InvalidFileNameException {
+        if( name.contains("/") || name.contains("\0") ) {
+            throw new InvalidFileNameException(name);
+        }
+        super.setName(name);
+    }
 
 }
