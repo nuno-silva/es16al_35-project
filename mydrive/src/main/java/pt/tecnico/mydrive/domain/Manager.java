@@ -1,6 +1,8 @@
 package pt.tecnico.mydrive.domain;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.mydrive.exception.UnknownPathException;
+
 import java.util.ArrayList;
 
 /*
