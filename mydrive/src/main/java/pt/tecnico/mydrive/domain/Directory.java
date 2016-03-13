@@ -30,10 +30,10 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
 
     @Override
-    public void removeFile( File file ) throws FilenameAlreadyExistsException {
+    public void removeFile( File file ) throws FileNotFoundException {
         String filename = file.getName();
-        if( hasFile( filename ) ) {
-            throw new FilenameAlreadyExistsException( filename );
+        if( !hasFile( filename ) ) {
+            throw new FileNotFoundException( filename );
         } else {
             super.removeFile( file );
         }
@@ -84,6 +84,8 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         }
         super.remove(); // remove the directory from its parent
     }
+    
+    public Directory(Directory parent, String name, byte perm, long id) {}
 
     @Override
     public Element accept(IXMLVisitor visitor) {

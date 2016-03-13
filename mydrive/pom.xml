@@ -136,6 +136,7 @@
 					<fork>true</fork>
 				</configuration>
 			</plugin>
+			<!--  
 			<plugin>
 				<groupId>pt.tecnico.plugin</groupId>
 				<artifactId>dml2yuml-maven-plugin</artifactId>
@@ -154,6 +155,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 			<plugin>
 				<groupId>pt.ist</groupId>
 				<artifactId>ff-maven-plugin</artifactId>

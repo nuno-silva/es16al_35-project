@@ -1,6 +1,7 @@
 package pt.tecnico.mydrive.domain;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class Manager extends Manager_Base {
         super();
         FenixFramework.getDomainRoot().setManager(this);
         
-        addFileSystems(new FileSystem()); //dont know how to set fileSystem...
+        addFileSystems(new FileSystem("")); //dont know how to set fileSystem...
     }
     
     public ArrayList<File> showPathContent(String path) throws UnknownPathException {
