@@ -9,8 +9,8 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         super();
     }
 
-    public Directory(String name, byte perm, long id) {
-        init(name,perm,id);
+    public Directory(Directory parent, String name, byte perm, long id) {
+        init(parent, name, perm, id);
     }
 
     @Override

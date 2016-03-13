@@ -53,7 +53,7 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
     }
 
     public void removeFile (ArrayList<String> path) throws UnknownPathException {
-        //FIXME splitPath(path).remove();
+        splitPath(path).remove();
     }
 
     public File splitPath(ArrayList<String> path) throws UnknownPathException {

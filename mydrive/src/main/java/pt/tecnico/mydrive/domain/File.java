@@ -6,24 +6,21 @@ public abstract class File extends File_Base {
         super();
     }
 
-    public File(String name, byte perm, long id) {
-		init(name, perm, id);
+    public File(Directory dir, String name, byte perm, long id) {
+        init(dir, name, perm, id);
     }
 
-	protected void init(String name, byte perm, long id){
-		setName(name);
-		setId(id);
-		setPerm(perm);
-		setIsDeleted(false);
-		//still need to add DateTime lastMod
-	}
-	
-	public void deleteFile() {
-		setIsDeleted(true);
-	}
+    protected void init(Directory dir, String name, byte perm, long id){
+        setDirectory(dir);
+        setName(name);
+        setId(id);
+        setPerm(perm);
+        //still need to add DateTime lastMod
+    }
 
-	public boolean getIsDeleted(){
-		return super.getIsDeleted();
-	}
+    public void remove() {
+        setDirectory(null);
+        deleteDomainObject();
+    }
 
 }

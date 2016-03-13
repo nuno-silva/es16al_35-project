@@ -14,17 +14,17 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
         super();
     }
 
-    public PlainFile(String name, byte perm, long id, String content) {
-        init(name, perm, id, content);
+    public PlainFile(Directory dir, String name, byte perm, long id, String content) {
+        init(dir, name, perm, id, content);
     }
 
     /** construct an empty PlainFile */
-    public PlainFile( String name, byte perm, long id ) {
-        init( name, perm, id, "" );
+    public PlainFile( Directory dir, String name, byte perm, long id ) {
+        init( dir, name, perm, id, "" );
     }
 
-    protected void init(String name, byte perm, long id, String content){
-        super.init(name, perm, id);
+    protected void init(Directory dir, String name, byte perm, long id, String content){
+        super.init(dir, name, perm, id);
         setContent(content);
     }
 

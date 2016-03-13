@@ -19,7 +19,6 @@ class File {
 	long id;
 	byte perm;
 	DateTime lastMod;
-	boolean isDeleted;
 }
 
 class PlainFile extends File {
