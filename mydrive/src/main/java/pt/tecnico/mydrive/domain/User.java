@@ -14,16 +14,17 @@ public class User extends User_Base implements IXMLVisitable {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public User(String username, String password, String name, byte mask) throws InvalidUsernameException {
-    	init(username, password, name, mask);
+    public User(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException {
+    	init(fs, username, password, name, mask);
     }
     
-    public void init(String username, String password, String name, byte mask) throws InvalidUsernameException {
+    public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException {
 		if (checkUserName(username)) {
 			setUsername(username);
 			setPassword(password);
 			setName(name);
 			setUmask(mask);
+			setFs(fs);
 			// setDir(new Directory(username, (byte) 11111010, 123)); FIXME
 			// depois metodo que cria o user tem de ligar a sua pasta ao directorio "home"
 		}

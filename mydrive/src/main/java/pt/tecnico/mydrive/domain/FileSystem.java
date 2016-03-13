@@ -14,26 +14,33 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
     }
 
     public FileSystem(String name) throws InvalidUsernameException {
+    	super();
         init(name);
     }
 
     private void init(String name) throws InvalidUsernameException {
         setName(name);
-        byte permission = (byte) 111101101;
+        byte permission = (byte) 0b111101101;
+        
         // Create root directory: "/"
-        numFiles+=1;
-        Directory rootDir = new Directory("/", permission, numFiles);
+        Directory rootDir = addDirectory(null, "", permission);
         setRootDir(rootDir);  // FIXME
+        
         // Create home directory: "/home"
-        numFiles+=1;
-        Directory homeDir = new Directory("home", permission, numFiles);
-        rootDir.addFile(homeDir);
+        Directory homeDir = addDirectory(rootDir, "home", permission);
+        
         // Create Super User and respective directory: "/home/root"
-        addUsers(new User("root", "***", "Super User", (byte) 111101101));   // FIXME: construtor de user ja cria o seu diretorio
-        numFiles+=1;
-        Directory homeroot = new Directory("root", permission, numFiles);
-        homeDir.addFile(homeroot);
+        addUsers(new User(this, "root", "***", "Super User", (byte) 0b111101101));
+        addDirectory(homeDir, "root", permission);
     }
+    
+    public Directory addDirectory(Directory parent, String name, byte permission) {
+    	numFiles+=1;
+    	Directory newDir = new Directory(parent, name, permission, numFiles);
+    	return newDir;
+    }
+    
+    
 
     public ArrayList<File> pathContent (ArrayList<String> path) throws UnknownPathException {
         return null;//return splitPath(path).showContent(); //FIXME
