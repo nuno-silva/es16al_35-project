@@ -18,26 +18,26 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
     private void init(String name) {
         setName(name);
     }
-    
-    public ArrayList<File> pathContent (ArrayList<String> path) throws UnknownPathException {
-    	return splitPath(path).showContent(); //FIXME
-    }
-    
-    public String fileContent (ArrayList<String> path) throws UnknownPathException {
-    	return splitPath(path).getContent(); //FIXME
-    }
-    
-    public void removeFile (ArrayList<String> path) throws UnknownPathException {
-    	splitPath(path).deleteFile(); 
-    }
-    
-    public File splitPath(ArrayList<String> path) throws UnknownPathException {
-    	File currentDir = getRootDir();
 
-    	for(String dir : path) 
-    		currentDir = currentDir.getContent(dir); //FIXME
-    	
-    	return currentDir;
+    public ArrayList<File> pathContent (ArrayList<String> path) throws UnknownPathException {
+        return null;//return splitPath(path).showContent(); //FIXME
+    }
+
+    public String fileContent (ArrayList<String> path) throws UnknownPathException {
+        return null; //return splitPath(path).getContent(); //FIXME
+    }
+
+    public void removeFile (ArrayList<String> path) throws UnknownPathException {
+        //FIXME splitPath(path).remove();
+    }
+
+    public File splitPath(ArrayList<String> path) throws UnknownPathException {
+        File currentDir = getRootDir();
+	/* FIXME
+        for(String dir : path)
+            currentDir = currentDir.getContent(dir); //FIXME
+        */
+        return currentDir;
     }
 
     @Override
