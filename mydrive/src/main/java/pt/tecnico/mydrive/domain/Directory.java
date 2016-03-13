@@ -19,22 +19,20 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
 
     @Override
-    public void addFile( File file ) {
+    public void addFile( File file ) throws FilenameAlreadyExistsException {
         String filename = file.getName();
         if( hasFile( filename ) ) {
-            //FIXME: mvn says I can't override Directory_Base when I throw an exception. However, this is being done in phonebook.
-            //FIXME: throw new FilenameAlreadyExistsException( filename );
+            throw new FilenameAlreadyExistsException( filename );
         } else {
             super.addFile( file );
         }
     }
 
     @Override
-    public void removeFile( File file ) {
+    public void removeFile( File file ) throws FilenameAlreadyExistsException {
         String filename = file.getName();
         if( hasFile( filename ) ) {
-            //FIXME: mvn says I can't override Directory_Base when I throw an exception. However, this is being done in phonebook.
-            //FIXME: throw new FilenameAlreadyExistsException( filename );
+            throw new FilenameAlreadyExistsException( filename );
         } else {
             super.removeFile( file );
         }
