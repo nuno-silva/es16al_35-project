@@ -53,6 +53,18 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         }
     }
 
+    public List<String> listFiles() {
+        //TODO: should we use a Visitor for this?
+        List<String> files = new ArrayList<String>();
+
+        files.add(".");
+        files.add("..");
+        for( File f : getFileSet() ) {
+            files.add( f.getName() );
+        }
+        // TODO: the format should be "<type> <perm> <dim> <owner> <date> <name>", but not for the first sprint, I think
+        return files;
+    }
 
     @Override
     public Element accept(IXMLVisitor visitor) {
