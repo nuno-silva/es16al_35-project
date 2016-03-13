@@ -35,14 +35,14 @@ class Directory extends File;
 class App extends PlainFile;
 
 relation FileSystemHasUsers {
-	User playsRole users{multiplicity 1..*;}
-	FileSystem playsRole fs{multiplicity 1;}
+	User playsRole user {multiplicity 1..*;}
+	FileSystem playsRole fs {multiplicity 1;}
 }
 
 relation FileSystemHasRootDir {
 
 	FileSystem playsRole fs { multiplicity 1; }
-	Directory playsRole rootDir{  multiplicity 1; }
+	Directory playsRole rootDir {  multiplicity 1; }
 }
 
 relation DirectoryHasFiles {
@@ -58,5 +58,4 @@ relation DomainRootHasManager {
 relation ManagerHasFileSystems {
 	FileSystem playsRole fileSystems{multiplicity *;}
 	Manager playsRole manager{multiplicity 1;}
-
 }
