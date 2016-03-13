@@ -84,6 +84,8 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         }
         super.remove(); // remove the directory from its parent
     }
+    
+    public Directory(Directory parent, String name, byte perm, long id) {}
 
     @Override
     public Element accept(IXMLVisitor visitor) {
