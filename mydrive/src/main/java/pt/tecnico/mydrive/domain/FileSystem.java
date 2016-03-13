@@ -32,7 +32,7 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
         Directory homeDir = addDirectory(rootDir, "home", permission);
         
         // Create Super User and respective directory: "/home/root"
-        addUsers(new User(this, "root", "***", "Super User", (byte) 0b111101101));
+        addUser(new User(this, "root", "***", "Super User", (byte) 0b111101101));
         addDirectory(homeDir, "root", permission);
     }
     
@@ -45,22 +45,22 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
     
 
     public ArrayList<File> pathContent (ArrayList<String> path) throws UnknownPathException {
-        return null;//return splitPath(path).showContent(); //FIXME
+        return null;//return getFile(path).listFiles(); //FIXME
     }
 
     public String fileContent (ArrayList<String> path) throws UnknownPathException {
-        return null; //return splitPath(path).getContent(); //FIXME
+        return null; //return getFile(path).getLines(); //FIXME
     }
 
     public void removeFile (ArrayList<String> path) throws UnknownPathException {
-        //FIXME splitPath(path).remove();
+        //FIXME getFile(path).remove();
     }
 
-    public File splitPath(ArrayList<String> path) throws UnknownPathException {
-        File currentDir = getRootDir();
+    public File getFile(ArrayList<String> path) throws UnknownPathException {
+    	File currentDir = getRootDir();
 	/* FIXME
         for(String dir : path)
-            currentDir = currentDir.getContent(dir); //FIXME
+            currentDir = currentDir.getFileByName(dir); //FIXME
         */
         return currentDir;
     }
