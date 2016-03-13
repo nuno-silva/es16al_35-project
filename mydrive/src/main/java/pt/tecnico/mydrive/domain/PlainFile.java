@@ -27,7 +27,9 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
         super.init(dir, name, perm, id);
         setContent(content);
     }
-
+	public String readFileContent(){
+		return getContent();
+	}
     /** Execute the file: each line is interpreted as "<app path> <args>*"
      *  and each app is executed */
     public void execute() {

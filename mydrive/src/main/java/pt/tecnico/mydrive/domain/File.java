@@ -23,4 +23,9 @@ public abstract class File extends File_Base {
         deleteDomainObject();
     }
 
+	public setName(String name) throws InvalidFileNameException{
+		/*second cond might have a bug*/if(name.toLowerCase().contains('/') || name.toLowerCase().contains('\\\0') throw new InvalidFileNameException(name);
+	
+	}
+
 }
