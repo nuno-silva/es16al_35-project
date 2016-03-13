@@ -9,8 +9,8 @@ public class App extends App_Base implements IXMLVisitable {
         super();
     }
 
-    public App(String name, byte perm, long id, String content) {
-            init(name, perm, id, content);
+    public App(Directory dir, String name, byte perm, long id, String content) {
+            init(dir, name, perm, id, content);
     }
     @Override
     public Element accept(IXMLVisitor visitor) {
