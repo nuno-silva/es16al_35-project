@@ -14,6 +14,34 @@ public class User extends User_Base implements IXMLVisitable {
 
     private static final Logger logger = LogManager.getLogger();
 
+    public User(String username, String password, String name, byte mask) throws InvalidUsernameException {
+    	init(username, password, name, mask);
+    }
+    
+    public void init(String username, String password, String name, byte mask) throws InvalidUsernameException {
+		if (checkUserName(username)) {
+			setUsername(username);
+			setPassword(password);
+			setName(name);
+			setUmask(mask);
+			// setDir(new Directory(username, (byte) 11111010, 123)); FIXME
+			// depois metodo que cria o user tem de ligar a sua pasta ao directorio "home"
+		}
+		else
+			throw new InvalidUsernameException(username);
+    }
+    
+    public boolean checkUserName(String username) {
+        char[] chars = username.toCharArray();
+
+        for (char c : chars) {
+            if(!Character.isLetter(c) || !Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     @Override
     public Element accept(IXMLVisitor visitor) {
         return visitor.visit(this);
