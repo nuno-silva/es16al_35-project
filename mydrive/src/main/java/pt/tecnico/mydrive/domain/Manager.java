@@ -25,8 +25,9 @@ public class Manager extends Manager_Base {
     private Manager() {
         super();
         FenixFramework.getDomainRoot().setManager(this);
-        
-        addFileSystems(new FileSystem("")); //dont know how to set fileSystem...
+        FileSystem newFs = new FileSystem("");
+        addFileSystems(newFs); //dont know how to set fileSystem...
+        currentFileSystem = newFs;
     }
     
     public ArrayList<File> showPathContent(String path) throws UnknownPathException {
@@ -41,6 +42,9 @@ public class Manager extends Manager_Base {
     	currentFileSystem.removeFile(splitPath(path)); //FIXME
     }
     
+    public void createUser(String username, String password, String name) throws InvalidUsernameException {
+    	currentFileSystem.createUser(username, password, name);
+    }
     
     public ArrayList<String> splitPath(String path) throws UnknownPathException {
     	ArrayList<String> directories = new ArrayList<String>();

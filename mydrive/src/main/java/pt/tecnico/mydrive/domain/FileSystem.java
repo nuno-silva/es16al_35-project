@@ -41,7 +41,7 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
 		root.setUsername("root");
 		root.setPassword("***");
 		root.setName("Super User");
-		root.setUmask((byte) 0b111101101);
+		root.setUmask((byte) 00000000);
 		root.setFs(this);
 		return root;
     }
@@ -52,7 +52,9 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
     	return newDir;
     }
     
-    
+    public void createUser(String username, String password, String name) throws InvalidUsernameException {
+    	addUser(new User(this, username, password, name, (byte) 00000000));
+    }
 
     public ArrayList<File> pathContent (ArrayList<String> path) throws UnknownPathException {
         return null;//return getFile(path).listFiles(); //FIXME
