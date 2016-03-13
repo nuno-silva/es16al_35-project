@@ -29,6 +29,17 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         }
     }
 
+    @Override
+    public void removeFile( File file ) {
+        String filename = file.getName();
+        if( hasFile( filename ) ) {
+            //FIXME: mvn says I can't override Directory_Base when I throw an exception. However, this is being done in phonebook.
+            //FIXME: throw new FilenameAlreadyExistsException( filename );
+        } else {
+            super.removeFile( file );
+        }
+    }
+
     public File getFileByName( String name ) throws FileNotFoundException {
         if( name.equals(".") ) {
             return this;
@@ -64,6 +75,15 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         }
         // TODO: the format should be "<type> <perm> <dim> <owner> <date> <name>", but not for the first sprint, I think
         return files;
+    }
+
+    /** removes the Directory (from its parent) and all its Files */
+    @Override
+    public void remove() {
+        for( File f : getFileSet() ) {
+            f.remove();
+        }
+        super.remove(); // remove the directory from its parent
     }
 
     @Override
