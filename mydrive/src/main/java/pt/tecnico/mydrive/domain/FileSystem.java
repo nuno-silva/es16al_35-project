@@ -104,6 +104,7 @@ public class FileSystem extends FileSystem_Base {
         String userHome = "/home/" + username;
         Directory home = createFileParents( userHome );
         createDirectory(home, username, (byte) 000000);
+        user.setHomePath( userHome );
     }
 
     public List<String> pathContent (String path) throws UnknownPathException {
