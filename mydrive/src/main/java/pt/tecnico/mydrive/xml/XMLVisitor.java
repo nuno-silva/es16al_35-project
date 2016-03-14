@@ -1,5 +1,6 @@
 package pt.tecnico.mydrive.xml;
 
+import ch.qos.logback.classic.db.names.ColumnName;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
@@ -18,7 +19,16 @@ public class XMLVisitor implements IXMLVisitor {
 
     @Override
     public Element visit(PlainFile plainFile) {
-        return null;
+        String content;
+        content = plainFile.getContent();
+        Element fileElem = visit((File)plainFile);
+        fileElem.setName("plain");
+
+        if (content != null && content != "") {
+            fileElem.addContent(new Element("content").setText(content));
+        }
+
+        return fileElem;
     }
 
     @Override
