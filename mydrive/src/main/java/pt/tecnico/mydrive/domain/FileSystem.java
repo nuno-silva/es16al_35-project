@@ -184,6 +184,7 @@ public class FileSystem extends FileSystem_Base {
         xmlImportUsers(users, fs);
         xmlImportDirectories(dirs, fs);
         xmlImportPlainFiles(plains, fs);
+        xmlImportLinks(links, fs);
 
     }
 
@@ -195,7 +196,8 @@ public class FileSystem extends FileSystem_Base {
         return fs;
     }
     
-    private void xmlImportFiles(List<Element> files, FileSystem fs) {
+    private Queue<File> xmlImportFiles(List<Element> files, FileSystem fs) {
+    	Queue<File> newFiles = new LinkedList<>();
     	Element e = null;
         String id, name, mask, lastMod, path;
         for (Element file : files) {
@@ -227,11 +229,13 @@ public class FileSystem extends FileSystem_Base {
 
             // FIXME: better default mask
             fs.getRootDir().addFile(newFile);
+            newFiles.add(newFile);
         }
+        return newFiles;
     }
     
     private void xmlImportPlainFiles(List<Element> plains, FileSystem fs) {
-    	xmlImportFiles(plains, fs);
+    	Queue<File> newFiles = xmlImportFiles(plains, fs);
     	String content = null;
     	Element elem = null;
     	for (Element plain : plains) {
@@ -241,6 +245,24 @@ public class FileSystem extends FileSystem_Base {
     		} else {
     			content = "";
     		}
+    		((PlainFile)newFiles.poll()).setContent(content);
+    	}
+    }
+    
+    private void xmlImportLinks(List<Element> links, FileSystem fs) {
+    	Queue<File> newFiles = xmlImportFiles(links, fs);
+    	xmlImportFiles(links, fs);
+    	String path = null;
+    	Element elem = null;
+    	for (Element plain : links) {
+    		elem = plain.getChild("content");
+    		if (elem != null) {
+    			path = elem.getText();
+    		} else {
+    			path = "";
+    		}
+    		((Link)newFiles.poll()).setPath(path);
+
     	}
     }
     
