@@ -5,12 +5,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
+import org.jdom2.JDOMException;
 import pt.tecnico.mydrive.domain.*;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -20,13 +22,18 @@ import java.util.Set;
 
 public class MyDriveApplication {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
         try {
-            SetupDomain.populateDomain();
-        } catch (InvalidUsernameException e) {
+            init(args[0]);
+        } catch (JDOMException e) {
             e.printStackTrace();
-        } finally {
-            FenixFramework.shutdown();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    @Atomic
+    public static void init(String fileName) throws JDOMException, IOException {
+        Manager man = Manager.getInstance();
+        man.getFirstFs().xmlImportFromFile(fileName);
     }
 }
