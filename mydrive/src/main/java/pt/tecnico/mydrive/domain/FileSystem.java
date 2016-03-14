@@ -1,5 +1,6 @@
 package pt.tecnico.mydrive.domain;
 
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -15,11 +16,15 @@ import pt.tecnico.mydrive.exception.UnknownPathException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 
+import pt.tecnico.mydrive.xml.IXMLVisitable;
+import pt.tecnico.mydrive.xml.IXMLVisitor;
 import pt.tecnico.mydrive.xml.XMLVisitor;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.interfaces.ECKey;
 import java.util.*;
+import java.util.jar.Attributes;
 
 public class FileSystem extends FileSystem_Base {
 	
@@ -64,7 +69,6 @@ public class FileSystem extends FileSystem_Base {
         Directory homeDir = createDirectory(rootDir, "home", permission);
 
         // Create Super User
-        createDirectory(homeDir, "root", permission);
         try {
             createUser( "root", "***", "Super User" );
         } catch (InvalidUsernameException e ) {
@@ -83,17 +87,17 @@ public class FileSystem extends FileSystem_Base {
         int i = 1; // p[0] is ""
         for( ; i < p.length - 1; i++ ) {
             String dirName = p[i];
-            currentPath += "/" + dirName;
             try {
                 File f = dir.getFileByName( dirName );
                 if( ! f.isCdAble() ) {
                     // there's a file with that name
-                    throw new FilenameAlreadyExistsException( currentPath );
+                    throw new FilenameAlreadyExistsException( dirName, currentPath );
                 }
                 dir = (Directory) f;
             } catch( FileNotFoundException e ) {
                 dir = createDirectory( dir, dirName, dir.getPerm() );
             }
+            currentPath += "/" + dirName;
         }
         return dir;
     }
@@ -101,7 +105,7 @@ public class FileSystem extends FileSystem_Base {
     protected Directory createRootDirectory() {
         numFiles++;
         // FIXME: proper rootdir permission
-        Directory rootDir = new Directory((byte)0, numFiles);
+        Directory rootDir = new Directory((byte) 0b11111010, numFiles);
         setRootDir(rootDir);
         return rootDir;
     }
@@ -118,7 +122,7 @@ public class FileSystem extends FileSystem_Base {
     	return newPlainFile;
     }
 
-    /** creates a new User and its home directoty in the FileSystem */
+    /** creates a new User and its home directory in the FileSystem */
     public void createUser(String username, String password, String name) throws InvalidUsernameException {
         User user = new User(this, username, password, name, (byte) 00000000);
         String userHome = "/home/" + username;
@@ -187,7 +191,7 @@ public class FileSystem extends FileSystem_Base {
         }
         return doc;
     }
-    
+
     @Atomic
     public void xmlImport(Document doc) {
         /*
@@ -200,7 +204,7 @@ public class FileSystem extends FileSystem_Base {
         List<Element> links = doc.getRootElement().getChildren(Link.XML_TAG);
 
         FileSystem fs = xmlCreateFileSystem();
-        
+
         xmlImportUsers(users, fs);
         xmlImportDirectories(dirs, fs);
         xmlImportPlainFiles(plains, fs);
@@ -210,12 +214,12 @@ public class FileSystem extends FileSystem_Base {
 
     private FileSystem xmlCreateFileSystem() {
         Manager man = FenixFramework.getDomainRoot().getManager();
-        // FIXME: tempoist178134rary placeholder for FileSystem's name
+        // FIXME: temporary placeholder for FileSystem's name
         FileSystem fs = new FileSystem("ext4");
         man.addFileSystems(fs);
         return fs;
     }
-    
+
     private FileParams parseFileParams(Element file, FileSystem fs, FileParams fp) {
         // This allows some code reuse
     	Element e = null;

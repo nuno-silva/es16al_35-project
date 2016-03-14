@@ -38,7 +38,10 @@ public class User extends User_Base implements IXMLVisitable {
 
     @Override
     public void setFs( FileSystem fs ) {
-        super.setFs(fs); // not sure about this
+        if( fs == null ) {
+            super.setFs(fs);
+            return;
+        }
         fs.addUser(this);
     }
 
