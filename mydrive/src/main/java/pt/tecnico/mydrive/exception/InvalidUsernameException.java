@@ -5,7 +5,6 @@ public class InvalidUsernameException extends MydriveException {
 	private String _username;
 	
 	public InvalidUsernameException(String username) {
-        super("The provided username is invalid: " + username); // TODO: something more specific would be nice
 		_username = username;
 	}
 	
@@ -15,6 +14,6 @@ public class InvalidUsernameException extends MydriveException {
 	
 	@Override
 	public String getMessage() {
-		return "The provided username is invalid: " + username;
-	}
+		return "The provided username is invalid: " + _username;
+	}	
 }
