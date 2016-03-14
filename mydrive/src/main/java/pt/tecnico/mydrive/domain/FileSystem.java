@@ -36,15 +36,13 @@ public class FileSystem extends FileSystem_Base {
         byte permission = (byte) 0b111101101;
 
         // Create root directory: "/"
-        Directory rootDir = createDirectory(null, "", permission);
-        setRootDir(rootDir);  // FIXME
+        Directory rootDir = createRootDirectory();
 
-        // Create home directory: "/usr"
-        createDirectory(rootDir, "usr", permission);
         // Create home directory: "/home"
         Directory homeDir = createDirectory(rootDir, "home", permission);
 
         // Create Super User and respective directory: "/home/root"
+         //FIXME: User should receive the FileSystem and add itself to it
         addUser(createSuperUser());
         createDirectory(homeDir, "root", permission);
     }
@@ -83,6 +81,14 @@ public class FileSystem extends FileSystem_Base {
             }
         }
         return dir;
+    }
+
+    protected Directory createRootDirectory() {
+        numFiles++;
+        // FIXME: proper rootdir permission
+        Directory rootDir = new Directory((byte)0, numFiles);
+        setRootDir(rootDir);
+        return rootDir;
     }
 
     public Directory createDirectory(Directory parent, String name, byte permission) {
