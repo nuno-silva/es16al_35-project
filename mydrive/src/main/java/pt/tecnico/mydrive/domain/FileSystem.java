@@ -10,7 +10,7 @@ import java.util.List;
 public class FileSystem extends FileSystem_Base implements IXMLVisitable {
 
 	private static long numFiles = 0;
-	
+
     public FileSystem() {
         super();
     }
@@ -23,19 +23,19 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
     private void init(String name) {
         setName(name);
         byte permission = (byte) 0b111101101;
-        
+
         // Create root directory: "/"
         Directory rootDir = addDirectory(null, "", permission);
         setRootDir(rootDir);  // FIXME
-        
+
         // Create home directory: "/home"
         Directory homeDir = addDirectory(rootDir, "home", permission);
-        
+
         // Create Super User and respective directory: "/home/root"
         addUser(createSuperUser());
         addDirectory(homeDir, "root", permission);
     }
-    
+
     public User createSuperUser() {
     	User root = new User();
 		root.setUsername("root");
@@ -45,13 +45,13 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
 		root.setFs(this);
 		return root;
     }
-    
+
     public Directory addDirectory(Directory parent, String name, byte permission) {
     	numFiles+=1;
     	Directory newDir = new Directory(parent, name, permission, numFiles);
     	return newDir;
     }
-    
+
     public void createUser(String username, String password, String name) throws InvalidUsernameException {
     	addUser(new User(this, username, password, name, (byte) 00000000));
     }
@@ -61,7 +61,7 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
     }
 
     public List<String> fileContent (String path) throws UnknownPathException {
-        return getFile(path).showContent(); 
+        return getFile(path).showContent();
     }
 
     public void removeFile (String path) throws UnknownPathException {
@@ -70,13 +70,14 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
 
     public File getFile(String path) throws UnknownPathException {
     	File currentDir = getRootDir();
-    	
+
     	if(!path.substring(0, 1).matches("/")) //check if root directory is used, otherwise ERROR!
     		throw new UnknownPathException(path);
-    	
+
+        path = path.substring(1); // remove '/'
     	for(String dir : path.split("/"))
             currentDir = currentDir.getFileByName(dir);
-    	
+
         return currentDir;
     }
 
