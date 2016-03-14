@@ -2,14 +2,28 @@ package pt.tecnico.mydrive.xml;
 
 import ch.qos.logback.classic.db.names.ColumnName;
 import org.jdom2.Attribute;
+import org.jdom2.Document;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 import pt.tecnico.mydrive.domain.*;
+
+import java.util.Set;
 
 /**
  * A concrete XMLVisitor implementation.
  */
 public class XMLVisitor implements IXMLVisitor {
+    private static XMLVisitor instance = null;
+
+    // TODO: not reflection safe
+    public static XMLVisitor getInstance() {
+        if (instance == null) {
+            instance = new XMLVisitor();
+        }
+        return instance;
+    }
+
+    private XMLVisitor() { /* empty on purpose */ }
     @Override
     public Element visit(Directory directory) {
         Element dirElement = visit((File)directory);
@@ -73,11 +87,6 @@ public class XMLVisitor implements IXMLVisitor {
     @Override
     public Element visit(App app) {
         return visit((PlainFile)app).setName("app");
-    }
-
-    @Override
-    public Element visit(FileSystem fileSystem) {
-        return null;
     }
 
     @Override

@@ -9,9 +9,11 @@ import pt.tecnico.mydrive.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.DirectoryNotEmptyException;
+import pt.tecnico.mydrive.xml.XMLVisitor;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class Directory extends Directory_Base implements IXMLVisitable {
     static final Logger log = LogManager.getRootLogger();
@@ -104,6 +106,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     /** removes the Directory (from its parent) and all its Files */
     @Override
     public void remove() throws DirectoryNotEmptyException {
+        // FIXME: deprecated method
         if( getFileCount() != 0 ) {
             throw new DirectoryNotEmptyException( getName() );
         }

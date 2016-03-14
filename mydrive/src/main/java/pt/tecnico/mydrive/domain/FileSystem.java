@@ -1,13 +1,17 @@
 package pt.tecnico.mydrive.domain;
 
+import org.jdom2.Document;
 import org.jdom2.Element;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
 import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
-import java.util.List;
+import pt.tecnico.mydrive.xml.XMLVisitor;
 
-public class FileSystem extends FileSystem_Base implements IXMLVisitable {
+import java.util.List;
+import java.util.Set;
+
+public class FileSystem extends FileSystem_Base {
 
 	private static long numFiles = 0;
 
@@ -81,8 +85,16 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
         return currentDir;
     }
 
-    @Override
-    public Element accept(IXMLVisitor visitor) {
-        return visitor.visit(this);
+    public Document xmlExport() {
+        Document doc = new Document(new Element("mydrive"));
+        Element e = null;
+        // Convert all users to xml
+        Set<User> users = getUserSet();
+        for (User u : users) {
+            e = u.accept(XMLVisitor.getInstance());
+            doc.getRootElement().addContent(e);
+        }
+        // TODO: go through directories and add them and their contents
+        return doc;
     }
 }
