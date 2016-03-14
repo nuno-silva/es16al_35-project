@@ -1,5 +1,9 @@
 package pt.tecnico.mydrive.domain;
 import org.jdom2.Element;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
@@ -10,6 +14,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Directory extends Directory_Base implements IXMLVisitable {
+    static final Logger log = LogManager.getRootLogger();
 
     public Directory() {
         super();
@@ -30,6 +35,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     @Override
     public String getFullPath() {
         if( getDirectory() == this ) { // we're the root dir
+            log.trace("Directory.getFullPath() reached root dir");
             return "";
         } else {
             return super.getFullPath();
