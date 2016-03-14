@@ -3,11 +3,15 @@ package pt.tecnico.mydrive.domain;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.jdom2.Document;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import pt.ist.fenixframework.FenixFramework;
 
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -51,8 +55,15 @@ public class Manager extends Manager_Base {
     	printContent("Content of plainfile README: ", fs.fileContent("/home/README"));
     	// Remove "/usr/local/bin":
     	fs.removeFile("/usr/local/bin");
-    	//TODO: FAZER A EXPORTACAO DO XML
-    	// Remove "/home/README":
+    	//TODO: propagate exception
+        Document doc = getFirstFs().xmlExport();
+        XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+        try {
+            out.output(doc, System.out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Remove "/home/README":
     	fs.removeFile("/home/README");
     	// Print content of "/home":
     	printContent("Content of directory /home: ", fs.fileContent("/home"));
