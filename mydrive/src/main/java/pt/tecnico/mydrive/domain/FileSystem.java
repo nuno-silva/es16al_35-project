@@ -183,6 +183,7 @@ public class FileSystem extends FileSystem_Base {
         
         xmlImportUsers(users, fs);
         xmlImportDirectories(dirs, fs);
+        xmlImportPlainFiles(plains, fs);
 
     }
 
@@ -228,7 +229,21 @@ public class FileSystem extends FileSystem_Base {
             fs.getRootDir().addFile(newFile);
         }
     }
-
+    
+    private void xmlImportPlainFiles(List<Element> plains, FileSystem fs) {
+    	xmlImportFiles(plains, fs);
+    	String content = null;
+    	Element elem = null;
+    	for (Element plain : plains) {
+    		elem = plain.getChild("content");
+    		if (elem != null) {
+    			content = elem.getText();
+    		} else {
+    			content = "";
+    		}
+    	}
+    }
+    
     private void xmlImportDirectories(List<Element> dirs, FileSystem fs) {
         xmlImportFiles(dirs, fs);
     }
