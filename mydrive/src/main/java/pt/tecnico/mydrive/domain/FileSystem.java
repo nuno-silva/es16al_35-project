@@ -43,20 +43,13 @@ public class FileSystem extends FileSystem_Base {
         // Create home directory: "/home"
         Directory homeDir = createDirectory(rootDir, "home", permission);
 
-        // Create Super User and respective directory: "/home/root"
-         //FIXME: User should receive the FileSystem and add itself to it
-        addUser(createSuperUser());
+        // Create Super User
         createDirectory(homeDir, "root", permission);
-    }
-
-    public User createSuperUser() {
-    	User root = new User();
-		root.setUsername("root");
-		root.setPassword("***");
-		root.setName("Super User");
-		root.setUmask((byte) 00000000);
-		root.setFs(this);
-		return root;
+        try {
+            createUser( "root", "***", "Super User" );
+        } catch (InvalidUsernameException e ) {
+            e.printStackTrace(); // should never happen. "root" is a valid username
+        }
     }
 
     /** Creates all parent directories for the given file path, if they
@@ -105,8 +98,12 @@ public class FileSystem extends FileSystem_Base {
     	return newPlainFile;
     }
 
+    /** creates a new User and its home directoty in the FileSystem */
     public void createUser(String username, String password, String name) throws InvalidUsernameException {
-    	addUser(new User(this, username, password, name, (byte) 00000000));
+        User user = new User(this, username, password, name, (byte) 00000000);
+        String userHome = "/home/" + username;
+        Directory home = createFileParents( userHome );
+        createDirectory(home, username, (byte) 000000);
     }
 
     public List<String> pathContent (String path) throws UnknownPathException {

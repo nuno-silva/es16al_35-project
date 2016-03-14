@@ -36,6 +36,12 @@ public class User extends User_Base implements IXMLVisitable {
         }
     }
 
+    @Override
+    public void setFs( FileSystem fs ) {
+        super.setFs(fs); // not sure about this
+        fs.addUser(this);
+    }
+
     public boolean checkUserName(String username) {
         char[] chars = username.toCharArray();
         for (char c : chars) {
