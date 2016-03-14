@@ -25,12 +25,27 @@ public class XMLVisitor implements IXMLVisitor {
 
     @Override
     public Element visit(User user) {
+        String password, name, home, mask;
+        password = user.getPassword();
+        name = user.getName();
+        home = user.getHomePath();
+        mask = user.getStringUmask();
+
         Element userElement = new Element("user");
         userElement.setAttribute(new Attribute("username", user.getUsername()));
-        userElement.addContent(new Element("password").setText(user.getPassword()));
-        userElement.addContent(new Element("name").setText(user.getName()));
-        userElement.addContent(new Element("home").setText(user.getHomePath()));
-        userElement.addContent(new Element("mask").setText("111111111")); // TODO: placeholder
+
+        if (password != null && password != "") {
+            userElement.addContent(new Element("password").setText(user.getPassword()));
+        }
+        if (name != null && name != "") {
+            userElement.addContent(new Element("name").setText(user.getName()));
+        }
+        if (home != null && home != "") {
+            userElement.addContent(new Element("home").setText(user.getHomePath()));
+        }
+        if (mask != null && mask != "") {
+            userElement.addContent(new Element("mask").setText(mask));
+        }
         return userElement;
     }
 

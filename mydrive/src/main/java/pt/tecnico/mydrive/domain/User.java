@@ -50,6 +50,7 @@ public class User extends User_Base implements IXMLVisitable {
      * @return String representation of the byte umask
      */
     public String getStringUmask() {
+        // TODO: do some more testing
         byte umask = getUmask();
         return Integer.toBinaryString(umask & 0xFF);
     }
