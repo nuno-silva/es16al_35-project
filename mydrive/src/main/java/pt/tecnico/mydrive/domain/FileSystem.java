@@ -1,6 +1,5 @@
 package pt.tecnico.mydrive.domain;
 
-import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -12,13 +11,9 @@ import pt.tecnico.mydrive.exception.UnknownPathException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 
-import pt.tecnico.mydrive.xml.IXMLVisitable;
-import pt.tecnico.mydrive.xml.IXMLVisitor;
 import pt.tecnico.mydrive.xml.XMLVisitor;
 
-import java.security.interfaces.ECKey;
 import java.util.*;
-import java.util.jar.Attributes;
 
 public class FileSystem extends FileSystem_Base {
 	
@@ -204,7 +199,7 @@ public class FileSystem extends FileSystem_Base {
         xmlImportDirectories(dirs, fs);
         xmlImportPlainFiles(plains, fs);
         xmlImportLinks(links, fs);
-
+        xmlImportApps(apps, fs);
     }
 
     private FileSystem xmlCreateFileSystem() {
@@ -216,6 +211,7 @@ public class FileSystem extends FileSystem_Base {
     }
     
     private FileParams parseFileParams(Element file, FileSystem fs, FileParams fp) {
+        // This allows some code reuse
     	Element e = null;
         String id, name, mask, lastMod, path;
         id = file.getAttribute("id").getValue();
@@ -242,37 +238,52 @@ public class FileSystem extends FileSystem_Base {
             lastMod = new DateTime().toString(); // FIXME: find a more suitable default lastMod
         }
         return fp.parse(id, name, mask, lastMod, path);
-            
-            /**File newFile = new Directory(fs.getRootDir(), name, (byte)0b1111111, Long.valueOf(id));
-            newFile.setLastMod(new DateTime()); // FIXME: placeholder lastMod
+    }
 
-            // FIXME: better default mask
-            fs.getRootDir().addFile(newFile);
-            newFiles.add(newFile);
-            */
-        //}
-        //return newFiles;
-    }
-    
-    private void xmlImportPlainFiles(List<Element> plains, FileSystem fs) {
-    	//Queue<File> newFiles = parseFileParams(plains, fs);
-    	String content = null;
-    	Element elem = null;
-    	for (Element plain : plains) {
-    		elem = plain.getChild("content");
-    		if (elem != null) {
-    			content = elem.getText();
-    		} else {
-    			content = "";
-    		}
-    		//((PlainFile)newFiles.poll()).setContent(content);
-    	}
-    }
-    
     private void xmlImportApps(List<Element> apps, FileSystem fs) {
-    	xmlImportPlainFiles(apps, fs);
+    	xmlImportContentFiles(apps, fs, true);
     }
-    
+
+    /**
+     * Import content files from XML (i.e. PlainFiles Apps).
+     *
+     * @param  contentFiles - list of Elements to import
+     * @param fs - FileSystem which every instance of the created Files will be associated with
+     * @param isApp - if true, create App files. If false, create PlainFiles
+     */
+    private void xmlImportContentFiles(List<Element> contentFiles, FileSystem fs, boolean isApp) {
+        FileParams fp = new FileParams();
+        String content = null;
+        Element elem = null;
+        for (Element contentFile :  contentFiles) {
+            fp = parseFileParams(contentFile, fs, fp);
+            elem = contentFile.getChild("content");
+            if (elem != null) {
+                content = elem.getText();
+            } else {
+                content = "";
+            }
+
+            File newPlainFile;
+
+            // if it's an app, all the App's constructor, otherwise use PlainFile's
+            if(isApp) {
+                newPlainFile = new App(Directory.fromPath(fp.PATH, fs), fp.NAME,
+                        (byte)0b11111010, Long.valueOf(fp.ID), content);
+            } else {
+                newPlainFile = new PlainFile(Directory.fromPath(fp.PATH, fs), fp.NAME,
+                        (byte) 0b11111010, Long.valueOf(fp.ID), content);
+            }
+            newPlainFile.setLastMod(new DateTime()); // FIXME: placeholder lastMod
+            fs.getRootDir().addFile(newPlainFile);
+            fs.createFileParents(fp.PATH);
+        }
+    }
+
+    private void xmlImportPlainFiles(List<Element> plains, FileSystem fs) {
+        xmlImportContentFiles(plains, fs, false);
+    }
+
     private void xmlImportLinks(List<Element> links, FileSystem fs) {
     	 FileParams fp = new FileParams();
     	 String pointer = null;
@@ -285,21 +296,13 @@ public class FileSystem extends FileSystem_Base {
      		} else {
      			pointer = "";
      		}
-     		File newLink = new Link()
-     		//.setPath(path);
-         	
-             Directory newDir = new Directory(fs.getRootDir(), fp.NAME, (byte)0b1111111, Long.valueOf(fp.ID));
-             newDir.setLastMod(new DateTime()); // FIXME: placeholder lastMod
-             fs.getRootDir().addFile(newDir);
+     		File newLink = new Link(Directory.fromPath(fp.PATH, fs), fp.NAME,
+                                    (byte)0b00000001, Long.valueOf(fp.ID), pointer);
+             newLink.setLastMod(new DateTime()); // FIXME: placeholder lastMod
+             fs.getRootDir().addFile(newLink);
              fs.createFileParents(fp.PATH);
-             
 
          }
-        
-    	for (Element plain : links) {
-    		
-
-    	}
     }
     
     private void xmlImportDirectories(List<Element> dirs, FileSystem fs) {
