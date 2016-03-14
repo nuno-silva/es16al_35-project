@@ -16,7 +16,13 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
 
     public Directory(Directory parent, String name, byte perm, long id) {
+        super();
         init(parent, name, perm, id);
+    }
+
+    public Directory(byte perm, long id) {
+        super();
+        init(this, "", perm, id);
     }
 
     @Override
