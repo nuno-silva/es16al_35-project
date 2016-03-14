@@ -127,7 +127,7 @@ public class FileSystem extends FileSystem_Base {
         path = path.substring(1); // remove '/'
     	for(String dir : path.split("/"))
             currentDir = currentDir.getFileByName(dir);
-
+    		
         return currentDir;
     }
 

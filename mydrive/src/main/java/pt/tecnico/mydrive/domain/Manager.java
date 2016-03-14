@@ -3,6 +3,7 @@ package pt.tecnico.mydrive.domain;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import jvstm.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
@@ -26,7 +27,6 @@ public class Manager extends Manager_Base {
         if (man == null) {
             log.trace("created new Manager");
             man = new Manager();
-            setup();
         }
         return man;
     }
@@ -40,7 +40,8 @@ public class Manager extends Manager_Base {
 
     }
 
-    public static void setup() {
+    @Atomic
+    public void doTests() {
     	// Create "/home/README":
     	PlainFile readme = currentFileSystem.createPlainFile((Directory) currentFileSystem.getFile("/home"), "README", (byte) 00000000);
     	// Create "/usr/local":
@@ -58,7 +59,7 @@ public class Manager extends Manager_Base {
     	printContent("Content of directory /home: ", currentFileSystem.fileContent("/home"));
     }
 
-    public static void printContent(String description, List<String> stringArray) {
+    public void printContent(String description, List<String> stringArray) {
     	System.out.println(description);
     	for (String line : stringArray)
     		System.out.println(line);

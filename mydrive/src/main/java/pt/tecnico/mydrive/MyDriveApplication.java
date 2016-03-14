@@ -23,6 +23,7 @@ public class MyDriveApplication {
         System.out.println("Hello World!");
         try {
             SetupDomain.populateDomain();
+            Manager.getInstance().doTests();
         } catch (InvalidUsernameException e) {
             e.printStackTrace();
         } finally {
