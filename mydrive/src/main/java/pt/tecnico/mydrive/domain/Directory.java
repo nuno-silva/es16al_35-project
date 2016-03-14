@@ -9,11 +9,11 @@ import pt.tecnico.mydrive.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.DirectoryNotEmptyException;
-import pt.tecnico.mydrive.xml.XMLVisitor;
+import pt.tecnico.mydrive.exception.IsNotCdAbleException;
+
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
 
 public class Directory extends Directory_Base implements IXMLVisitable {
     static final Logger log = LogManager.getRootLogger();
@@ -33,6 +33,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         init(this, "", perm, id);
     }
 
+	public void assertCdAble() throws IsNotCdAbleException {}
 
     @Override
     public String getFullPath() {

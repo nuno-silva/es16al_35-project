@@ -1,6 +1,7 @@
 package pt.tecnico.mydrive.domain;
 import java.util.Arrays;
 import java.util.List;
+import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 
 import org.jdom2.Element;
 import pt.tecnico.mydrive.xml.IXMLVisitable;
@@ -17,6 +18,10 @@ public class Link extends Link_Base implements IXMLVisitable {
         init(dir, name, perm, id);
         setPath(path);
     }
+    
+    public void assertCdAble() throws IsNotCdAbleException{
+		throw new IsNotCdAbleException();
+	}
     
     @Override
     public File getFileByName( String name ) {
