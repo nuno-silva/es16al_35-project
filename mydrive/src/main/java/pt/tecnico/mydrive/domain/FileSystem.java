@@ -199,9 +199,10 @@ public class FileSystem extends FileSystem_Base {
             if (elem != null) {
                 home = elem.getText();
             } else {
-                // TODO: create path
                 home = "/usr/home/" + username;
             }
+            // TODO: make sure this works
+            fs.createFileParents(home);
             
             elem = u.getChild("mask");
             if (elem != null) {
