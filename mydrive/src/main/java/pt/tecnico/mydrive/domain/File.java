@@ -19,14 +19,20 @@ public abstract class File extends File_Base implements IXMLVisitable {
         init(dir, name, perm, id);
     }
 
-    protected void init(Directory dir, String name, byte perm, long id){
-        setDirectory(dir);
+    protected void init(Directory parent, String name, byte perm, long id){
+        setDirectory(parent);
         setName(name);
         setId(id);
         setPerm(perm);
         //still need to add DateTime lastMod
     }
-    
+
+    @Override
+    public void setDirectory( Directory parent ) {
+        super.setDirectory( parent ); // not sure about this
+        parent.addFile(this);
+    }
+
     public boolean isCdAble() { return false; };
 
     public void remove() {
