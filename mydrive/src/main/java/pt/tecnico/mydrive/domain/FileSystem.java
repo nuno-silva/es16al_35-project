@@ -160,4 +160,12 @@ public class FileSystem extends FileSystem_Base {
         }
         return doc;
     }
+
+    public void xmlImport(Document doc) {
+        List<Element> users = doc.getRootElement().getChildren(User.XML_TAG);
+        List<Element> dirs = doc.getRootElement().getChildren(Directory.XML_TAG);
+        List<Element> plains = doc.getRootElement().getChildren(PlainFile.XML_TAG);
+        List<Element> apps = doc.getRootElement().getChildren(App.XML_TAG);
+        List<Element> links = doc.getRootElement().getChildren(Link.XML_TAG);
+    }
 }

@@ -8,6 +8,7 @@ import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 
 public abstract class File extends File_Base implements IXMLVisitable {
+    public static final String XML_TAG = "file";
 
     public File() {
         super();

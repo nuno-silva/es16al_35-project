@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class Directory extends Directory_Base implements IXMLVisitable {
     static final Logger log = LogManager.getRootLogger();
+    public static final String XML_TAG = "dir";
 
     public Directory() {
         super();

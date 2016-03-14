@@ -9,6 +9,8 @@ import java.util.Arrays;
 
 public class PlainFile extends PlainFile_Base implements IXMLVisitable {
     public static final String LINE_SEPARATOR = "\n";
+    public static final String XML_TAG = "plain";
+
 
     public PlainFile() {
         super();

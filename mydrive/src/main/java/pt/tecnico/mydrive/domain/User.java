@@ -9,6 +9,8 @@ import pt.tecnico.mydrive.xml.IXMLVisitor;
 
 
 public class User extends User_Base implements IXMLVisitable {
+    public static final String XML_TAG = "user";
+
     public User() {
         super();
     }

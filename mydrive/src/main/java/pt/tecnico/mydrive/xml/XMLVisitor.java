@@ -27,7 +27,7 @@ public class XMLVisitor implements IXMLVisitor {
     @Override
     public Element visit(Directory directory) {
         Element dirElement = visit((File)directory);
-        dirElement.setName("dir");
+        dirElement.setName(Directory.XML_TAG);
         return dirElement;
     }
 
@@ -36,7 +36,7 @@ public class XMLVisitor implements IXMLVisitor {
         String content;
         content = plainFile.getContent();
         Element fileElem = visit((File)plainFile);
-        fileElem.setName("plain");
+        fileElem.setName(PlainFile.XML_TAG);
 
         if (content != null && content != "") {
             fileElem.addContent(new Element("content").setText(content));
@@ -50,7 +50,7 @@ public class XMLVisitor implements IXMLVisitor {
         String path;
         path = link.getPath();
         Element linkElem = visit((File)link);
-        linkElem.setName("link");
+        linkElem.setName(Link.XML_TAG);
         if(path != null && path != "") {
             linkElem.addContent(new Element("path").setText(path));
         }
@@ -65,7 +65,7 @@ public class XMLVisitor implements IXMLVisitor {
         home = user.getHomePath();
         mask = PathHelper.getStringUmask(user.getUmask());
 
-        Element userElement = new Element("user");
+        Element userElement = new Element(User.XML_TAG);
 
         userElement.setAttribute(new Attribute("username", user.getUsername()));
 
@@ -86,7 +86,7 @@ public class XMLVisitor implements IXMLVisitor {
 
     @Override
     public Element visit(App app) {
-        return visit((PlainFile)app).setName("app");
+        return visit((PlainFile)app).setName(App.XML_TAG);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class XMLVisitor implements IXMLVisitor {
         name = file.getName();
         mask = PathHelper.getStringUmask(file.getPerm());
         lastMod = file.getLastMod();
-        Element fileElement = new Element("file"); // temp placeholder
+        Element fileElement = new Element(File.XML_TAG); // temp placeholder
         fileElement.setAttribute(new Attribute("id", String.valueOf(file.getId())));
 
         if (name != null && name != "") {

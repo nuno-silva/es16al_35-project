@@ -4,6 +4,7 @@ import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 
 public class App extends App_Base implements IXMLVisitable {
+    public static final String XML_TAG = "app";
 
     public App() {
         super();

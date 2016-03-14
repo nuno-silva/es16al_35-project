@@ -9,6 +9,8 @@ import pt.tecnico.mydrive.xml.IXMLVisitor;
 
 public class Link extends Link_Base implements IXMLVisitable {
 	public static final String LINE_SEPARATOR = "\n";
+    public static final String XML_TAG = "link";
+
 
     public Link() {
         super();
