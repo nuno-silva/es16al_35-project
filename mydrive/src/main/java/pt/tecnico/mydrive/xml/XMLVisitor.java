@@ -47,12 +47,12 @@ public class XMLVisitor implements IXMLVisitor {
 
     @Override
     public Element visit(Link link) {
-        String path;
-        path = link.getPath();
+        String pointer;
+        pointer = link.getPointer();
         Element linkElem = visit((File)link);
         linkElem.setName(Link.XML_TAG);
-        if(path != null && path != "") {
-            linkElem.addContent(new Element("path").setText(path));
+        if(pointer != null && pointer != "") {
+            linkElem.addContent(new Element("pointer").setText(pointer));
         }
         return linkElem;
     }

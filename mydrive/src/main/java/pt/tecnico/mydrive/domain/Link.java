@@ -16,9 +16,9 @@ public class Link extends Link_Base implements IXMLVisitable {
         super();
     }
 
-    public Link(Directory dir, String name, byte perm, long id, String path) {
+    public Link(Directory dir, String name, byte perm, long id, String pointer) {
         init(dir, name, perm, id);
-        setPath(path);
+        setPointer(pointer);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class Link extends Link_Base implements IXMLVisitable {
     /** @returns the content of the PlainFile as a List of lines */
     @Override
     public List<String> showContent() {
-        String content = getPath();
+        String content = getPointer();
         List<String> lines = Arrays.asList( content.split( LINE_SEPARATOR ) );
         return lines;
     }

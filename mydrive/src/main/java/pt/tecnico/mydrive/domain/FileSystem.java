@@ -21,6 +21,25 @@ import java.util.*;
 import java.util.jar.Attributes;
 
 public class FileSystem extends FileSystem_Base {
+	
+	/**
+	 * Contains parameters required by all File children.
+	 *
+	 */
+	private class FileParams {
+		// Android-ish
+		public String ID, NAME, MASK, LASTMOD, PATH;
+		public FileParams() { }
+		public FileParams parse (String id, String name, String mask, String lastMod, String path) {
+			ID = id;
+			NAME = name;
+			MASK = mask;
+			LASTMOD = lastMod;
+			PATH = path;
+			
+			return this;
+		}
+	};
 
 	private static long numFiles = 0;
 
@@ -190,52 +209,53 @@ public class FileSystem extends FileSystem_Base {
 
     private FileSystem xmlCreateFileSystem() {
         Manager man = FenixFramework.getDomainRoot().getManager();
-        // FIXME: temporary placeholder for FileSystem's name
+        // FIXME: tempoist178134rary placeholder for FileSystem's name
         FileSystem fs = new FileSystem("ext4");
         man.addFileSystems(fs);
         return fs;
     }
     
-    private Queue<File> xmlImportFiles(List<Element> files, FileSystem fs) {
-    	Queue<File> newFiles = new LinkedList<>();
+    private FileParams parseFileParams(Element file, FileSystem fs, FileParams fp) {
     	Element e = null;
         String id, name, mask, lastMod, path;
-        for (Element file : files) {
-            id = file.getAttribute("id").getValue();
-            name = file.getChild("name").getText(); // must-have
-            e = file.getChild("path");
-            if (e != null) {
-                path = e.getText();
-            } else {
-                path = "/usr/nopath"; // FIXME: find a more suitable default path
-            }
-            fs.createFileParents(path);
+        id = file.getAttribute("id").getValue();
+        name = file.getChild("name").getText(); // must-have
+        e = file.getChild("path");
+        if (e != null) {
+            path = e.getText();
+        } else {
+            path = "/usr/nopath"; // FIXME: find a more suitable default path
+        }
+        fs.createFileParents(path);
 
-            e = file.getChild("mask");
-            if (e != null) {
-                mask = e.getText();
-            } else {
-                mask = "11111111"; // FIXME: find a more suitable default mask
-            }
+        e = file.getChild("mask");
+        if (e != null) {
+            mask = e.getText();
+        } else {
+            mask = "11111111"; // FIXME: find a more suitable default mask
+        }
 
-            e = file.getChild("lastMod");
-            if (e != null) {
-                lastMod = e.getText();
-            } else {
-                lastMod = new DateTime().toString(); // FIXME: find a more suitable default lastMod
-            }
-            Directory newFile = new Directory(fs.getRootDir(), name, (byte)0b1111111, Long.valueOf(id));
+        e = file.getChild("lastMod");
+        if (e != null) {
+            lastMod = e.getText();
+        } else {
+            lastMod = new DateTime().toString(); // FIXME: find a more suitable default lastMod
+        }
+        return fp.parse(id, name, mask, lastMod, path);
+            
+            /**File newFile = new Directory(fs.getRootDir(), name, (byte)0b1111111, Long.valueOf(id));
             newFile.setLastMod(new DateTime()); // FIXME: placeholder lastMod
 
             // FIXME: better default mask
             fs.getRootDir().addFile(newFile);
             newFiles.add(newFile);
-        }
-        return newFiles;
+            */
+        //}
+        //return newFiles;
     }
     
     private void xmlImportPlainFiles(List<Element> plains, FileSystem fs) {
-    	Queue<File> newFiles = xmlImportFiles(plains, fs);
+    	//Queue<File> newFiles = parseFileParams(plains, fs);
     	String content = null;
     	Element elem = null;
     	for (Element plain : plains) {
@@ -245,29 +265,53 @@ public class FileSystem extends FileSystem_Base {
     		} else {
     			content = "";
     		}
-    		((PlainFile)newFiles.poll()).setContent(content);
+    		//((PlainFile)newFiles.poll()).setContent(content);
     	}
     }
     
+    private void xmlImportApps(List<Element> apps, FileSystem fs) {
+    	xmlImportPlainFiles(apps, fs);
+    }
+    
     private void xmlImportLinks(List<Element> links, FileSystem fs) {
-    	Queue<File> newFiles = xmlImportFiles(links, fs);
-    	xmlImportFiles(links, fs);
-    	String path = null;
-    	Element elem = null;
+    	 FileParams fp = new FileParams();
+    	 String pointer = null;
+     	 Element elem = null;
+         for(Element link : links) {
+         	fp = parseFileParams(link, fs, fp);
+            elem = link.getChild("pointer");
+     		if (elem != null) {
+     			pointer = elem.getText();
+     		} else {
+     			pointer = "";
+     		}
+     		File newLink = new Link()
+     		//.setPath(path);
+         	
+             Directory newDir = new Directory(fs.getRootDir(), fp.NAME, (byte)0b1111111, Long.valueOf(fp.ID));
+             newDir.setLastMod(new DateTime()); // FIXME: placeholder lastMod
+             fs.getRootDir().addFile(newDir);
+             fs.createFileParents(fp.PATH);
+             
+
+         }
+        
     	for (Element plain : links) {
-    		elem = plain.getChild("content");
-    		if (elem != null) {
-    			path = elem.getText();
-    		} else {
-    			path = "";
-    		}
-    		((Link)newFiles.poll()).setPath(path);
+    		
 
     	}
     }
     
     private void xmlImportDirectories(List<Element> dirs, FileSystem fs) {
-        xmlImportFiles(dirs, fs);
+        FileParams fp = new FileParams();
+        for(Element dir : dirs) {
+        	fp = parseFileParams(dir, fs, fp);
+            Directory newDir = new Directory(fs.getRootDir(), fp.NAME, (byte)0b1111111, Long.valueOf(fp.ID));
+            newDir.setLastMod(new DateTime()); // FIXME: placeholder lastMod
+            fs.getRootDir().addFile(newDir);
+            fs.createFileParents(fp.PATH);
+        }
+
     }
     
 

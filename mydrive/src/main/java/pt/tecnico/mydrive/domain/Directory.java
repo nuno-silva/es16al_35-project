@@ -27,6 +27,12 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         super();
         init(parent, name, perm, id);
     }
+    
+    public static Directory fromPath(String path, FileSystem fs) {
+    	Directory newDir = fs.createFileParents(path);
+    	// FIXME: owner placeholder
+        return fs.createDirectory(newDir, "root" , (byte) 000000);
+    }
 
     @Override
     public boolean isCdAble() {

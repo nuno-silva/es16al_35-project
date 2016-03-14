@@ -26,7 +26,7 @@ class PlainFile extends File {
 }
 
 class Link extends File {
-	String path;  // also discussable
+	String pointer;  // what the link points to
 }
 
 class Directory extends File;
