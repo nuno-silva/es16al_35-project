@@ -2,9 +2,8 @@ package pt.tecnico.mydrive.xml;
 
 import org.jdom2.Attribute;
 import org.jdom2.Element;
+import org.joda.time.DateTime;
 import pt.tecnico.mydrive.domain.*;
-
-import java.nio.file.Path;
 
 /**
  * A concrete XMLVisitor implementation.
@@ -12,7 +11,9 @@ import java.nio.file.Path;
 public class XMLVisitor implements IXMLVisitor {
     @Override
     public Element visit(Directory directory) {
-        return null;
+        Element dirElement = visit((File)directory);
+        dirElement.setName("dir");
+        return dirElement;
     }
 
     @Override
@@ -64,6 +65,31 @@ public class XMLVisitor implements IXMLVisitor {
 
     @Override
     public Element visit(File file) {
-        return null;
+        /*
+            Visitor for the abstract File class. Children must first call this visitor,
+            then Element.setName() to rename the Element as needed.
+        */
+        String name, mask;
+        DateTime lastMod;
+        name = file.getName();
+        mask = PathHelper.getStringUmask(file.getPerm());
+        lastMod = file.getLastMod();
+        Element fileElement = new Element("file"); // temp placeholder
+        fileElement.setAttribute(new Attribute("id", String.valueOf(file.getId())));
+
+        if (name != null && name != "") {
+            fileElement.addContent(new Element("name").setText(name));
+        }
+
+        if (mask != null && mask != "") {
+            fileElement.addContent(new Element("mask").setText(mask));
+        }
+
+        if (lastMod != null) {
+            fileElement.addContent(new Element("lastMod").setText(lastMod.toString()));
+        }
+
+        return fileElement;
+
     }
 }

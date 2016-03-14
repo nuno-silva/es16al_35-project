@@ -2,9 +2,12 @@ package pt.tecnico.mydrive.domain;
 
 import java.util.List;
 
+import org.jdom2.Element;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
+import pt.tecnico.mydrive.xml.IXMLVisitable;
+import pt.tecnico.mydrive.xml.IXMLVisitor;
 
-public abstract class File extends File_Base {
+public abstract class File extends File_Base implements IXMLVisitable {
 
     public File() {
         super();
@@ -38,6 +41,11 @@ public abstract class File extends File_Base {
             throw new InvalidFileNameException(name);
         }
         super.setName(name);
+    }
+
+    @Override
+    public Element accept(IXMLVisitor visitor) {
+        return visitor.visit(this);
     }
 
 }
