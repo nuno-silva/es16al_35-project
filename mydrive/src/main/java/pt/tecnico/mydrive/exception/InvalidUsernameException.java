@@ -6,7 +6,7 @@ public class InvalidUsernameException extends Exception {
 	private String _username;
 	
 	public InvalidUsernameException(String username) {
-        super("The provided username is invalid"); // TODO: something more specific would be nice
+        super("The provided username is invalid: " + username); // TODO: something more specific would be nice
 		_username = username;
 	}
 	
