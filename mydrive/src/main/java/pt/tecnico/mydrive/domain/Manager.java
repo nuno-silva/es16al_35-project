@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Manager extends Manager_Base {
     static final Logger log = LogManager.getRootLogger();
-    private FileSystem currentFileSystem;
+    private static FileSystem currentFileSystem;
 
     // TODO: not Reflection safe
     public static Manager getInstance() {
@@ -24,6 +24,7 @@ public class Manager extends Manager_Base {
         if (man == null) {
             log.trace("created new Manager");
             man = new Manager();
+            setup();
         }
         return man;
     }
@@ -35,6 +36,12 @@ public class Manager extends Manager_Base {
         addFileSystems(newFs); //dont know how to set fileSystem...
         currentFileSystem = newFs;
 
+    }
+    
+    public static void setup() {
+    	currentFileSystem.createPlainFile((Directory) currentFileSystem.getFile("/home"), "README", (byte) 00000000);
+    	currentFileSystem.createDirectory((Directory) currentFileSystem.getFile("/usr"), "bin", (byte) 00000000);
+    	currentFileSystem.fileContent("/home/README");
     }
 
     public List<String> showPathContent(String path) throws UnknownPathException {

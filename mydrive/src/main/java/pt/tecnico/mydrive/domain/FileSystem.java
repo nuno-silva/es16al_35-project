@@ -25,15 +25,17 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
         byte permission = (byte) 0b111101101;
 
         // Create root directory: "/"
-        Directory rootDir = addDirectory(null, "", permission);
+        Directory rootDir = createDirectory(null, "", permission);
         setRootDir(rootDir);  // FIXME
 
+        // Create home directory: "/usr"
+        createDirectory(rootDir, "usr", permission);
         // Create home directory: "/home"
-        Directory homeDir = addDirectory(rootDir, "home", permission);
+        Directory homeDir = createDirectory(rootDir, "home", permission);
 
         // Create Super User and respective directory: "/home/root"
         addUser(createSuperUser());
-        addDirectory(homeDir, "root", permission);
+        createDirectory(homeDir, "root", permission);
     }
 
     public User createSuperUser() {
@@ -46,12 +48,18 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
 		return root;
     }
 
-    public Directory addDirectory(Directory parent, String name, byte permission) {
+    public Directory createDirectory(Directory parent, String name, byte permission) {
     	numFiles+=1;
     	Directory newDir = new Directory(parent, name, permission, numFiles);
     	return newDir;
     }
 
+    public PlainFile createPlainFile(Directory parent, String name, byte permission) {
+    	numFiles+=1;
+    	PlainFile newPlainFile = new PlainFile(parent, name, permission, numFiles);
+    	return newPlainFile;
+    }
+    
     public void createUser(String username, String password, String name) throws InvalidUsernameException {
     	addUser(new User(this, username, password, name, (byte) 00000000));
     }
