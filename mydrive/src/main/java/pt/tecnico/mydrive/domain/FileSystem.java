@@ -4,6 +4,7 @@ import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
+import org.joda.time.DateTime;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
@@ -15,6 +16,7 @@ import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 import pt.tecnico.mydrive.xml.XMLVisitor;
 
+import java.security.interfaces.ECKey;
 import java.util.*;
 import java.util.jar.Attributes;
 
@@ -195,7 +197,42 @@ public class FileSystem extends FileSystem_Base {
     }
 
     @Atomic
+    private void xmlImportDirectories(List<Element> dirs, FileSystem fs) {
+        Element e = null;
+        String id, name, mask, lastMod, path;
+        for (Element dir : dirs) {
+            id = dir.getAttribute("id").getValue();
+            name = dir.getChild("name").getText(); // must-have
+            e = dir.getChild("path");
+            if (e != null) {
+                path = e.getText();
+            } else {
+                path = "/usr/nopath"; // FIXME: find a more suitable default path
+            }
+            fs.createFileParents(path);
+
+            e = dir.getChild("mask");
+            if (e != null) {
+                mask = e.getText();
+            } else {
+                mask = "11111111"; // FIXME: find a more suitable default mask
+            }
+
+            e = dir.getChild("lastMod");
+            if (e != null) {
+                lastMod = e.getText();
+            } else {
+                lastMod = new DateTime().toString(); // FIXME: find a more suitable default lastMod
+            }
+
+            // FIXME: better default mask
+            fs.getRootDir().addFile(new Directory(fs.getRootDir(), name, (byte)0b1111111, Long.valueOf(id)));
+        }
+    }
+
+    @Atomic
     private void xmlImportUsers(List<Element> users, FileSystem fs) {
+        // FIXME: this code is bad
         Manager man = FenixFramework.getDomainRoot().getManager();
         String username, password, name, home, mask;
         Element elem;
