@@ -1,6 +1,10 @@
 package pt.tecnico.mydrive.domain;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import pt.ist.fenixframework.FenixFramework;
+
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
 
@@ -11,23 +15,26 @@ import java.util.ArrayList;
 */
 
 public class Manager extends Manager_Base {
+    static final Logger log = LogManager.getRootLogger();
 	private FileSystem currentFileSystem;
 
     // TODO: not Reflection safe
     public static Manager getInstance() {
         Manager man = FenixFramework.getDomainRoot().getManager();
         if (man == null) {
+            log.trace("created new Manager");
             man = new Manager();
         }
         return man;
     }
 
     private Manager() {
-        super();
-        FenixFramework.getDomainRoot().setManager(this);
+        setRoot(FenixFramework.getDomainRoot());
+
         FileSystem newFs = new FileSystem("");
         addFileSystems(newFs); //dont know how to set fileSystem...
         currentFileSystem = newFs;
+
     }
 
     public ArrayList<File> showPathContent(String path) throws UnknownPathException {

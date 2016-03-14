@@ -9,6 +9,7 @@ public abstract class File extends File_Base {
     }
 
     public File(Directory dir, String name, byte perm, long id) {
+        super();
         init(dir, name, perm, id);
     }
 
