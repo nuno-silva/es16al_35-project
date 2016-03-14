@@ -65,7 +65,7 @@ public class XMLVisitor implements IXMLVisitor {
 
     @Override
     public Element visit(App app) {
-        return null;
+        return visit((PlainFile)app);
     }
 
     @Override
