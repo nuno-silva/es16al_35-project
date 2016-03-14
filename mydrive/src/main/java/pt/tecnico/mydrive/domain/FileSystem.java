@@ -193,14 +193,14 @@ public class FileSystem extends FileSystem_Base {
         man.addFileSystems(fs);
         return fs;
     }
-
-    private void xmlImportDirectories(List<Element> dirs, FileSystem fs) {
-        Element e = null;
+    
+    private void xmlImportFiles(List<Element> files, FileSystem fs) {
+    	Element e = null;
         String id, name, mask, lastMod, path;
-        for (Element dir : dirs) {
-            id = dir.getAttribute("id").getValue();
-            name = dir.getChild("name").getText(); // must-have
-            e = dir.getChild("path");
+        for (Element file : files) {
+            id = file.getAttribute("id").getValue();
+            name = file.getChild("name").getText(); // must-have
+            e = file.getChild("path");
             if (e != null) {
                 path = e.getText();
             } else {
@@ -208,29 +208,32 @@ public class FileSystem extends FileSystem_Base {
             }
             fs.createFileParents(path);
 
-            e = dir.getChild("mask");
+            e = file.getChild("mask");
             if (e != null) {
                 mask = e.getText();
             } else {
                 mask = "11111111"; // FIXME: find a more suitable default mask
             }
 
-            e = dir.getChild("lastMod");
+            e = file.getChild("lastMod");
             if (e != null) {
                 lastMod = e.getText();
             } else {
                 lastMod = new DateTime().toString(); // FIXME: find a more suitable default lastMod
             }
-            Directory newDir = new Directory(fs.getRootDir(), name, (byte)0b1111111, Long.valueOf(id));
-            newDir.setLastMod(new DateTime()); // FIXME: placeholder lastMod
+            Directory newFile = new Directory(fs.getRootDir(), name, (byte)0b1111111, Long.valueOf(id));
+            newFile.setLastMod(new DateTime()); // FIXME: placeholder lastMod
 
             // FIXME: better default mask
-            fs.getRootDir().addFile(newDir);
-            
+            fs.getRootDir().addFile(newFile);
         }
     }
 
-    @Atomic
+    private void xmlImportDirectories(List<Element> dirs, FileSystem fs) {
+        xmlImportFiles(dirs, fs);
+    }
+    
+
     private void xmlImportUsers(List<Element> users, FileSystem fs) {
         // FIXME: this code is bad
         Manager man = FenixFramework.getDomainRoot().getManager();
