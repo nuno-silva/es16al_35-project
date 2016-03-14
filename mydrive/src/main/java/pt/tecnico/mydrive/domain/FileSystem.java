@@ -4,11 +4,11 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
-import pt.tecnico.mydrive.xml.IXMLVisitable;
-import pt.tecnico.mydrive.xml.IXMLVisitor;
 import pt.tecnico.mydrive.xml.XMLVisitor;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 public class FileSystem extends FileSystem_Base {
@@ -112,6 +112,20 @@ public class FileSystem extends FileSystem_Base {
             doc.getRootElement().addContent(e);
         }
         // TODO: go through directories and add them and their contents
+        Directory rootDir = getRootDir();
+        File f = null;
+        Queue<File> queue = new LinkedList<>();
+        e = rootDir.accept(XMLVisitor.getInstance());
+        doc.getRootElement().addContent(e);
+        queue.addAll(rootDir.getFileSet());
+        while (!queue.isEmpty()) {
+            f = queue.poll(); // TODO: should never return null, but maybe do a sanity check
+            e = f.accept(XMLVisitor.getInstance());
+            doc.getRootElement().addContent(e);
+            if (f.isCdAble()) {
+                queue.add(f);
+            }
+        }
         return doc;
     }
 }

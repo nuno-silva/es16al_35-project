@@ -1,5 +1,6 @@
 package pt.tecnico.mydrive.xml;
 
+import org.jdom2.Document;
 import org.jdom2.Element;
 
 public interface IXMLVisitable {
