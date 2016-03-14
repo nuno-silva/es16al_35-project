@@ -97,7 +97,7 @@ public class FileSystem extends FileSystem_Base {
     	return newPlainFile;
     }
 
-    /** creates a new User and its home directoty in the FileSystem */
+    /** creates a new User and its home directory in the FileSystem */
     public void createUser(String username, String password, String name) throws InvalidUsernameException {
         User user = new User(this, username, password, name, (byte) 00000000);
         String userHome = "/home/" + username;

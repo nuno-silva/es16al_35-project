@@ -48,16 +48,21 @@ public class Manager extends Manager_Base {
     	currentFileSystem.createDirectory(local, "bin", (byte) 00000000);
     	// Print content of "/home/README":
     	insertUsersInFile(readme);
-    	currentFileSystem.fileContent("/home/README");
+    	printContent("Content of plainfile README: ", currentFileSystem.fileContent("/home/README"));
     	// Remove "/usr/local/bin":
     	currentFileSystem.removeFile("/usr/local/bin");
     	//TODO: FAZER A EXPORTACAO DO XML
     	// Remove "/home/README":
     	currentFileSystem.removeFile("/home/README");
     	// Print content of "/home":
-    	currentFileSystem.fileContent("/home");
+    	printContent("Content of directory /home: ", currentFileSystem.fileContent("/home"));
     }
 
+    public static void printContent(String description, List<String> stringArray) {
+    	System.out.println(description);
+    	for (String line : stringArray)
+    		System.out.println(line);
+    }
     public static void insertUsersInFile(PlainFile file) {
     	List<String> users = new ArrayList<String>();
     	for (User user : currentFileSystem.getUserSet()) {
