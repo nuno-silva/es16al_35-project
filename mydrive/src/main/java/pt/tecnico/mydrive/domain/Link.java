@@ -18,9 +18,10 @@ public class Link extends Link_Base implements IXMLVisitable {
         init(dir, name, perm, id);
         setPath(path);
     }
-    
-    public void assertCdAble() throws IsNotCdAbleException{
-		throw new IsNotCdAbleException();
+
+    @Override
+    public boolean isCdAble() {
+            return false;
 	}
     
     @Override

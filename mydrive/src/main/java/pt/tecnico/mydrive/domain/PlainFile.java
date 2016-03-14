@@ -22,9 +22,10 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
     public PlainFile( Directory dir, String name, byte perm, long id ) {
         init( dir, name, perm, id, "" );
     }
-    
-    public void assertCdAble() throws IsNotCdAbleException{
-		throw new IsNotCdAbleException();
+
+    @Override
+    public boolean isCdAble(){
+		return false;
 	}
 
     protected void init(Directory dir, String name, byte perm, long id, String content){

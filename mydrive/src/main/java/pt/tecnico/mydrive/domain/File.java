@@ -5,7 +5,6 @@ import java.util.List;
 import org.jdom2.Element;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import pt.tecnico.mydrive.xml.IXMLVisitable;
-import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 
 public abstract class File extends File_Base implements IXMLVisitable {
@@ -27,7 +26,7 @@ public abstract class File extends File_Base implements IXMLVisitable {
         //still need to add DateTime lastMod
     }
     
-    public abstract void assertCdAble() throws IsNotCdAbleException;
+    public boolean isCdAble() { return false; };
 
     public void remove() {
         setDirectory(null);

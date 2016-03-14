@@ -27,13 +27,16 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         init(parent, name, perm, id);
     }
 
+    @Override
+    public boolean isCdAble() {
+        return false;
+    }
+
     /** constructor for root directory */
     public Directory(byte perm, long id) {
         super();
         init(this, "", perm, id);
     }
-
-	public void assertCdAble() throws IsNotCdAbleException {}
 
     @Override
     public String getFullPath() {
