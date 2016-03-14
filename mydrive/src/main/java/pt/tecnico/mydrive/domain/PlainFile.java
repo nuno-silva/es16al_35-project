@@ -2,6 +2,7 @@ package pt.tecnico.mydrive.domain;
 import org.jdom2.Element;
 import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
+import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 
 import java.util.List;
 import java.util.Arrays;
@@ -21,6 +22,10 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
     public PlainFile( Directory dir, String name, byte perm, long id ) {
         init( dir, name, perm, id, "" );
     }
+    
+    public void assertCdAble() throws IsNotCdAbleException{
+		throw new IsNotCdAbleException();
+	}
 
     protected void init(Directory dir, String name, byte perm, long id, String content){
         super.init(dir, name, perm, id);

@@ -9,6 +9,7 @@ import pt.tecnico.mydrive.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.DirectoryNotEmptyException;
+import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         init(this, "", perm, id);
     }
 
+	public void assertCdAble() throws IsNotCdAbleException {}
 
     @Override
     public String getFullPath() {
