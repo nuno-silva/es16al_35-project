@@ -27,9 +27,11 @@ public class XMLVisitor implements IXMLVisitor {
     public Element visit(User user) {
         Element userElement = new Element("user");
         userElement.setAttribute(new Attribute("username", user.getUsername()));
-
-
-        return null;
+        userElement.addContent(new Element("password").setText(user.getPassword()));
+        userElement.addContent(new Element("name").setText(user.getName()));
+        userElement.addContent(new Element("home").setText(user.getHomePath()));
+        userElement.addContent(new Element("mask").setText("111111111")); // TODO: placeholder
+        return userElement;
     }
 
     @Override

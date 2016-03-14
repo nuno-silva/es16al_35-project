@@ -44,6 +44,16 @@ public class User extends User_Base implements IXMLVisitable {
         return true;
     }
 
+    /**
+     * Returns a Sting representation of the byte umask.
+     *
+     * @return String representation of the byte umask
+     */
+    public String getStringUmask() {
+        byte umask = getUmask();
+        return Integer.toBinaryString(umask & 0xFF);
+    }
+
     @Override
     public Element accept(IXMLVisitor visitor) {
         return visitor.visit(this);

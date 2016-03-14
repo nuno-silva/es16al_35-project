@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Manager extends Manager_Base {
     static final Logger log = LogManager.getRootLogger();
-	private FileSystem currentFileSystem;
+    private FileSystem currentFileSystem;
 
     // TODO: not Reflection safe
     public static Manager getInstance() {
@@ -38,19 +38,19 @@ public class Manager extends Manager_Base {
     }
 
     public List<String> showPathContent(String path) throws UnknownPathException {
-    	return currentFileSystem.pathContent(path); 
+        return currentFileSystem.pathContent(path);
     }
 
     public List<String> showFileContent(String path) throws UnknownPathException {
-    	return currentFileSystem.fileContent(path); 
+        return currentFileSystem.fileContent(path);
     }
 
     public void removePathContent(String path) throws UnknownPathException {
-    	currentFileSystem.removeFile(path); 
+        currentFileSystem.removeFile(path);
     }
 
     public void createUser(String username, String password, String name) throws InvalidUsernameException {
-    	currentFileSystem.createUser(username, password, name);
+        currentFileSystem.createUser(username, password, name);
     }
 
 }
