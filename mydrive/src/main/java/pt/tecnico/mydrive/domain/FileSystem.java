@@ -3,6 +3,10 @@ package pt.tecnico.mydrive.domain;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.joda.time.DateTime;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
@@ -13,6 +17,8 @@ import pt.tecnico.mydrive.exception.FileNotFoundException;
 
 import pt.tecnico.mydrive.xml.XMLVisitor;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 public class FileSystem extends FileSystem_Base {
@@ -34,7 +40,7 @@ public class FileSystem extends FileSystem_Base {
 			
 			return this;
 		}
-	};
+	}
 
 	private static long numFiles = 0;
 
@@ -316,7 +322,6 @@ public class FileSystem extends FileSystem_Base {
         }
 
     }
-    
 
     private void xmlImportUsers(List<Element> users, FileSystem fs) {
         // FIXME: this code is bad
@@ -362,8 +367,27 @@ public class FileSystem extends FileSystem_Base {
             } catch (InvalidUsernameException e) {
                 e.printStackTrace();
             }
+
+
         }
 
+    }
+
+    public void xmlImportFromFile(String fileName) throws JDOMException, IOException {
+        xmlImport(getXMLDocumentFromFile(fileName));
+    }
+
+    public void xmlExportToFile(String fileName) throws IOException {
+        writeXMLDocumentToFile(xmlExport(), fileName);
+    }
+
+    private Document getXMLDocumentFromFile(String fileName) throws JDOMException, IOException {
+        return new SAXBuilder().build(new java.io.File(fileName));
+    }
+
+    private void writeXMLDocumentToFile(Document doc, String fileName) throws IOException {
+        XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+        out.output(doc, new FileOutputStream(fileName));
     }
 
 }
