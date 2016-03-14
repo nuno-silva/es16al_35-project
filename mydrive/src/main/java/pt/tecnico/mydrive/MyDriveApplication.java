@@ -9,6 +9,7 @@ import pt.tecnico.mydrive.domain.*;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.mydrive.exception.InvalidUsernameException;
 
 import java.util.Set;
 
@@ -20,6 +21,12 @@ import java.util.Set;
 public class MyDriveApplication {
     public static void main(String[] args) {
         System.out.println("Hello World!");
-        SetupDomain.populateDomain();
+        try {
+            SetupDomain.populateDomain();
+        } catch (InvalidUsernameException e) {
+            e.printStackTrace();
+        } finally {
+            FenixFramework.shutdown();
+        }
     }
 }
