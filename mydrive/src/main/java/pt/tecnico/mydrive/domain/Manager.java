@@ -53,4 +53,7 @@ public class Manager extends Manager_Base {
         currentFileSystem.createUser(username, password, name);
     }
 
+    public void writeReadMe() {
+    	currentFileSystem.createReadMe();
+    }
 }

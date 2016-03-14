@@ -67,6 +67,15 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
     public void removeFile (String path) throws UnknownPathException {
         getFile(path).remove();
     }
+    
+    public void createReadMe() {
+    	List<String> users = pathContent("/home");
+    	Directory home = (Directory) getFile("/home");
+    	numFiles+=1;
+    		
+    	PlainFile readMe = new PlainFile(home, "README", (byte) 00000000, numFiles);
+    	readMe.setLines(users);
+    }
 
     public File getFile(String path) throws UnknownPathException {
     	File currentDir = getRootDir();
