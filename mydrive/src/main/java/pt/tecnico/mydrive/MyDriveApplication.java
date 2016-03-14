@@ -22,12 +22,14 @@ import java.util.Set;
 
 public class MyDriveApplication {
     public static void main(String[] args) {
-        try {
-            init(args[0]);
-        } catch (JDOMException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (args.length > 0) {
+            try {
+                init(args[0]);
+            } catch (JDOMException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
