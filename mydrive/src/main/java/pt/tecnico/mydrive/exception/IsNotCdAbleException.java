@@ -5,6 +5,6 @@ public class IsNotCdAbleException extends MydriveException {
 
 	@Override
 	public String getMessage() {
-		return "File aren't cdAble";
+		return "File isn't cdAble";
 	}
 }
