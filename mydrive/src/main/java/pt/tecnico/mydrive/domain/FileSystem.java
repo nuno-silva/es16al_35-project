@@ -162,21 +162,35 @@ public class FileSystem extends FileSystem_Base {
         return doc;
     }
 
-    @Atomic
     public void xmlImport(Document doc) {
+        /*
+            PSA: I AM SORRY FOR THIS CODE, WE'RE KIND OF IN A RUSH
+        */
         List<Element> users = doc.getRootElement().getChildren(User.XML_TAG);
         List<Element> dirs = doc.getRootElement().getChildren(Directory.XML_TAG);
         List<Element> plains = doc.getRootElement().getChildren(PlainFile.XML_TAG);
         List<Element> apps = doc.getRootElement().getChildren(App.XML_TAG);
         List<Element> links = doc.getRootElement().getChildren(Link.XML_TAG);
 
-        Manager man = FenixFramework.getDomainRoot().getManager();
-        // FIXME: temporary placeholder for FileSystem's name
-        FileSystem fs = new FileSystem(String.valueOf(new Random().nextInt()));
-        man.addFileSystems(fs);
-
+        FileSystem fs = xmlCreateFileSystem();
         // TODO: modularize all this
         /* User instantiation */
+        xmlImportUsers(users, fs);
+
+    }
+
+    @Atomic
+    private FileSystem xmlCreateFileSystem() {
+        Manager man = FenixFramework.getDomainRoot().getManager();
+        // FIXME: temporary placeholder for FileSystem's name
+        FileSystem fs = new FileSystem("ext4");
+        man.addFileSystems(fs);
+        return fs;
+    }
+
+    @Atomic
+    private void xmlImportUsers(List<Element> users, FileSystem fs) {
+        Manager man = FenixFramework.getDomainRoot().getManager();
         String username, password, name, home, mask;
         Element elem;
         for (Element u : users) {
@@ -194,7 +208,7 @@ public class FileSystem extends FileSystem_Base {
             } else {
                 name = "Noname";
             }
-            
+
             elem = u.getChild("home");
             if (elem != null) {
                 home = elem.getText();
@@ -203,7 +217,7 @@ public class FileSystem extends FileSystem_Base {
             }
             // TODO: make sure this works
             fs.createFileParents(home);
-            
+
             elem = u.getChild("mask");
             if (elem != null) {
                 mask = elem.getText();
@@ -218,7 +232,6 @@ public class FileSystem extends FileSystem_Base {
             } catch (InvalidUsernameException e) {
                 e.printStackTrace();
             }
-
         }
 
     }
