@@ -1,8 +1,7 @@
 package pt.tecnico.mydrive.exception;
 
-public class InvalidUsernameException extends Exception {
+public class InvalidUsernameException extends MydriveException {
 
-	private static final long serialVersionUID = 1L;
 	private String _username;
 	
 	public InvalidUsernameException(String username) {
@@ -12,5 +11,10 @@ public class InvalidUsernameException extends Exception {
 	
 	public String getUsername() {
 		return _username;
+	}
+	
+	@Override
+	public String getMessage() {
+		return "The provided username is invalid: " + username;
 	}
 }
