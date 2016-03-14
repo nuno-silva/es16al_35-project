@@ -39,25 +39,25 @@ public class Manager extends Manager_Base {
         currentFileSystem = newFs;
 
     }
-    
+
     public static void setup() {
     	// Create "/home/README":
     	PlainFile readme = currentFileSystem.createPlainFile((Directory) currentFileSystem.getFile("/home"), "README", (byte) 00000000);
     	// Create "/usr/local":
-    	//Directory local = currentFileSystem.createFileParents("/usr/local/bin");
-    	//currentFileSystem.createDirectory(local, "bin", (byte) 00000000);
+    	Directory local = currentFileSystem.createFileParents("/usr/local/bin");
+    	currentFileSystem.createDirectory(local, "bin", (byte) 00000000);
     	// Print content of "/home/README":
     	insertUsersInFile(readme);
     	currentFileSystem.fileContent("/home/README");
     	// Remove "/usr/local/bin":
     	currentFileSystem.removeFile("/usr/local/bin");
-    	// FAZER A EXPORTACAO DO XML
+    	//TODO: FAZER A EXPORTACAO DO XML
     	// Remove "/home/README":
     	currentFileSystem.removeFile("/home/README");
     	// Print content of "/home":
     	currentFileSystem.fileContent("/home");
-    	}
-    
+    }
+
     public static void insertUsersInFile(PlainFile file) {
     	List<String> users = new ArrayList<String>();
     	for (User user : currentFileSystem.getUserSet()) {
@@ -65,7 +65,7 @@ public class Manager extends Manager_Base {
     	}
     	file.setLines(users);
     }
-  
+
     public List<String> showPathContent(String path) throws UnknownPathException {
         return currentFileSystem.pathContent(path);
     }
