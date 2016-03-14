@@ -4,6 +4,8 @@ import org.jdom2.Attribute;
 import org.jdom2.Element;
 import pt.tecnico.mydrive.domain.*;
 
+import java.nio.file.Path;
+
 /**
  * A concrete XMLVisitor implementation.
  */
@@ -29,9 +31,10 @@ public class XMLVisitor implements IXMLVisitor {
         password = user.getPassword();
         name = user.getName();
         home = user.getHomePath();
-        mask = user.getStringUmask();
+        mask = PathHelper.getStringUmask(user.getUmask());
 
         Element userElement = new Element("user");
+
         userElement.setAttribute(new Attribute("username", user.getUsername()));
 
         if (password != null && password != "") {
@@ -56,6 +59,11 @@ public class XMLVisitor implements IXMLVisitor {
 
     @Override
     public Element visit(FileSystem fileSystem) {
+        return null;
+    }
+
+    @Override
+    public Element visit(File file) {
         return null;
     }
 }

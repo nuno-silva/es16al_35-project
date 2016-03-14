@@ -10,4 +10,5 @@ public interface IXMLVisitor {
     Element visit(User user);
     Element visit(App app);
     Element visit(FileSystem fileSystem);
+    Element visit(File file);
 }
