@@ -33,7 +33,14 @@ public class XMLVisitor implements IXMLVisitor {
 
     @Override
     public Element visit(Link link) {
-        return null;
+        String path;
+        path = link.getPath();
+        Element linkElem = visit((File)link);
+        linkElem.setName("link");
+        if(path != null && path != "") {
+            linkElem.addContent(new Element("path").setText(path));
+        }
+        return linkElem;
     }
 
     @Override
@@ -65,7 +72,7 @@ public class XMLVisitor implements IXMLVisitor {
 
     @Override
     public Element visit(App app) {
-        return visit((PlainFile)app);
+        return visit((PlainFile)app).setName("app");
     }
 
     @Override
