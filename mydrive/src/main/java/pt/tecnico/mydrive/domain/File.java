@@ -27,9 +27,14 @@ public abstract class File extends File_Base {
         setDirectory(null);
         deleteDomainObject();
     }
-    
+
+    /** @returns the full path for this file (eg. "/home/root/file") */
+    public String getFullPath() {
+        return getDirectory().getFullPath() + "/" + getName();
+    }
+
     public abstract File getFileByName( String name );
-    
+
     public abstract List<String> showContent();
 
     @Override

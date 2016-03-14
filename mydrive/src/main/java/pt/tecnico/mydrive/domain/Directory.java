@@ -20,9 +20,20 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         init(parent, name, perm, id);
     }
 
+    /** constructor for root directory */
     public Directory(byte perm, long id) {
         super();
         init(this, "", perm, id);
+    }
+
+
+    @Override
+    public String getFullPath() {
+        if( getDirectory() == this ) { // we're the root dir
+            return "";
+        } else {
+            return super.getFullPath();
+        }
     }
 
     @Override
@@ -44,7 +55,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
             super.removeFile( file );
         }
     }
-    
+
     @Override
     public File getFileByName( String name ) throws FileNotFoundException {
         if( name.equals(".") ) {
