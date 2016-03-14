@@ -4,7 +4,6 @@ import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class PlainFile extends PlainFile_Base implements IXMLVisitable {
@@ -37,13 +36,6 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
         // TODO: method not needed for the first sprint
     }
 
-    /** @returns the content of the PlainFile as a List of lines */
-    public List<String> getLines() {
-        String content = getContent();
-        List<String> lines = Arrays.asList( content.split( LINE_SEPARATOR ) );
-        return lines;
-    }
-
     /** sets the content of the PlainFile as a List of lines */
     public void setLines( List<String> lines ) {
         String content = "";
@@ -51,6 +43,19 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
             content += line + LINE_SEPARATOR;
         }
         setContent( content );
+    }
+    
+    /** @returns the content of the PlainFile as a List of lines */
+    @Override
+    public List<String> showContent() {
+        String content = getContent();
+        List<String> lines = Arrays.asList( content.split( LINE_SEPARATOR ) );
+        return lines;
+    }
+    
+    @Override
+    public File getFileByName( String name ) {
+    	return this;
     }
 
     @Override

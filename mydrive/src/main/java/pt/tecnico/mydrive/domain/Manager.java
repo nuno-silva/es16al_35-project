@@ -4,7 +4,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /*
     Uses the Singleton pattern.
@@ -30,35 +30,20 @@ public class Manager extends Manager_Base {
         currentFileSystem = newFs;
     }
 
-    public ArrayList<File> showPathContent(String path) throws UnknownPathException {
-    	return currentFileSystem.pathContent(splitPath(path)); //FIXME
+    public List<String> showPathContent(String path) throws UnknownPathException {
+    	return currentFileSystem.pathContent(path); 
     }
 
-    public String showFileContent(String path) throws UnknownPathException {
-    	return currentFileSystem.fileContent(splitPath(path)); //FIXME
+    public List<String> showFileContent(String path) throws UnknownPathException {
+    	return currentFileSystem.fileContent(path); 
     }
 
     public void removePathContent(String path) throws UnknownPathException {
-    	currentFileSystem.removeFile(splitPath(path)); //FIXME
+    	currentFileSystem.removeFile(path); 
     }
 
     public void createUser(String username, String password, String name) throws InvalidUsernameException {
     	currentFileSystem.createUser(username, password, name);
     }
 
-    public ArrayList<String> splitPath(String path) throws UnknownPathException {
-    	ArrayList<String> directories = new ArrayList<String>();
-
-    	if(!path.substring(0, 1).matches("/")) //check if root directory is used, otherwise ERROR!
-    		throw new UnknownPathException(path);
-
-    	directories.add("/");
-
-    	path = path.substring(1);
-
-    	for(String dir : path.split("/"))
-    		directories.add(dir);
-
-    	return directories;
-    }
 }

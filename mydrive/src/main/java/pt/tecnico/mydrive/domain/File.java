@@ -1,5 +1,7 @@
 package pt.tecnico.mydrive.domain;
 
+import java.util.List;
+
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
 
 public abstract class File extends File_Base {
@@ -24,6 +26,10 @@ public abstract class File extends File_Base {
         setDirectory(null);
         deleteDomainObject();
     }
+    
+    public abstract File getFileByName( String name );
+    
+    public abstract List<String> showContent();
 
     @Override
     public void setName(String name) throws InvalidFileNameException {
