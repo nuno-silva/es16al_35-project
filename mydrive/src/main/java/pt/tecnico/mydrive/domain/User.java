@@ -18,7 +18,7 @@ public class User extends User_Base implements IXMLVisitable {
     public User(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException {
     	init(fs, username, password, name, mask);
     }
-    
+
     public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException {
 		if (checkUserName(username)) {
 			setUsername(username);
@@ -32,7 +32,7 @@ public class User extends User_Base implements IXMLVisitable {
 		else
 			throw new InvalidUsernameException(username);
     }
-    
+
     public boolean checkUserName(String username) {
         char[] chars = username.toCharArray();
 
@@ -43,7 +43,7 @@ public class User extends User_Base implements IXMLVisitable {
         }
         return true;
     }
-    
+
     @Override
     public Element accept(IXMLVisitor visitor) {
         return visitor.visit(this);

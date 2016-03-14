@@ -16,7 +16,13 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
 
     public Directory(Directory parent, String name, byte perm, long id) {
+        super();
         init(parent, name, perm, id);
+    }
+
+    public Directory(byte perm, long id) {
+        super();
+        init(this, "", perm, id);
     }
 
     @Override
@@ -30,15 +36,16 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
 
     @Override
-    public void removeFile( File file ) throws FilenameAlreadyExistsException {
+    public void removeFile( File file ) throws FileNotFoundException {
         String filename = file.getName();
-        if( hasFile( filename ) ) {
-            throw new FilenameAlreadyExistsException( filename );
+        if( !hasFile( filename ) ) {
+            throw new FileNotFoundException( filename );
         } else {
             super.removeFile( file );
         }
     }
-
+    
+    @Override
     public File getFileByName( String name ) throws FileNotFoundException {
         if( name.equals(".") ) {
             return this;
@@ -63,7 +70,8 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         }
     }
 
-    public List<String> listFiles() {
+    @Override
+    public List<String> showContent() {
         //TODO: should we use a Visitor for this?
         List<String> files = new ArrayList<String>();
 
@@ -84,6 +92,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         }
         super.remove(); // remove the directory from its parent
     }
+
 
     @Override
     public Element accept(IXMLVisitor visitor) {

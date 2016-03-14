@@ -5,7 +5,7 @@ import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
 import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
-import java.util.ArrayList;
+import java.util.List;
 
 public class FileSystem extends FileSystem_Base implements IXMLVisitable {
 
@@ -15,12 +15,12 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
         super();
     }
 
-    public FileSystem(String name) throws InvalidUsernameException {
+    public FileSystem(String name) {
     	super();
         init(name);
     }
 
-    private void init(String name) throws InvalidUsernameException {
+    private void init(String name) {
         setName(name);
         byte permission = (byte) 0b111101101;
         
@@ -32,8 +32,18 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
         Directory homeDir = addDirectory(rootDir, "home", permission);
         
         // Create Super User and respective directory: "/home/root"
-        addUser(new User(this, "root", "***", "Super User", (byte) 0b111101101));
+        addUser(createSuperUser());
         addDirectory(homeDir, "root", permission);
+    }
+    
+    public User createSuperUser() {
+    	User root = new User();
+		root.setUsername("root");
+		root.setPassword("***");
+		root.setName("Super User");
+		root.setUmask((byte) 00000000);
+		root.setFs(this);
+		return root;
     }
     
     public Directory addDirectory(Directory parent, String name, byte permission) {
@@ -42,26 +52,31 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
     	return newDir;
     }
     
-    
-
-    public ArrayList<File> pathContent (ArrayList<String> path) throws UnknownPathException {
-        return null;//return getFile(path).listFiles(); //FIXME
+    public void createUser(String username, String password, String name) throws InvalidUsernameException {
+    	addUser(new User(this, username, password, name, (byte) 00000000));
     }
 
-    public String fileContent (ArrayList<String> path) throws UnknownPathException {
-        return null; //return getFile(path).getLines(); //FIXME
+    public List<String> pathContent (String path) throws UnknownPathException {
+        return getFile(path).showContent();
     }
 
-    public void removeFile (ArrayList<String> path) throws UnknownPathException {
+    public List<String> fileContent (String path) throws UnknownPathException {
+        return getFile(path).showContent(); 
+    }
+
+    public void removeFile (String path) throws UnknownPathException {
         getFile(path).remove();
     }
 
-    public File getFile(ArrayList<String> path) throws UnknownPathException {
+    public File getFile(String path) throws UnknownPathException {
     	File currentDir = getRootDir();
-	/* FIXME
-        for(String dir : path)
-            currentDir = currentDir.getFileByName(dir); //FIXME
-        */
+    	
+    	if(!path.substring(0, 1).matches("/")) //check if root directory is used, otherwise ERROR!
+    		throw new UnknownPathException(path);
+    	
+    	for(String dir : path.split("/"))
+            currentDir = currentDir.getFileByName(dir);
+    	
         return currentDir;
     }
 
