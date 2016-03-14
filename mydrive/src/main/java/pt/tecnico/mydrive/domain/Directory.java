@@ -44,7 +44,8 @@ public class Directory extends Directory_Base implements IXMLVisitable {
             super.removeFile( file );
         }
     }
-
+    
+    @Override
     public File getFileByName( String name ) throws FileNotFoundException {
         if( name.equals(".") ) {
             return this;
@@ -69,7 +70,8 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         }
     }
 
-    public List<String> listFiles() {
+    @Override
+    public List<String> showContent() {
         //TODO: should we use a Visitor for this?
         List<String> files = new ArrayList<String>();
 

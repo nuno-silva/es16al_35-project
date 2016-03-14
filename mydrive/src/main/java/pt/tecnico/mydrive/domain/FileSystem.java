@@ -5,7 +5,7 @@ import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
 import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
-import java.util.ArrayList;
+import java.util.List;
 
 public class FileSystem extends FileSystem_Base implements IXMLVisitable {
 
@@ -56,24 +56,27 @@ public class FileSystem extends FileSystem_Base implements IXMLVisitable {
     	addUser(new User(this, username, password, name, (byte) 00000000));
     }
 
-    public ArrayList<File> pathContent (ArrayList<String> path) throws UnknownPathException {
-        return null;//return getFile(path).listFiles(); //FIXME
+    public List<String> pathContent (String path) throws UnknownPathException {
+        return getFile(path).showContent();
     }
 
-    public String fileContent (ArrayList<String> path) throws UnknownPathException {
-        return null; //return getFile(path).getLines(); //FIXME
+    public List<String> fileContent (String path) throws UnknownPathException {
+        return getFile(path).showContent(); 
     }
 
-    public void removeFile (ArrayList<String> path) throws UnknownPathException {
+    public void removeFile (String path) throws UnknownPathException {
         getFile(path).remove();
     }
 
-    public File getFile(ArrayList<String> path) throws UnknownPathException {
+    public File getFile(String path) throws UnknownPathException {
     	File currentDir = getRootDir();
-	/* FIXME
-        for(String dir : path)
-            currentDir = currentDir.getFileByName(dir); //FIXME
-        */
+    	
+    	if(!path.substring(0, 1).matches("/")) //check if root directory is used, otherwise ERROR!
+    		throw new UnknownPathException(path);
+    	
+    	for(String dir : path.split("/"))
+            currentDir = currentDir.getFileByName(dir);
+    	
         return currentDir;
     }
 
