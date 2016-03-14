@@ -1,8 +1,11 @@
 package pt.tecnico.mydrive.domain;
 
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
@@ -12,10 +15,8 @@ import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 import pt.tecnico.mydrive.xml.XMLVisitor;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
+import java.util.jar.Attributes;
 
 public class FileSystem extends FileSystem_Base {
 
@@ -161,11 +162,64 @@ public class FileSystem extends FileSystem_Base {
         return doc;
     }
 
+    @Atomic
     public void xmlImport(Document doc) {
         List<Element> users = doc.getRootElement().getChildren(User.XML_TAG);
         List<Element> dirs = doc.getRootElement().getChildren(Directory.XML_TAG);
         List<Element> plains = doc.getRootElement().getChildren(PlainFile.XML_TAG);
         List<Element> apps = doc.getRootElement().getChildren(App.XML_TAG);
         List<Element> links = doc.getRootElement().getChildren(Link.XML_TAG);
+
+        Manager man = FenixFramework.getDomainRoot().getManager();
+        // FIXME: temporary placeholder for FileSystem's name
+        FileSystem fs = new FileSystem(String.valueOf(new Random().nextInt()));
+        man.addFileSystems(fs);
+
+        // TODO: modularize all this
+        /* User instantiation */
+        String username, password, name, home, mask;
+        Element elem;
+        for (Element u : users) {
+            username = u.getAttribute("username").getValue(); // TODO: this assumes that it's actually there
+            elem = u.getChild("password");
+            if (elem != null) {
+                password = elem.getText();
+            } else {
+                password = "toor";
+            }
+
+            elem = u.getChild("name");
+            if (elem != null) {
+                name = elem.getText();
+            } else {
+                name = "Noname";
+            }
+            
+            elem = u.getChild("home");
+            if (elem != null) {
+                home = elem.getText();
+            } else {
+                // TODO: create path
+                home = "/usr/home/" + username;
+            }
+            
+            elem = u.getChild("mask");
+            if (elem != null) {
+                mask = elem.getText();
+            } else {
+                // TODO: fix mask default
+                mask = "11111111";
+            }
+
+            try {
+                // FIXME: hardcoded mask
+                fs.addUser(new User(fs, username, password, name, (byte)0b00000000));
+            } catch (InvalidUsernameException e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
+
 }
