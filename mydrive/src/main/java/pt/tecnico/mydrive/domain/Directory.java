@@ -30,7 +30,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
 
     @Override
     public boolean isCdAble() {
-        return false;
+        return true;
     }
 
     /** constructor for root directory */
@@ -45,6 +45,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
             log.trace("Directory.getFullPath() reached root dir");
             return "";
         } else {
+            System.out.println("Directory.getFullPath() " + super.getFullPath());
             return super.getFullPath();
         }
     }
@@ -53,7 +54,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     public void addFile( File file ) throws FilenameAlreadyExistsException {
         String filename = file.getName();
         if( hasFile( filename ) ) {
-            throw new FilenameAlreadyExistsException( filename );
+            throw new FilenameAlreadyExistsException( filename, getFullPath() );
         } else {
             super.addFile( file );
         }

@@ -44,7 +44,6 @@ public class FileSystem extends FileSystem_Base {
         Directory homeDir = createDirectory(rootDir, "home", permission);
 
         // Create Super User
-        createDirectory(homeDir, "root", permission);
         try {
             createUser( "root", "***", "Super User" );
         } catch (InvalidUsernameException e ) {
@@ -63,17 +62,17 @@ public class FileSystem extends FileSystem_Base {
         int i = 1; // p[0] is ""
         for( ; i < p.length - 1; i++ ) {
             String dirName = p[i];
-            currentPath += "/" + dirName;
             try {
                 File f = dir.getFileByName( dirName );
                 if( ! f.isCdAble() ) {
                     // there's a file with that name
-                    throw new FilenameAlreadyExistsException( currentPath );
+                    throw new FilenameAlreadyExistsException( dirName, currentPath );
                 }
                 dir = (Directory) f;
             } catch( FileNotFoundException e ) {
                 dir = createDirectory( dir, dirName, dir.getPerm() );
             }
+            currentPath += "/" + dirName;
         }
         return dir;
     }
@@ -167,7 +166,7 @@ public class FileSystem extends FileSystem_Base {
         }
         return doc;
     }
-    
+
     @Atomic
     public void xmlImport(Document doc) {
         /*
@@ -180,7 +179,7 @@ public class FileSystem extends FileSystem_Base {
         List<Element> links = doc.getRootElement().getChildren(Link.XML_TAG);
 
         FileSystem fs = xmlCreateFileSystem();
-        
+
         xmlImportUsers(users, fs);
         xmlImportDirectories(dirs, fs);
         xmlImportPlainFiles(plains, fs);
@@ -194,7 +193,7 @@ public class FileSystem extends FileSystem_Base {
         man.addFileSystems(fs);
         return fs;
     }
-    
+
     private void xmlImportFiles(List<Element> files, FileSystem fs) {
     	Element e = null;
         String id, name, mask, lastMod, path;
@@ -229,7 +228,7 @@ public class FileSystem extends FileSystem_Base {
             fs.getRootDir().addFile(newFile);
         }
     }
-    
+
     private void xmlImportPlainFiles(List<Element> plains, FileSystem fs) {
     	xmlImportFiles(plains, fs);
     	String content = null;
@@ -243,11 +242,11 @@ public class FileSystem extends FileSystem_Base {
     		}
     	}
     }
-    
+
     private void xmlImportDirectories(List<Element> dirs, FileSystem fs) {
         xmlImportFiles(dirs, fs);
     }
-    
+
 
     private void xmlImportUsers(List<Element> users, FileSystem fs) {
         // FIXME: this code is bad
