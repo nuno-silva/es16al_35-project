@@ -16,7 +16,7 @@ public class User extends User_Base implements IXMLVisitable {
     private static final Logger logger = LogManager.getLogger();
 
     public User(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException {
-    	init(fs, username, password, name, mask);
+        init(fs, username, password, name, mask);
     }
 
     public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException {
@@ -29,15 +29,15 @@ public class User extends User_Base implements IXMLVisitable {
 			// setDir(new Directory(username, (byte) 11111010, 123)); FIXME
 			// depois metodo que cria o user tem de ligar a sua pasta ao directorio "home"
 		}
-		else
-			throw new InvalidUsernameException(username);
+		else {
+            throw new InvalidUsernameException(username);
+        }
     }
 
     public boolean checkUserName(String username) {
         char[] chars = username.toCharArray();
-
         for (char c : chars) {
-            if(!Character.isLetter(c) || !Character.isDigit(c)) {
+            if(!Character.isLetter(c) && !Character.isDigit(c)) {
                 return false;
             }
         }
