@@ -167,7 +167,8 @@ public class FileSystem extends FileSystem_Base {
         }
         return doc;
     }
-
+    
+    @Atomic
     public void xmlImport(Document doc) {
         /*
             PSA: I AM SORRY FOR THIS CODE, WE'RE KIND OF IN A RUSH
@@ -179,13 +180,12 @@ public class FileSystem extends FileSystem_Base {
         List<Element> links = doc.getRootElement().getChildren(Link.XML_TAG);
 
         FileSystem fs = xmlCreateFileSystem();
-        // TODO: modularize all this
-        /* User instantiation */
+        
         xmlImportUsers(users, fs);
+        xmlImportDirectories(dirs, fs);
 
     }
 
-    @Atomic
     private FileSystem xmlCreateFileSystem() {
         Manager man = FenixFramework.getDomainRoot().getManager();
         // FIXME: temporary placeholder for FileSystem's name
@@ -194,7 +194,6 @@ public class FileSystem extends FileSystem_Base {
         return fs;
     }
 
-    @Atomic
     private void xmlImportDirectories(List<Element> dirs, FileSystem fs) {
         Element e = null;
         String id, name, mask, lastMod, path;
@@ -222,9 +221,12 @@ public class FileSystem extends FileSystem_Base {
             } else {
                 lastMod = new DateTime().toString(); // FIXME: find a more suitable default lastMod
             }
+            Directory newDir = new Directory(fs.getRootDir(), name, (byte)0b1111111, Long.valueOf(id));
+            newDir.setLastMod(new DateTime()); // FIXME: placeholder lastMod
 
             // FIXME: better default mask
-            fs.getRootDir().addFile(new Directory(fs.getRootDir(), name, (byte)0b1111111, Long.valueOf(id)));
+            fs.getRootDir().addFile(newDir);
+            
         }
     }
 
