@@ -22,7 +22,7 @@ public class MaskHelper {
      * @return the {@link java.lang.String} representation of the binary mask
      */
     public static String getStringMask(byte mask) {
-        return String.format("%6s", Integer.toBinaryString(mask).replace(' ', '0'));
+        return String.format("%6s", Integer.toBinaryString(mask)).replace(' ', '0');
     }
 
     /**
@@ -65,5 +65,9 @@ public class MaskHelper {
         result += (chars[2] == '1') ? HR_MASK_EXECUTE : HR_MASK_NONE;
 
         return result;
+    }
+
+    public static byte andMasks(byte mask1, byte mask2) {
+        return (byte) (mask1 & mask2);
     }
 }

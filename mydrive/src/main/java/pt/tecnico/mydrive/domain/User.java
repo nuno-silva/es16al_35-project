@@ -71,17 +71,23 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
     }
 
     @Override
-    public byte getBytePermissions() {
+    public byte getByteMask() {
         return getMask();
     }
 
     @Override
-    public String getANDedPermissions(IPermissionable other) {
-        return null;
+    public byte getANDedByteMask(IPermissionable other) {
+        return MaskHelper.andMasks(getByteMask(), other.getByteMask());
     }
 
     @Override
-    public String getANDedMask(IPermissionable other) {
-        return null;
+    public String getANDedStringMask(IPermissionable other) {
+        return MaskHelper.getStringMask(getANDedByteMask(other));
     }
+
+    @Override
+    public String getANDedStringPermissions(IPermissionable other) {
+        return MaskHelper.getStringPermissions(getANDedByteMask(other));
+    }
+
 }

@@ -6,7 +6,8 @@ package pt.tecnico.mydrive.domain;
 public interface IPermissionable {
     public String getStringPermissions();
     public String getStringMask();
-    public byte getBytePermissions();
-    public String getANDedPermissions(IPermissionable other);
-    public String getANDedMask(IPermissionable other);
+    public byte getByteMask();
+    public String getANDedStringPermissions(IPermissionable other);
+    public String getANDedStringMask(IPermissionable other);
+    public byte getANDedByteMask(IPermissionable other);
 }
