@@ -7,7 +7,7 @@ import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 
-public abstract class File extends File_Base implements IXMLVisitable {
+public abstract class File extends File_Base implements IXMLVisitable, IPermissionable {
     public static final String XML_TAG = "file";
 
     public File() {
@@ -65,4 +65,28 @@ public abstract class File extends File_Base implements IXMLVisitable {
         return visitor.visit(this);
     }
 
+    @Override
+    public String getStringPermissions() {
+        return MaskHelper.getStringPermissions(getMask());
+    }
+
+    @Override
+    public String getStringMask() {
+        return MaskHelper.getStringMask(getMask());
+    }
+
+    @Override
+    public byte getBytePermissions() {
+        return getMask();
+    }
+
+    @Override
+    public String getANDedPermissions(IPermissionable other) {
+        return null;
+    }
+
+    @Override
+    public String getANDedMask(IPermissionable other) {
+        return null;
+    }
 }

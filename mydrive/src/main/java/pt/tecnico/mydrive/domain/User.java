@@ -8,7 +8,7 @@ import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 
 
-public class User extends User_Base implements IXMLVisitable {
+public class User extends User_Base implements IXMLVisitable, IPermissionable {
     public static final String XML_TAG = "user";
 
     public User() {
@@ -55,9 +55,33 @@ public class User extends User_Base implements IXMLVisitable {
         return true;
     }
 
-
     @Override
     public Element accept(IXMLVisitor visitor) {
         return visitor.visit(this);
+    }
+
+    @Override
+    public String getStringPermissions() {
+        return MaskHelper.getStringPermissions(getMask());
+    }
+
+    @Override
+    public String getStringMask() {
+        return MaskHelper.getStringMask(getMask());
+    }
+
+    @Override
+    public byte getBytePermissions() {
+        return getMask();
+    }
+
+    @Override
+    public String getANDedPermissions(IPermissionable other) {
+        return null;
+    }
+
+    @Override
+    public String getANDedMask(IPermissionable other) {
+        return null;
     }
 }
