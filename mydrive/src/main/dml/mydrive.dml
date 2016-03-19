@@ -10,14 +10,14 @@ class User {
 	String username;
 	String password;
 	String name;
-	byte umask;
+	byte mask;
 	String homePath; // discussable (please discuss this in issue #4 if needed)
 }
 
 class File {
 	String name;
 	long id;
-	byte perm;
+	byte mask; // A.K.A. file permissions
 	DateTime lastMod;
 }
 
@@ -55,6 +55,6 @@ relation DomainRootHasManager {
 }
 
 relation ManagerHasFileSystems {
-	FileSystem playsRole fileSystems{multiplicity *;}
-	Manager playsRole manager{multiplicity 1;}
+	FileSystem playsRole fileSystem {multiplicity *;}
+	Manager playsRole manager {multiplicity 1;}
 }

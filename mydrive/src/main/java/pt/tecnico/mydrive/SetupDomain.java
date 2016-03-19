@@ -17,7 +17,7 @@ public class SetupDomain {
         Manager man = Manager.getInstance();
         /* not needed...
         FileSystem fs = new FileSystem("ext4");
-        man.addFileSystems(fs);
+        man.addFileSystem(fs);
         User jayceon = new User(fs, "jayceon", "drerules", "Jayceon", (byte) 0b11111111);
         fs.addUser(jayceon);
         */

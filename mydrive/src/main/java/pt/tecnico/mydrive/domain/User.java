@@ -26,7 +26,7 @@ public class User extends User_Base implements IXMLVisitable {
 			setUsername(username);
 			setPassword(password);
 			setName(name);
-			setUmask(mask);
+			setMask(mask);
 			setFs(fs);
 			// setDir(new Directory(username, (byte) 11111010, 123)); FIXME
 			// depois metodo que cria o user tem de ligar a sua pasta ao directorio "home"

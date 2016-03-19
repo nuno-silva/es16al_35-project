@@ -22,7 +22,7 @@ public abstract class File extends File_Base implements IXMLVisitable {
     protected void init(Directory parent, String name, byte perm, long id){
         setName(name);
         setId(id);
-        setPerm(perm);
+        setMask(perm);
         setDirectory(parent); // must be called after setName!
         //still need to add DateTime lastMod
     }

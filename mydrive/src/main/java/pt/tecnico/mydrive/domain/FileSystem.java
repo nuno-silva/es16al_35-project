@@ -95,7 +95,7 @@ public class FileSystem extends FileSystem_Base {
                 }
                 dir = (Directory) f;
             } catch( FileNotFoundException e ) {
-                dir = createDirectory( dir, dirName, dir.getPerm() );
+                dir = createDirectory( dir, dirName, dir.getMask() );
             }
             currentPath += "/" + dirName;
         }
@@ -216,7 +216,7 @@ public class FileSystem extends FileSystem_Base {
         Manager man = FenixFramework.getDomainRoot().getManager();
         // FIXME: temporary placeholder for FileSystem's name
         FileSystem fs = new FileSystem("ext4");
-        man.addFileSystems(fs);
+        man.addFileSystem(fs);
         return fs;
     }
 

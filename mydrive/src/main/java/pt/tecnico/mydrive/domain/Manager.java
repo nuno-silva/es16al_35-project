@@ -39,7 +39,7 @@ public class Manager extends Manager_Base {
         setRoot(FenixFramework.getDomainRoot());
 
         FileSystem newFs = new FileSystem("");
-        addFileSystems(newFs); //dont know how to set fileSystem...
+        addFileSystem(newFs); //dont know how to set fileSystem...
 
     }
 
@@ -83,7 +83,7 @@ public class Manager extends Manager_Base {
     }
 
     public static FileSystem getFirstFs() {
-        Set<FileSystem> set = FenixFramework.getDomainRoot().getManager().getFileSystems();
+        Set<FileSystem> set = FenixFramework.getDomainRoot().getManager().getFileSystem();
         for( FileSystem fs : set ) {
             return fs;
         }

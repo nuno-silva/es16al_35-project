@@ -63,7 +63,7 @@ public class XMLVisitor implements IXMLVisitor {
         password = user.getPassword();
         name = user.getName();
         home = user.getHomePath();
-        mask = PathHelper.getStringUmask(user.getUmask());
+        mask = PathHelper.getStringUmask(user.getMask());
 
         Element userElement = new Element(User.XML_TAG);
 
@@ -98,7 +98,7 @@ public class XMLVisitor implements IXMLVisitor {
         String name, mask;
         DateTime lastMod;
         name = file.getName();
-        mask = PathHelper.getStringUmask(file.getPerm());
+        mask = PathHelper.getStringUmask(file.getMask());
         lastMod = file.getLastMod();
         Element fileElement = new Element(File.XML_TAG); // temp placeholder
         fileElement.setAttribute(new Attribute("id", String.valueOf(file.getId())));
