@@ -1,22 +1,20 @@
 package pt.tecnico.mydrive.domain;
 import org.jdom2.Element;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.DirectoryNotEmptyException;
-import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 
 
 import java.util.List;
 import java.util.ArrayList;
 
 public class Directory extends Directory_Base implements IXMLVisitable {
-    static final Logger log = LogManager.getRootLogger();
+    private static final Logger logger = Logger.getLogger(Directory.class);
     public static final String XML_TAG = "dir";
 
     public Directory() {
@@ -47,11 +45,11 @@ public class Directory extends Directory_Base implements IXMLVisitable {
 
     @Override
     public String getFullPath() {
-        if( getDirectory() == this ) { // we're the root dir
-            log.trace("Directory.getFullPath() reached root dir");
+        if(getDirectory() == this) { // we're the root dir
+            logger.trace("Directory.getFullPath() reached root dir");
             return "";
         } else {
-            System.out.println("Directory.getFullPath() " + super.getFullPath());
+            logger.trace("Directory.getFullPath() " + super.getFullPath());
             return super.getFullPath();
         }
     }

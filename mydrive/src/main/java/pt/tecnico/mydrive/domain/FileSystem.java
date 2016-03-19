@@ -1,5 +1,6 @@
 package pt.tecnico.mydrive.domain;
 
+import org.apache.log4j.Logger;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -46,8 +47,8 @@ public class FileSystem extends FileSystem_Base {
 			return this;
 		}
 	}
-
-	private static long numFiles = 0;
+    private final static Logger logger = Logger.getLogger(FileSystem.class);
+    private static long numFiles = 0;
 
     public FileSystem() {
         super();
@@ -167,26 +168,35 @@ public class FileSystem extends FileSystem_Base {
 
     public Document xmlExport() {
         Document doc = new Document(new Element("mydrive"));
-        Element e = null;
+        Element e;
         // Convert all users to xml
         Set<User> users = getUserSet();
         for (User u : users) {
             e = u.accept(XMLVisitor.getInstance());
             doc.getRootElement().addContent(e);
         }
-        // TODO: go through directories and add them and their contents
+
         Directory rootDir = getRootDir();
-        File f = null;
+        File file;
         Queue<File> queue = new LinkedList<>();
-        e = rootDir.accept(XMLVisitor.getInstance());
-        doc.getRootElement().addContent(e);
-        queue.addAll(rootDir.getFileSet());
+        queue.add(getRootDir());
         while (!queue.isEmpty()) {
-            f = queue.poll(); // TODO: should never return null, but maybe do a sanity check
-            e = f.accept(XMLVisitor.getInstance());
+            file = queue.poll();
+            logger.trace("Working with " + file.getName());
+            e = file.accept(XMLVisitor.getInstance());
             doc.getRootElement().addContent(e);
-            if (f.isCdAble()) {
-                queue.add(f);
+            if (file.isCdAble()) {
+                // if file is CDable, add all of it's children to the queue
+                for(File f : ((Directory)file).getFileSet()) {
+                    logger.info("Adding " + f.getName() + " to directory queue");
+                    if (file != f) {
+                        /* this prevents infinite loops, since the root directory contains itself as
+                         * parent, which results in it being added over and over to the queue
+                         */
+                        queue.add(f);
+                    }
+                }
+
             }
         }
         return doc;
