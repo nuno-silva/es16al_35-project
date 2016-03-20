@@ -18,6 +18,12 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         super();
         init(dir, name, perm, id);
     }
+	
+	public File(Directory dir,String name,long id){
+		super();
+		init(dir,name,dir.getMask(),id);
+		
+	}
 
     protected void init(Directory parent, String name, byte perm, long id){
         setName(name);
