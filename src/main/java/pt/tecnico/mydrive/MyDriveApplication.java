@@ -38,4 +38,8 @@ public class MyDriveApplication {
         Manager man = Manager.getInstance();
         man.getFirstFs().xmlImportFromFile(fileName);
     }
+
+	public static void init(){
+		/*FIXME*/
+	}
 }
