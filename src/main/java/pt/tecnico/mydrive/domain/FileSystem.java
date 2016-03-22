@@ -215,11 +215,23 @@ public class FileSystem extends FileSystem_Base {
 
         FileSystem fs = xmlCreateFileSystem();
 
+        logger.debug("BEGIN xmlImport");
+        logger.debug("BEGIN import Users");
         xmlImportUsers(users, fs);
+        logger.debug("END import Users");
+        logger.debug("BEGIN import Directories");
         xmlImportDirectories(dirs, fs);
+        logger.debug("END import Directories");
+        logger.debug("BEGIN import PlainFiles");
         xmlImportPlainFiles(plains, fs);
+        logger.debug("END import PlainFiles");
+        logger.debug("BEGIN import Links");
         xmlImportLinks(links, fs);
+        logger.debug("END import Links");
+        logger.debug("BEGIN import Apps");
         xmlImportApps(apps, fs);
+        logger.debug("END import Apps");
+        logger.debug("END xmlImport");
     }
 
     private FileSystem xmlCreateFileSystem() {
@@ -232,16 +244,27 @@ public class FileSystem extends FileSystem_Base {
 
     private FileParams parseFileParams(Element file, FileSystem fs, FileParams fp) {
         // This allows some code reuse
-    	Element e = null;
+    	Element e;
         String id, name, mask, lastMod, path;
         id = file.getAttribute("id").getValue();
-        name = file.getChild("name").getText(); // must-have
+        logger.debug("File ID: " + id);
+
+        e = file.getChild("name"); // must-have
+        if (e == null) {
+            // root dir
+            name = "";
+        } else {
+            name = e.getText();
+        }
+        logger.debug("File name: " + name);
+
         e = file.getChild("path");
         if (e != null) {
             path = e.getText();
         } else {
             path = "/usr/nopath"; // FIXME: find a more suitable default path
         }
+        logger.debug("File path: " + path);
         fs.createFileParents(path);
 
         e = file.getChild("mask");
@@ -250,6 +273,7 @@ public class FileSystem extends FileSystem_Base {
         } else {
             mask = "11111111"; // FIXME: find a more suitable default mask
         }
+        logger.debug("File mask: " + mask);
 
         e = file.getChild("lastMod");
         if (e != null) {
@@ -257,6 +281,7 @@ public class FileSystem extends FileSystem_Base {
         } else {
             lastMod = new DateTime().toString(); // FIXME: find a more suitable default lastMod
         }
+        logger.debug("Last mod: " + lastMod);
         return fp.parse(id, name, mask, lastMod, path);
     }
 
@@ -273,8 +298,8 @@ public class FileSystem extends FileSystem_Base {
      */
     private void xmlImportContentFiles(List<Element> contentFiles, FileSystem fs, boolean isApp) {
         FileParams fp = new FileParams();
-        String content = null;
-        Element elem = null;
+        String content;
+        Element elem;
         for (Element contentFile :  contentFiles) {
             fp = parseFileParams(contentFile, fs, fp);
             elem = contentFile.getChild("content");
@@ -329,10 +354,15 @@ public class FileSystem extends FileSystem_Base {
         FileParams fp = new FileParams();
         for(Element dir : dirs) {
         	fp = parseFileParams(dir, fs, fp);
-            Directory newDir = new Directory(fs.getRootDir(), fp.NAME, (byte)0b1111111, Long.valueOf(fp.ID));
-            newDir.setLastMod(new DateTime()); // FIXME: placeholder lastMod
-            fs.getRootDir().addFile(newDir);
-            fs.createFileParents(fp.PATH);
+            Optional<Directory> opt =
+                    Directory.createIfNotExists(fs.getRootDir(), fp.NAME, (byte)0b1111111, Long.valueOf(fp.ID));
+            if (opt.isPresent()) {
+                logger.debug("Creating directory");
+                Directory newDir = opt.get();
+                newDir.setLastMod(new DateTime()); // FIXME: placeholder lastMod
+                fs.createFileParents(fp.PATH);
+                fs.getRootDir().addFileIfNotExists(newDir);
+            }
         }
 
     }

@@ -12,6 +12,7 @@ import pt.tecnico.mydrive.exception.DirectoryNotEmptyException;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class Directory extends Directory_Base implements IXMLVisitable {
     private static final Logger logger = Logger.getLogger(Directory.class);
@@ -24,6 +25,25 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     public Directory(Directory parent, String name, byte perm, long id) {
         super();
         init(parent, name, perm, id);
+    }
+
+    /**
+     * Creates the directory if one with the same name and parent does not already exist.
+     * @param parent parent
+     * @param name name
+     * @param perm permissions
+     * @param id ID
+     * @return {@link java.util.Optional} containing either the newly created Directory or null.
+     */
+    public static Optional<Directory> createIfNotExists(Directory parent, String name, byte perm, long id) {
+        Optional<Directory> opt = Optional.empty();
+        try {
+            Directory dir = new Directory(parent, name, perm, id);
+            opt = Optional.of(dir);
+        } catch (FilenameAlreadyExistsException _) {
+            logger.debug("Directory with name *[" + name + "]* already exists!");
+        }
+        return opt;
     }
     
     public static Directory fromPath(String path, FileSystem fs) {
@@ -61,6 +81,15 @@ public class Directory extends Directory_Base implements IXMLVisitable {
             throw new FilenameAlreadyExistsException( filename, getFullPath() );
         } else {
             super.addFile( file );
+        }
+    }
+
+    public void addFileIfNotExists(File file) {
+        try {
+            addFile(file);
+        } catch (FilenameAlreadyExistsException _) {
+            // Do nothing, filename already exists
+            logger.debug("File with name *[" + file.getName() + "*] already exists in directory *[" + getName() + "]*");
         }
     }
 
