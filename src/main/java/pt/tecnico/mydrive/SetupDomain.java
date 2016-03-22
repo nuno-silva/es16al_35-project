@@ -1,6 +1,7 @@
 package pt.tecnico.mydrive;
 
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
@@ -15,6 +16,7 @@ public class SetupDomain {
     @Atomic
     public static void populateDomain() throws InvalidUsernameException {
         Manager man = Manager.getInstance();
+        FenixFramework.shutdown();
         /* not needed...
         FileSystem fs = new FileSystem("ext4");
         man.addFileSystem(fs);

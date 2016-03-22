@@ -6,6 +6,8 @@ import org.apache.logging.log4j.Logger;
 
 
 import org.jdom2.JDOMException;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import pt.tecnico.mydrive.domain.*;
 
 import pt.ist.fenixframework.Atomic;
@@ -26,10 +28,12 @@ public class MyDriveApplication {
             try {
                 init(args[0]);
             } catch (JDOMException e) {
-                e.printStackTrace();
+                e.printStackTrace() ;
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            SetupDomain.populateDomain();
         }
     }
 
@@ -37,6 +41,7 @@ public class MyDriveApplication {
     public static void init(String fileName) throws JDOMException, IOException {
         Manager man = Manager.getInstance();
         man.getFirstFs().xmlImportFromFile(fileName);
+        FenixFramework.shutdown();
     }
 
 	public static void init(){
