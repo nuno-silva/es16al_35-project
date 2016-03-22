@@ -1,6 +1,10 @@
 package pt.tecnico.mydrive.domain;
 
 import java.util.List;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import org.jdom2.Element;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
@@ -17,14 +21,15 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     public File(Directory dir, String name, byte perm, long id) {
         super();
         init(dir, name, perm, id);
+		
     }
-
+	
     protected void init(Directory parent, String name, byte perm, long id){
         setName(name);
         setId(id);
         setMask(perm);
         setDirectory(parent); // must be called after setName!
-        //still need to add DateTime lastMod
+       	setLastMod(new Date()); 
     }
 
     @Override
