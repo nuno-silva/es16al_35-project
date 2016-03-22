@@ -25,6 +25,7 @@ class PlainFile extends File {
 	String content;
 }
 
+
 class Link extends File {
 	String pointer;  // what the link points to
 }
@@ -36,6 +37,11 @@ class App extends PlainFile;
 relation FileSystemHasUsers {
 	User playsRole user {multiplicity 1..*;}
 	FileSystem playsRole fs {multiplicity 1;}
+}
+
+relation FileHasOwner {
+    File playsRole file;
+    User playsRole owner;
 }
 
 relation FileSystemHasRootDir {
