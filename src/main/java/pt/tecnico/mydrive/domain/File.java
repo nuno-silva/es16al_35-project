@@ -17,17 +17,43 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
 
     public File(Directory dir, String name, byte perm, long id) {
         super();
-        init(dir, name, perm, id);
+        init(dir, name, perm, id,dir.getOwner());
 		
     }
+
+	public File(Directory dir,String name,long id){
+		super();
+		init(dir,name,dir.getMask(),id,dir.getOwner());
+	}
+
+	public File(Directory dir,String name, byte perm,long id,User owner){
+		super();
+		init(dir,name,perm,id,owner);
+	}
+
+	public File(Directory dir,String name,long id,User owner){
+		super();
+		init(dir,name,dir.getMask(),id,owner);
+	}
+		
 	
-    protected void init(Directory parent, String name, byte perm, long id){
+    protected void init(Directory parent, String name, byte perm, long id,User owner){
         setName(name);
         setId(id);
         setMask(perm);
         setDirectory(parent); // must be called after setName!
-       	setLastMod(new DateTime()); 
+       	setLastMod(new DateTime());
+		setOwner(owner); 
     }
+	
+	protected void init(Directory parent,String name,byte perm,long id){
+		setName(name);
+		setId(id);
+		setMask(perm);
+		setDirectory(parent);
+		setLastMod(new DateTime());
+		setOwner(parent.getOwner());
+	}
 
     @Override
     public void setDirectory( Directory parent ) {
