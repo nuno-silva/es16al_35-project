@@ -46,13 +46,13 @@ public class Manager extends Manager_Base {
     public static void setup() {
         FileSystem fs = getFirstFs();
     	// Create "/home/README":
-    	PlainFile readme = fs.createPlainFile((Directory) fs.getFile("/home"), "README", (byte) 00000000);
+    	PlainFile readme = fs.createPlainFileIfNotExists((Directory) fs.getFile("/home"), "README", (byte) 00000000);
     	// Create "/usr/local":
     	Directory local = fs.createFileParents("/usr/local/bin");
     	fs.createDirectory(local, "bin", (byte) 00000000);
     	// Print content of "/home/README":
     	insertUsersInFile(readme);
-    	printContent("Content of plainfile README: ", fs.fileContent("/home/README"));
+    	printContent("Content of PlainFile README: ", fs.fileContent("/home/README"));
     	// Remove "/usr/local/bin":
     	fs.removeFile("/usr/local/bin");
     	//TODO: propagate exception

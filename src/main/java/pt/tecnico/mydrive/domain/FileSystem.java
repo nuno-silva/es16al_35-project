@@ -150,9 +150,19 @@ public class FileSystem extends FileSystem_Base {
     }
 
     public PlainFile createPlainFile(Directory parent, String name, byte permission) {
-    	numFiles+=1;
     	PlainFile newPlainFile = new PlainFile(parent, name, permission, numFiles);
-    	return newPlainFile;
+        numFiles+=1;
+        return newPlainFile;
+    }
+
+    public PlainFile createPlainFileIfNotExists(Directory parent, String name, byte permission) {
+        try {
+            return createPlainFile(parent, name, permission);
+        } catch(FilenameAlreadyExistsException _) {
+            File f = getFile(parent.getFullPath() + "/" + name);
+            logger.debug("Got file... " + f.getFullPath());
+            return (PlainFile)f;
+        }
     }
 
     /** creates a new User and its home directory in the FileSystem */
@@ -186,15 +196,17 @@ public class FileSystem extends FileSystem_Base {
     }
     */
     public File getFile(String path) throws UnknownPathException {
+        logger.debug("getFile: " + path);
     	File currentDir = getRootDir();
 
     	if(!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
     		throw new UnknownPathException(path);
 
         path = path.substring(1); // remove '/'
-    	for(String dir : path.split("/"))
+    	for(String dir : path.split("/")) {
             currentDir = currentDir.getFileByName(dir);
-
+        }
+        logger.debug("getFile: " + currentDir.getFullPath());
         return currentDir;
     }
 
@@ -341,9 +353,10 @@ public class FileSystem extends FileSystem_Base {
                 content = "";
             }
 
-            File newPlainFile;
-            Optional<? extends File> opt;
-            Directory parent = Directory.fromPath(fp.PATH, fs);
+            PlainFile newPlainFile;
+            Optional<? extends PlainFile> opt;
+
+            Directory parent = createFileParents(fp.PATH);
 
             // if it's an App, all the App's constructor, otherwise use PlainFile's
             if(isApp) {
@@ -354,11 +367,10 @@ public class FileSystem extends FileSystem_Base {
                         (byte) 0b11111010, Long.valueOf(fp.ID), content);
             }
             if (opt.isPresent()) {
-
                 newPlainFile = opt.get();
                 newPlainFile.setLastMod(new DateTime()); // FIXME: placeholder lastMod
                 fs.getRootDir().addFileIfNotExists(newPlainFile);
-                fs.createFileParents(fp.PATH);
+                //fs.createFileParents(fp.PATH);
             }
 
         }
@@ -380,7 +392,7 @@ public class FileSystem extends FileSystem_Base {
      		} else {
      			pointer = "";
      		}
-     		File newLink = new Link(Directory.fromPath(fp.PATH, fs), fp.NAME,
+     		File newLink = new Link(createFileParents(fp.PATH), fp.NAME,
                                     (byte)0b00000001, Long.valueOf(fp.ID), pointer);
              newLink.setLastMod(new DateTime()); // FIXME: placeholder lastMod
              fs.getRootDir().addFile(newLink);
