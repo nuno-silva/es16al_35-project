@@ -1,10 +1,7 @@
 package pt.tecnico.mydrive.domain;
 
 import java.util.List;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import org.joda.time.DateTime;
 
 import org.jdom2.Element;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
@@ -29,7 +26,7 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         setId(id);
         setMask(perm);
         setDirectory(parent); // must be called after setName!
-       	setLastMod(new Date()); 
+       	setLastMod(new DateTime()); 
     }
 
     @Override
