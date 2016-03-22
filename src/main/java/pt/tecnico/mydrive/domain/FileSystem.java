@@ -81,22 +81,29 @@ public class FileSystem extends FileSystem_Base {
      * don't exist. Does NOT create the given file.
      * @returns the given file's parent Directory
      */
-    public Directory createFileParents( String path ) {
+    public Directory createFileParents(String path) {
+        logger.debug("createFileParents path: " + path);
         Directory dir = getRootDir();
         String currentPath = "";
         String[] p = path.split("/");
         int i = 1; // p[0] is ""
         for( ; i < p.length - 1; i++ ) {
             String dirName = p[i];
+            logger.debug("createFileParents p[" + i + "]: " + dirName);
             try {
-                File f = dir.getFileByName( dirName );
-                if( ! f.isCdAble() ) {
+                File f = dir.getFileByName(dirName);
+                if(!f.isCdAble()) {
                     // there's a file with that name
-                    throw new FilenameAlreadyExistsException( dirName, currentPath );
+                    logger.debug("createFileParents filename already exists: " + dirName);
+                    throw new FilenameAlreadyExistsException(dirName, currentPath);
                 }
+                logger.debug("createFileParents directory already exists: " + dirName
+                + " | full path: " + dir.getFullPath());
                 dir = (Directory) f;
-            } catch( FileNotFoundException e ) {
-                dir = createDirectory( dir, dirName, dir.getMask() );
+            } catch(FileNotFoundException e) {
+                logger.debug("createFileParents creating directory: " + dirName + " | full path: " +
+                        dir.getFullPath() + dirName);
+                dir = createDirectory(dir, dirName, dir.getMask());
             }
             currentPath += "/" + dirName;
         }
@@ -104,17 +111,42 @@ public class FileSystem extends FileSystem_Base {
     }
 
     protected Directory createRootDirectory() {
-        numFiles++;
         // FIXME: proper rootdir permission
         Directory rootDir = new Directory((byte) 0b11111010, numFiles);
         setRootDir(rootDir);
+        numFiles++;
         return rootDir;
     }
 
     public Directory createDirectory(Directory parent, String name, byte permission) {
-    	numFiles+=1;
-    	Directory newDir = new Directory(parent, name, permission, numFiles);
-    	return newDir;
+        Directory newDir = new Directory(parent, name, permission, numFiles);
+        numFiles+=1;
+        return newDir;
+    }
+
+    /**
+     * Creates the {@link Directory} if it does not exist, in either case, returns a {@link Optional} with that directory.
+     * @param parent
+     * @param name
+     * @param permission
+     * @return {@link java.util.Optional} with either the newly created directory or with the already existing directory
+     * This Optional will contain the specified directory either way, it can never contain null.
+     */
+    public Optional<Directory> createDirectoryIfNotExists(Directory parent, String name, byte permission) {
+        Optional<Directory> opt = Directory.createIfNotExists(parent, name, permission, numFiles);
+        if (!opt.isPresent()) {
+            // Assuming that getFile() will succeed, since createIfNotExists() reported that the directory
+            // already exists. This will result in an exception if something goes wrong with getFile(). If we were
+            // using C# 6, we could've taken advantage of nullables, which would give us more confidence and less
+            // boilerplate code, but we're not (and the point of the project is not to test every edge scenario, as
+            // mentioned in the classes).
+            String path = parent.getFullPath() + name;
+            logger.debug("Full Path: " + path);
+            opt = Optional.of((Directory)(this.getFile(path)));
+        } else {
+            numFiles+=1; // new directory has been created
+        }
+        return opt;
     }
 
     public PlainFile createPlainFile(Directory parent, String name, byte permission) {
@@ -156,7 +188,7 @@ public class FileSystem extends FileSystem_Base {
     public File getFile(String path) throws UnknownPathException {
     	File currentDir = getRootDir();
 
-    	if(!path.substring(0, 1).matches("/")) //check if root directory is used, otherwise ERROR!
+    	if(!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
     		throw new UnknownPathException(path);
 
         path = path.substring(1); // remove '/'
@@ -310,18 +342,25 @@ public class FileSystem extends FileSystem_Base {
             }
 
             File newPlainFile;
+            Optional<? extends File> opt;
+            Directory parent = Directory.fromPath(fp.PATH, fs);
 
-            // if it's an app, all the App's constructor, otherwise use PlainFile's
+            // if it's an App, all the App's constructor, otherwise use PlainFile's
             if(isApp) {
-                newPlainFile = new App(Directory.fromPath(fp.PATH, fs), fp.NAME,
+                opt = App.createIfNotExists(parent, fp.NAME,
                         (byte)0b11111010, Long.valueOf(fp.ID), content);
             } else {
-                newPlainFile = new PlainFile(Directory.fromPath(fp.PATH, fs), fp.NAME,
+                opt = PlainFile.createIfNotExists(parent, fp.NAME,
                         (byte) 0b11111010, Long.valueOf(fp.ID), content);
             }
-            newPlainFile.setLastMod(new DateTime()); // FIXME: placeholder lastMod
-            fs.getRootDir().addFile(newPlainFile);
-            fs.createFileParents(fp.PATH);
+            if (opt.isPresent()) {
+
+                newPlainFile = opt.get();
+                newPlainFile.setLastMod(new DateTime()); // FIXME: placeholder lastMod
+                fs.getRootDir().addFileIfNotExists(newPlainFile);
+                fs.createFileParents(fp.PATH);
+            }
+
         }
     }
 

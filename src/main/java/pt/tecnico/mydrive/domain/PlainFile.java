@@ -1,15 +1,19 @@
 package pt.tecnico.mydrive.domain;
+import org.apache.log4j.Logger;
 import org.jdom2.Element;
+import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.xml.IXMLVisitable;
 import pt.tecnico.mydrive.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 
 import java.util.List;
 import java.util.Arrays;
+import java.util.Optional;
 
 public class PlainFile extends PlainFile_Base implements IXMLVisitable {
     public static final String LINE_SEPARATOR = "\n";
     public static final String XML_TAG = "plain";
+    private static final Logger logger = Logger.getLogger(PlainFile.class);
 
 
     public PlainFile() {
@@ -18,6 +22,17 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
 
     public PlainFile(Directory dir, String name, byte perm, long id, String content) {
         init(dir, name, perm, id, content);
+    }
+
+    public static Optional<? extends PlainFile> createIfNotExists(Directory dir, String name, byte perm, long id, String content) {
+        Optional<PlainFile> opt = Optional.empty();
+        try {
+            PlainFile pf = new PlainFile(dir, name, perm, id, content);
+            opt = Optional.of(pf);
+        } catch (FilenameAlreadyExistsException _) {
+            logger.debug("PlainFile with name *[" + name + "]* already exists!");
+        }
+        return opt;
     }
 
     /** construct an empty PlainFile */

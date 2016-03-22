@@ -47,9 +47,12 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
     
     public static Directory fromPath(String path, FileSystem fs) {
+        logger.debug("Directory.fromPath: " + path);
     	Directory newDir = fs.createFileParents(path);
-    	// FIXME: owner placeholder
-        return fs.createDirectory(newDir, "root" , (byte) 000000);
+        logger.debug("Directory.fromPath: newDir path: " + newDir.getFullPath());
+        String [] parts = path.split("/");
+        Optional<Directory> opt = fs.createDirectoryIfNotExists(newDir, parts[parts.length - 1], (byte)0b00000000);
+        return opt.get(); // NOTE: the Optional is guaranteed to have a Directory (read javadoc for more info)
     }
 
     @Override
@@ -65,7 +68,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
 
     @Override
     public String getFullPath() {
-        if(getDirectory() == this) { // we're the root dir
+        if(getDirectory() == this) { // we're the root dir (getDirectory() returns the parent dir)
             logger.trace("Directory.getFullPath() reached root dir");
             return "";
         } else {
@@ -104,15 +107,16 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
 
     @Override
-    public File getFileByName( String name ) throws FileNotFoundException {
-        if( name.equals(".") ) {
+    public File getFileByName(String name) throws FileNotFoundException {
+        logger.debug("getFileByName: " + name);
+        if(name.equals(".")) {
             return this;
-        } else if( name.equals( ".." ) ) {
+        } else if(name.equals("..")) {
             return getDirectory(); // parent
         }
 
-        for( File f : getFileSet() ) {
-            if( f.getName().equals(name) ) {
+        for(File f : getFileSet()) {
+            if(f.getName().equals(name)) {
                 return f;
             }
         }
