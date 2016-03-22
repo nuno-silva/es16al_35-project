@@ -26,7 +26,7 @@ public abstract class AbstractServiceTest {
     @Before // run before each test
     public void setUp() throws Exception {
         try {
-            MyDriveApplication.getTransactionManager().begin(false);
+            FenixFramework.getTransactionManager().begin(false);
             populate();
         } catch (WriteOnReadError | NotSupportedException | SystemException e1) {
             e1.printStackTrace();
