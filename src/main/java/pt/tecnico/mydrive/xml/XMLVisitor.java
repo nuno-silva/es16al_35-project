@@ -102,6 +102,7 @@ public class XMLVisitor implements IXMLVisitor {
         lastMod = file.getLastMod();
         Element fileElement = new Element(File.XML_TAG); // temp placeholder
         fileElement.setAttribute(new Attribute("id", String.valueOf(file.getId())));
+        String path = (file.getFullPath() == "") ? "/" : file.getFullPath();
 
         if (name != null && name != "") {
             fileElement.addContent(new Element("name").setText(name));
@@ -115,7 +116,7 @@ public class XMLVisitor implements IXMLVisitor {
             fileElement.addContent(new Element("lastMod").setText(lastMod.toString()));
         }
 
-        fileElement.addContent(new Element("path").setText(file.getFullPath()));
+        fileElement.addContent(new Element("path").setText(path));
 
         return fileElement;
 
