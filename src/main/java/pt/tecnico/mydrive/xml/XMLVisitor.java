@@ -115,7 +115,7 @@ public class XMLVisitor implements IXMLVisitor {
             fileElement.addContent(new Element("lastMod").setText(lastMod.toString()));
         }
 
-        fileElement.addContent(new Element("path", file.getFullPath()));
+        fileElement.addContent(new Element("path").setText(file.getFullPath()));
 
         return fileElement;
 
