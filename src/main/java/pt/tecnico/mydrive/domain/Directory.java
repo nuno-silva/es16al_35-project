@@ -29,7 +29,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
 
     /**
      * Creates the directory if one with the same name and parent does not already exist.
-     * @param parent parent
+     * @param parent parent Directory
      * @param name name
      * @param perm permissions
      * @param id ID
@@ -45,7 +45,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         }
         return opt;
     }
-    
+
     public static Directory fromPath(String path, FileSystem fs) {
         logger.debug("Directory.fromPath: " + path);
     	Directory newDir = fs.createFileParents(path);
@@ -68,7 +68,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
 
     @Override
     public String getFullPath() {
-        if(getDirectory() == this) { // we're the root dir (getDirectory() returns the parent dir)
+        if(getParentDir() == this) { // we're the root dir
             logger.trace("Directory.getFullPath() reached root dir");
             return "";
         } else {
@@ -112,7 +112,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         if(name.equals(".")) {
             return this;
         } else if(name.equals("..")) {
-            return getDirectory(); // parent
+            return getParentDir();
         }
 
         for(File f : getFileSet()) {

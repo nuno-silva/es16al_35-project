@@ -20,14 +20,14 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
         super();
     }
 
-    public PlainFile(Directory dir, String name, byte perm, long id, String content) {
-        init(dir, name, perm, id, content);
+    public PlainFile(Directory parent, String name, byte perm, long id, String content) {
+        init(parent, name, perm, id, content);
     }
 
-    public static Optional<? extends PlainFile> createIfNotExists(Directory dir, String name, byte perm, long id, String content) {
+    public static Optional<? extends PlainFile> createIfNotExists(Directory parent, String name, byte perm, long id, String content) {
         Optional<PlainFile> opt = Optional.empty();
         try {
-            PlainFile pf = new PlainFile(dir, name, perm, id, content);
+            PlainFile pf = new PlainFile(parent, name, perm, id, content);
             opt = Optional.of(pf);
         } catch (FilenameAlreadyExistsException _) {
             logger.debug("PlainFile with name *[" + name + "]* already exists!");
@@ -36,8 +36,8 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
     }
 
     /** construct an empty PlainFile */
-    public PlainFile( Directory dir, String name, byte perm, long id ) {
-        init( dir, name, perm, id, "" );
+    public PlainFile( Directory parent, String name, byte perm, long id ) {
+        init( parent, name, perm, id, "" );
     }
 
     @Override
@@ -45,8 +45,8 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
 		return false;
 	}
 
-    protected void init(Directory dir, String name, byte perm, long id, String content){
-        super.init(dir, name, perm, id);
+    protected void init(Directory parent, String name, byte perm, long id, String content){
+        super.init(parent, name, perm, id);
         setContent(content);
     }
 	public String readFileContent(){
@@ -67,7 +67,7 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
         }
         setContent( content );
     }
-    
+
     /** @returns the content of the PlainFile as a List of lines */
     @Override
     public List<String> showContent() {
@@ -75,7 +75,7 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
         List<String> lines = Arrays.asList( content.split( LINE_SEPARATOR ) );
         return lines;
     }
-    
+
     @Override
     public File getFileByName( String name ) {
     	return this;

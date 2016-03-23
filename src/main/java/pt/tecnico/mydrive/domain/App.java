@@ -15,14 +15,14 @@ public class App extends App_Base implements IXMLVisitable {
         super();
     }
 
-    public App(Directory dir, String name, byte perm, long id, String content) {
-            init(dir, name, perm, id, content);
+    public App(Directory parent, String name, byte perm, long id, String content) {
+            init(parent, name, perm, id, content);
     }
 
-    public static Optional<? extends PlainFile> createIfNotExists(Directory dir, String name, byte perm, long id, String content) {
+    public static Optional<? extends PlainFile> createIfNotExists(Directory parent, String name, byte perm, long id, String content) {
         Optional<App> opt = Optional.empty();
         try {
-            App app = new App(dir, name, perm, id, content);
+            App app = new App(parent, name, perm, id, content);
             opt = Optional.of(app);
         } catch (FilenameAlreadyExistsException _) {
             logger.debug("App with name *[" + name + "]* already exists!");

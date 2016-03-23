@@ -16,8 +16,8 @@ public class Link extends Link_Base implements IXMLVisitable {
         super();
     }
 
-    public Link(Directory dir, String name, byte perm, long id, String pointer) {
-        init(dir, name, perm, id);
+    public Link(Directory parent, String name, byte perm, long id, String pointer) {
+        init(parent, name, perm, id);
         setPointer(pointer);
     }
 
@@ -25,12 +25,12 @@ public class Link extends Link_Base implements IXMLVisitable {
     public boolean isCdAble() {
             return false;
 	}
-    
+
     @Override
     public File getFileByName( String name ) {
     	return this;
     }
-    
+
     /** @returns the content of the PlainFile as a List of lines */
     @Override
     public List<String> showContent() {

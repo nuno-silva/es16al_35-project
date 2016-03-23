@@ -51,7 +51,7 @@ relation FileSystemHasRootDir {
 }
 
 relation DirectoryHasFiles {
-	Directory playsRole directory { multiplicity 1; }
+	Directory playsRole parentDir { multiplicity 1; }
 	File playsRole file { multiplicity *; }
 }
 
