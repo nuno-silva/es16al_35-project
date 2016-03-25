@@ -17,10 +17,6 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     private static final Logger logger = Logger.getLogger(Directory.class);
     public static final String XML_TAG = "dir";
 
-    public Directory() {
-        super();
-    }
-
     public Directory(Directory parent, String name, byte perm, long id) {
         super();
         init(parent, name, perm, id);

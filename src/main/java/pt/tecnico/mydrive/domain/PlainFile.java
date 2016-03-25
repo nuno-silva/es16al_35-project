@@ -16,11 +16,12 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
     private static final Logger logger = Logger.getLogger(PlainFile.class);
 
 
-    public PlainFile() {
+    protected PlainFile() {
         super();
     }
 
     public PlainFile(Directory parent, String name, byte perm, long id, String content) {
+        super();
         init(parent, name, perm, id, content);
     }
 
@@ -37,6 +38,7 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
 
     /** construct an empty PlainFile */
     public PlainFile( Directory parent, String name, byte perm, long id ) {
+        super();
         init( parent, name, perm, id, "" );
     }
 

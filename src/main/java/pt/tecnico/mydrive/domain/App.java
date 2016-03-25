@@ -11,12 +11,9 @@ public class App extends App_Base implements IXMLVisitable {
     public static final String XML_TAG = "app";
     private static final Logger logger = Logger.getLogger(App.class);
 
-    public App() {
-        super();
-    }
-
     public App(Directory parent, String name, byte perm, long id, String content) {
-            init(parent, name, perm, id, content);
+        super();
+        init(parent, name, perm, id, content);
     }
 
     public static Optional<? extends PlainFile> createIfNotExists(Directory parent, String name, byte perm, long id, String content) {

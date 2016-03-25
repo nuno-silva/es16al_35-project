@@ -11,13 +11,10 @@ import pt.tecnico.mydrive.xml.IXMLVisitor;
 public class User extends User_Base implements IXMLVisitable, IPermissionable {
     public static final String XML_TAG = "user";
 
-    public User() {
-        super();
-    }
-
     private static final Logger logger = LogManager.getLogger();
 
     public User(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException {
+        super();
         init(fs, username, password, name, mask);
     }
 

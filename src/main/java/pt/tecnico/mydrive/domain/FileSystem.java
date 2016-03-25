@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.jar.Attributes;
 
 public class FileSystem extends FileSystem_Base {
-	
+
 	/**
 	 * Contains parameters required by all File children.
 	 *
@@ -43,19 +43,15 @@ public class FileSystem extends FileSystem_Base {
 			MASK = mask;
 			LASTMOD = lastMod;
 			PATH = path;
-			
+
 			return this;
 		}
 	}
     private final static Logger logger = Logger.getLogger(FileSystem.class);
     private static long numFiles = 0;
 
-    public FileSystem() {
-        super();
-    }
-
     public FileSystem(String name) {
-    	super();
+        super();
         init(name);
     }
 
@@ -400,7 +396,7 @@ public class FileSystem extends FileSystem_Base {
 
          }
     }
-    
+
     private void xmlImportDirectories(List<Element> dirs, FileSystem fs) {
         FileParams fp = new FileParams();
         for(Element dir : dirs) {

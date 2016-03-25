@@ -11,7 +11,7 @@ import pt.tecnico.mydrive.xml.IXMLVisitor;
 public abstract class File extends File_Base implements IXMLVisitable, IPermissionable {
     public static final String XML_TAG = "file";
 
-    public File() {
+    protected File() {
         super();
     }
 

@@ -11,11 +11,6 @@ public class Link extends Link_Base implements IXMLVisitable {
 	public static final String LINE_SEPARATOR = "\n";
     public static final String XML_TAG = "link";
 
-
-    public Link() {
-        super();
-    }
-
     public Link(Directory parent, String name, byte perm, long id, String pointer) {
         init(parent, name, perm, id);
         setPointer(pointer);
