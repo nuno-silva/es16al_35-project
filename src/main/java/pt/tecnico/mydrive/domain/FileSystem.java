@@ -48,7 +48,6 @@ public class FileSystem extends FileSystem_Base {
 		}
 	}
     private final static Logger logger = Logger.getLogger(FileSystem.class);
-    private static long numFiles = 0;
 
     public FileSystem(String name) {
         super();
@@ -56,6 +55,7 @@ public class FileSystem extends FileSystem_Base {
     }
 
     private void init(String name) {
+        setFileCounter(0);
         setName(name);
         byte permission = (byte) 0b111101101;
 
@@ -108,16 +108,30 @@ public class FileSystem extends FileSystem_Base {
 
     protected Directory createRootDirectory() {
         // FIXME: proper rootdir permission
-        Directory rootDir = new Directory((byte) 0b11111010, numFiles);
-        setRootDir(rootDir);
-        numFiles++;
+        Directory rootDir = new Directory( (byte) 0b11111010, peekNewFileId() );
+        commitNewFileId(); // only allocate new fileId if Directory constructor throws no exception
+        setRootDir( rootDir );
         return rootDir;
     }
 
     public Directory createDirectory(Directory parent, String name, byte permission) {
-        Directory newDir = new Directory(parent, name, permission, numFiles);
-        numFiles+=1;
-        return newDir;
+        /* FIXME should this be protected? I don't think we should leak Directories out of the FileSystem (Nuno) */
+        Directory dir = new Directory( parent, name, permission, peekNewFileId() );
+        commitNewFileId(); // only allocate new fileId if Directory constructor throws no exception
+        return dir;
+    }
+
+    /** get the next new file id (but don't store it) - use it when trying to create a new File*/
+    protected long peekNewFileId() {
+        long newId = getFileCounter() + 1;
+        return newId;
+    }
+
+    /** "allocates" a new file id (when you're sure a new File was/will be created */
+    protected long commitNewFileId() {
+        long newId = peekNewFileId();
+        setFileCounter( newId );
+        return newId;
     }
 
     /**
@@ -129,7 +143,7 @@ public class FileSystem extends FileSystem_Base {
      * This Optional will contain the specified directory either way, it can never contain null.
      */
     public Optional<Directory> createDirectoryIfNotExists(Directory parent, String name, byte permission) {
-        Optional<Directory> opt = Directory.createIfNotExists(parent, name, permission, numFiles);
+        Optional<Directory> opt = Directory.createIfNotExists(parent, name, permission, peekNewFileId() );
         if (!opt.isPresent()) {
             // Assuming that getFile() will succeed, since createIfNotExists() reported that the directory
             // already exists. This will result in an exception if something goes wrong with getFile(). If we were
@@ -140,14 +154,14 @@ public class FileSystem extends FileSystem_Base {
             logger.debug("Full Path: " + path);
             opt = Optional.of((Directory)(this.getFile(path)));
         } else {
-            numFiles+=1; // new directory has been created
+            commitNewFileId(); // new directory has been created
         }
         return opt;
     }
 
     public PlainFile createPlainFile(Directory parent, String name, byte permission) {
-    	PlainFile newPlainFile = new PlainFile(parent, name, permission, numFiles);
-        numFiles+=1;
+    	PlainFile newPlainFile = new PlainFile(parent, name, permission, peekNewFileId() );
+        commitNewFileId(); // only allocate new fileId if Directory constructor throws no exception
         return newPlainFile;
     }
 
@@ -171,6 +185,7 @@ public class FileSystem extends FileSystem_Base {
     }
 
     public List<String> pathContent (String path) throws UnknownPathException {
+        /* FIXME duplicate of fileContent() ? */
         return getFile(path).showContent();
     }
 
@@ -272,6 +287,8 @@ public class FileSystem extends FileSystem_Base {
         xmlImportApps(apps, fs);
         logger.debug("END import Apps");
         logger.debug("END xmlImport");
+        /* FIXME after importing everything, is the fileCounter begin set to
+         * the greatest fileID that was imported? */
     }
 
     private FileSystem xmlCreateFileSystem() {

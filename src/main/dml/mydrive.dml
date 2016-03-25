@@ -4,6 +4,7 @@ class Manager;
 
 class FileSystem {
     String name; // unique identifier
+    long fileCounter;
 }
 
 class User {

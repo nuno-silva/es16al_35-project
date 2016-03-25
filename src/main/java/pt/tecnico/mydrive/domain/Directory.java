@@ -42,6 +42,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
 
     public static Directory fromPath(String path, FileSystem fs) {
+        /* FIXME why is this static method here? shouldn't this be done in FileSystem? (Nuno) */
         logger.debug("Directory.fromPath: " + path);
     	Directory newDir = fs.createFileParents(path);
         logger.debug("Directory.fromPath: newDir path: " + newDir.getFullPath());
