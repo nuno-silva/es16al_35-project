@@ -26,29 +26,26 @@ class PlainFile extends File {
 	String content;
 }
 
-
-class Link extends File {
-	String pointer;  // what the link points to
-}
-
 class Directory extends File;
 
 class App extends PlainFile;
 
+class Link extends PlainFile;
+
 relation FileSystemHasUsers {
-	User playsRole user {multiplicity 1..*;}
+	User playsRole user {multiplicity 0..*;}
 	FileSystem playsRole fs {multiplicity 1;}
 }
 
-relation FileHasOwner {
+relation UserHasFiles {
     File playsRole file;
-    User playsRole owner;
+    User playsRole user;
 }
 
 relation FileSystemHasRootDir {
 
 	FileSystem playsRole fs { multiplicity 1; }
-	Directory playsRole rootDir {  multiplicity 1; }
+	Directory playsRole rootDir {  multiplicity 0..1; }
 }
 
 relation DirectoryHasFiles {

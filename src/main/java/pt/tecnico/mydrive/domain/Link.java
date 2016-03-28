@@ -11,9 +11,8 @@ public class Link extends Link_Base implements IXMLVisitable {
 	public static final String LINE_SEPARATOR = "\n";
     public static final String XML_TAG = "link";
 
-    public Link(Directory parent, String name, byte perm, long id, String pointer) {
-        init(parent, name, perm, id);
-        setPointer(pointer);
+    public Link(Directory parent, String name, byte perm, long id, String content) {
+        init(parent, name, perm, id,content);
     }
 
     @Override
@@ -29,7 +28,7 @@ public class Link extends Link_Base implements IXMLVisitable {
     /** @returns the content of the PlainFile as a List of lines */
     @Override
     public List<String> showContent() {
-        String content = getPointer();
+        String content = getContent();
         List<String> lines = Arrays.asList( content.split( LINE_SEPARATOR ) );
         return lines;
     }

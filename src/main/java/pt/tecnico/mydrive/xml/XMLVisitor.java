@@ -48,7 +48,7 @@ public class XMLVisitor implements IXMLVisitor {
     @Override
     public Element visit(Link link) {
         String pointer;
-        pointer = link.getPointer();
+        pointer = link.getContent();
         Element linkElem = visit((File)link);
         linkElem.setName(Link.XML_TAG);
         if(pointer != null && pointer != "") {
