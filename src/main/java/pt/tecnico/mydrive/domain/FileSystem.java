@@ -10,6 +10,7 @@ import org.jdom2.output.XMLOutputter;
 import org.joda.time.DateTime;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.dml.Slot;
 import pt.tecnico.mydrive.domain.xml.XMLVisitor;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
@@ -258,6 +259,27 @@ public class FileSystem extends FileSystem_Base {
             }
         }
         return doc;
+    }
+
+    /**
+     * Returns {@link Optional} containing the User with the specified  username. If no User with such username is
+     * found, an empty {@link Optional} is returned. The caller should always call {@link Optional#isPresent()} before
+     * accessing the value.
+     * @param username the username of the {@link User} to find
+     * @return {@link Optional} containing the {@link User} with the specified username
+     */
+    public Optional<User> getUserByUsername(String username) {
+        Optional<User> opt = Optional.empty();
+        if (username == null) { return opt; }
+
+        for (User u: getUserSet()) {
+            if (u.getUsername() == username) {
+                opt = Optional.of(u);
+                return opt;
+            }
+        }
+
+        return opt;
     }
 
     @Atomic
