@@ -17,12 +17,12 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
 
     public File(Directory parent, String name, byte perm, long id) {
         super();
-        init(parent, name, perm, id, parent.getUser());
+        init(parent, name, perm, id, parent.getOwner());
     }
 
     public File(Directory parent, String name, long id){
         super();
-        init(parent, name, parent.getMask(), id, parent.getUser());
+        init(parent, name, parent.getMask(), id, parent.getOwner());
     }
 
     public File(Directory parent, String name, byte perm, long id, User owner) {
@@ -42,7 +42,7 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         setMask(perm);
         setParentDir(parent); // must be called after setName!
         setLastMod(new DateTime());
-        setUser(owner);
+        setOwner(owner);
     }
 
     protected void init(Directory parent, String name, byte perm, long id) {
@@ -51,7 +51,7 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         setMask(perm);
         setParentDir(parent);
         setLastMod(new DateTime());
-        setUser(parent.getUser());
+        setOwner(parent.getOwner());
     }
 
     @Override

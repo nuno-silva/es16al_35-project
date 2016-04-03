@@ -39,7 +39,7 @@ relation FileSystemHasUsers {
 
 relation UserHasFiles {
     File playsRole file;
-    User playsRole user;
+    User playsRole owner;
 }
 
 relation FileSystemHasRootDir {
