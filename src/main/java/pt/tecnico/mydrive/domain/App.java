@@ -1,9 +1,10 @@
 package pt.tecnico.mydrive.domain;
+
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
+import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
+import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
-import pt.tecnico.mydrive.xml.IXMLVisitable;
-import pt.tecnico.mydrive.xml.IXMLVisitor;
 
 import java.util.Optional;
 

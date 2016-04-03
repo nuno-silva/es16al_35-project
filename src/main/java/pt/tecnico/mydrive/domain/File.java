@@ -1,12 +1,12 @@
 package pt.tecnico.mydrive.domain;
 
-import java.util.List;
-import org.joda.time.DateTime;
-
 import org.jdom2.Element;
+import org.joda.time.DateTime;
+import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
+import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
-import pt.tecnico.mydrive.xml.IXMLVisitable;
-import pt.tecnico.mydrive.xml.IXMLVisitor;
+
+import java.util.List;
 
 public abstract class File extends File_Base implements IXMLVisitable, IPermissionable {
     public static final String XML_TAG = "file";

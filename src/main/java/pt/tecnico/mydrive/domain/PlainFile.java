@@ -1,13 +1,13 @@
 package pt.tecnico.mydrive.domain;
+
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
+import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
+import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
-import pt.tecnico.mydrive.xml.IXMLVisitable;
-import pt.tecnico.mydrive.xml.IXMLVisitor;
-import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class PlainFile extends PlainFile_Base implements IXMLVisitable {

@@ -3,17 +3,15 @@ package pt.tecnico.mydrive;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import pt.tecnico.mydrive.domain.*;
-
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
-import pt.tecnico.mydrive.exception.InvalidUsernameException;
+import pt.tecnico.mydrive.domain.Directory;
+import pt.tecnico.mydrive.domain.FileSystem;
+import pt.tecnico.mydrive.domain.PlainFile;
 
 import java.io.IOException;
 import java.util.List;

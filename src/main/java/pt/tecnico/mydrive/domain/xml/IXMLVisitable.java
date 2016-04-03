@@ -1,6 +1,5 @@
-package pt.tecnico.mydrive.xml;
+package pt.tecnico.mydrive.domain.xml;
 
-import org.jdom2.Document;
 import org.jdom2.Element;
 
 public interface IXMLVisitable {

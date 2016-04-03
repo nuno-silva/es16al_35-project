@@ -1,13 +1,9 @@
-package pt.tecnico.mydrive.xml;
+package pt.tecnico.mydrive.domain.xml;
 
-import ch.qos.logback.classic.db.names.ColumnName;
 import org.jdom2.Attribute;
-import org.jdom2.Document;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 import pt.tecnico.mydrive.domain.*;
-
-import java.util.Set;
 
 /**
  * A concrete XMLVisitor implementation.

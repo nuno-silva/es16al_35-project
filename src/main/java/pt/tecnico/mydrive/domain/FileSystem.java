@@ -1,10 +1,8 @@
 package pt.tecnico.mydrive.domain;
 
 import org.apache.log4j.Logger;
-import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
-
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
@@ -12,20 +10,15 @@ import org.jdom2.output.XMLOutputter;
 import org.joda.time.DateTime;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.mydrive.domain.xml.XMLVisitor;
+import pt.tecnico.mydrive.exception.FileNotFoundException;
+import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
-import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
-import pt.tecnico.mydrive.exception.FileNotFoundException;
-
-import pt.tecnico.mydrive.xml.IXMLVisitable;
-import pt.tecnico.mydrive.xml.IXMLVisitor;
-import pt.tecnico.mydrive.xml.XMLVisitor;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.interfaces.ECKey;
 import java.util.*;
-import java.util.jar.Attributes;
 
 public class FileSystem extends FileSystem_Base {
 

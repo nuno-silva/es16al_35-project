@@ -1,11 +1,11 @@
 package pt.tecnico.mydrive.domain;
-import java.util.Arrays;
-import java.util.List;
-import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 
 import org.jdom2.Element;
-import pt.tecnico.mydrive.xml.IXMLVisitable;
-import pt.tecnico.mydrive.xml.IXMLVisitor;
+import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
+import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class Link extends Link_Base implements IXMLVisitable {
 	public static final String LINE_SEPARATOR = "\n";

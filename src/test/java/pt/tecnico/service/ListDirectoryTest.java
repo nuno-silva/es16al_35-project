@@ -1,12 +1,6 @@
 package pt.tecnico.mydrive.service;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
-
-import pt.tecnico.mydrive.domain.User;
-
-import java.util.List;
 
 public class ListDirectoryTest extends AbstractServiceTest {
 

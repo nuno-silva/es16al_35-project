@@ -1,18 +1,16 @@
 package pt.tecnico.mydrive.service;
 
-import javax.transaction.NotSupportedException;
-import javax.transaction.SystemException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.WriteOnReadError;
 import pt.tecnico.mydrive.MyDriveApplication;
+
+import javax.transaction.NotSupportedException;
+import javax.transaction.SystemException;
 
 public abstract class AbstractServiceTest {
     protected static final Logger log = LogManager.getRootLogger();
