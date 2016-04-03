@@ -49,14 +49,24 @@ public class FileSystem extends FileSystem_Base {
 	}
     private final static Logger logger = Logger.getLogger(FileSystem.class);
 
-    public FileSystem(String name) {
-        super();
-        init(name);
+    public static FileSystem getInstance() {
+        FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+        if( fs == null ) {
+            fs = new FileSystem();
+            logger.trace("created new FileSystem");
+        }
+
+        return fs;
     }
 
-    private void init(String name) {
+    public FileSystem() {
+        super();
+        setRoot(FenixFramework.getDomainRoot());
+        init();
+    }
+
+    private void init() {
         setFileCounter(0);
-        setName(name);
         byte permission = (byte) 0b111101101;
 
         // Create root directory: "/"
@@ -268,38 +278,29 @@ public class FileSystem extends FileSystem_Base {
         List<Element> apps = doc.getRootElement().getChildren(App.XML_TAG);
         List<Element> links = doc.getRootElement().getChildren(Link.XML_TAG);
 
-        FileSystem fs = xmlCreateFileSystem();
-
         logger.debug("BEGIN xmlImport");
         logger.debug("BEGIN import Users");
-        xmlImportUsers(users, fs);
+        xmlImportUsers(users);
         logger.debug("END import Users");
         logger.debug("BEGIN import Directories");
-        xmlImportDirectories(dirs, fs);
+        xmlImportDirectories(dirs);
         logger.debug("END import Directories");
         logger.debug("BEGIN import PlainFiles");
-        xmlImportPlainFiles(plains, fs);
+        xmlImportPlainFiles(plains);
         logger.debug("END import PlainFiles");
         logger.debug("BEGIN import Links");
-        xmlImportLinks(links, fs);
+        xmlImportLinks(links);
         logger.debug("END import Links");
         logger.debug("BEGIN import Apps");
-        xmlImportApps(apps, fs);
+        xmlImportApps(apps);
         logger.debug("END import Apps");
         logger.debug("END xmlImport");
         /* FIXME after importing everything, is the fileCounter begin set to
          * the greatest fileID that was imported? */
     }
 
-    private FileSystem xmlCreateFileSystem() {
-        Manager man = FenixFramework.getDomainRoot().getManager();
-        // FIXME: temporary placeholder for FileSystem's name
-        FileSystem fs = new FileSystem("ext4");
-        man.addFileSystem(fs);
-        return fs;
-    }
 
-    private FileParams parseFileParams(Element file, FileSystem fs, FileParams fp) {
+    private FileParams parseFileParams(Element file, FileParams fp) {
         // This allows some code reuse
     	Element e;
         String id, name, mask, lastMod, path;
@@ -322,7 +323,7 @@ public class FileSystem extends FileSystem_Base {
             path = "/usr/nopath"; // FIXME: find a more suitable default path
         }
         logger.debug("File path: " + path);
-        fs.createFileParents(path);
+        createFileParents(path);
 
         e = file.getChild("mask");
         if (e != null) {
@@ -342,23 +343,22 @@ public class FileSystem extends FileSystem_Base {
         return fp.parse(id, name, mask, lastMod, path);
     }
 
-    private void xmlImportApps(List<Element> apps, FileSystem fs) {
-    	xmlImportContentFiles(apps, fs, true);
+    private void xmlImportApps(List<Element> apps) {
+    	xmlImportContentFiles(apps, true);
     }
 
     /**
      * Import content files from XML (i.e. PlainFiles Apps).
      *
      * @param  contentFiles - list of Elements to import
-     * @param fs - FileSystem which every instance of the created Files will be associated with
      * @param isApp - if true, create App files. If false, create PlainFiles
      */
-    private void xmlImportContentFiles(List<Element> contentFiles, FileSystem fs, boolean isApp) {
+    private void xmlImportContentFiles(List<Element> contentFiles, boolean isApp) {
         FileParams fp = new FileParams();
         String content;
         Element elem;
         for (Element contentFile :  contentFiles) {
-            fp = parseFileParams(contentFile, fs, fp);
+            fp = parseFileParams(contentFile, fp);
             elem = contentFile.getChild("content");
             if (elem != null) {
                 content = elem.getText();
@@ -382,23 +382,23 @@ public class FileSystem extends FileSystem_Base {
             if (opt.isPresent()) {
                 newPlainFile = opt.get();
                 newPlainFile.setLastMod(new DateTime()); // FIXME: placeholder lastMod
-                fs.getRootDir().addFileIfNotExists(newPlainFile);
-                //fs.createFileParents(fp.PATH);
+                getRootDir().addFileIfNotExists(newPlainFile);
+                //createFileParents(fp.PATH);
             }
 
         }
     }
 
-    private void xmlImportPlainFiles(List<Element> plains, FileSystem fs) {
-        xmlImportContentFiles(plains, fs, false);
+    private void xmlImportPlainFiles(List<Element> plains) {
+        xmlImportContentFiles(plains, false);
     }
 
-    private void xmlImportLinks(List<Element> links, FileSystem fs) {
+    private void xmlImportLinks(List<Element> links) {
     	 FileParams fp = new FileParams();
     	 String pointer = null;
      	 Element elem = null;
          for(Element link : links) {
-         	fp = parseFileParams(link, fs, fp);
+            fp = parseFileParams(link, fp);
             elem = link.getChild("pointer");
      		if (elem != null) {
      			pointer = elem.getText();
@@ -407,33 +407,31 @@ public class FileSystem extends FileSystem_Base {
      		}
      		File newLink = new Link(createFileParents(fp.PATH), fp.NAME,
                                     (byte)0b00000001, Long.valueOf(fp.ID), pointer);
-             newLink.setLastMod(new DateTime()); // FIXME: placeholder lastMod
-             fs.getRootDir().addFile(newLink);
-             fs.createFileParents(fp.PATH);
-
+            newLink.setLastMod(new DateTime()); // FIXME: placeholder lastMod
+            getRootDir().addFile(newLink);
+            createFileParents(fp.PATH);
          }
     }
 
-    private void xmlImportDirectories(List<Element> dirs, FileSystem fs) {
+    private void xmlImportDirectories(List<Element> dirs) {
         FileParams fp = new FileParams();
         for(Element dir : dirs) {
-        	fp = parseFileParams(dir, fs, fp);
+        	fp = parseFileParams(dir, fp);
             Optional<Directory> opt =
-                    Directory.createIfNotExists(fs.getRootDir(), fp.NAME, (byte)0b1111111, Long.valueOf(fp.ID));
+                    Directory.createIfNotExists(getRootDir(), fp.NAME, (byte)0b1111111, Long.valueOf(fp.ID));
             if (opt.isPresent()) {
                 logger.debug("Creating directory");
                 Directory newDir = opt.get();
                 newDir.setLastMod(new DateTime()); // FIXME: placeholder lastMod
-                fs.createFileParents(fp.PATH);
-                fs.getRootDir().addFileIfNotExists(newDir);
+                createFileParents(fp.PATH);
+                getRootDir().addFileIfNotExists(newDir);
             }
         }
 
     }
 
-    private void xmlImportUsers(List<Element> users, FileSystem fs) {
+    private void xmlImportUsers(List<Element> users) {
         // FIXME: this code is bad
-        Manager man = FenixFramework.getDomainRoot().getManager();
         String username, password, name, home, mask;
         Element elem;
         for (Element u : users) {
@@ -459,7 +457,7 @@ public class FileSystem extends FileSystem_Base {
                 home = "/usr/home/" + username;
             }
             // TODO: make sure this works
-            fs.createFileParents(home);
+            createFileParents(home);
 
             elem = u.getChild("mask");
             if (elem != null) {
@@ -471,7 +469,7 @@ public class FileSystem extends FileSystem_Base {
 
             try {
                 // FIXME: hardcoded mask
-                fs.addUser(new User(fs, username, password, name, (byte)0b00000000));
+                addUser(new User( this, username, password, name, (byte)0b00000000));
             } catch (InvalidUsernameException e) {
                 e.printStackTrace();
             }

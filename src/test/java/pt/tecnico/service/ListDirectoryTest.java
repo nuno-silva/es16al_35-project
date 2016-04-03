@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import pt.tecnico.mydrive.domain.Manager;
 import pt.tecnico.mydrive.domain.User;
 
 import java.util.List;

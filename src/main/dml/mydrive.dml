@@ -1,9 +1,6 @@
 package pt.tecnico.mydrive.domain;
 
-class Manager;
-
 class FileSystem {
-    String name; // unique identifier
     long fileCounter;
 }
 
@@ -53,12 +50,8 @@ relation DirectoryHasFiles {
 	File playsRole file { multiplicity *; }
 }
 
-relation DomainRootHasManager {
+relation DomainRootHasFileSystem {
 	.pt.ist.fenixframework.DomainRoot playsRole root { multiplicity 0..1; }
-	Manager playsRole manager { multiplicity 0..1; }
+	FileSystem playsRole fileSystem { multiplicity 0..1; }
 }
 
-relation ManagerHasFileSystems {
-	FileSystem playsRole fileSystem {multiplicity *;}
-	Manager playsRole manager {multiplicity 1;}
-}
