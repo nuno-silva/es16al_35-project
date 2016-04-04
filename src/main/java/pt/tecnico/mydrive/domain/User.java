@@ -46,7 +46,12 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
         }
         fs.addUser(this);
     }
-
+    
+    /* Is this needed? Discuss please (Jorge) */
+	public void remove(FileSystem fs){
+		fs.removeUser(this);
+	}
+	
     public boolean checkUserName(String username) {
         char[] chars = username.toCharArray();
         for (char c : chars) {
