@@ -16,11 +16,11 @@ import java.util.Optional;
 public abstract class MyDriveService {
     protected final static Logger logger = LogManager.getRootLogger();
 
-    public static FileSystem getFileSystem()  {
+    static FileSystem getFileSystem()  {
         return FileSystem.getInstance();
     }
 
-    public static User getUser(String username) {
+    static User getUser(String username) {
         if (username == null) {
             throw new InvalidUsernameException("Username cannot be \"null\".");
         }
