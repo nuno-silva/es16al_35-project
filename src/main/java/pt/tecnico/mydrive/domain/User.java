@@ -25,12 +25,9 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
 			setName(name);
 			setMask(mask);
 			setFs(fs);
-			Directory d=(Directory)(fs.getFile("home"));
-			d.addFileIfNotExists(new Directory(username));
-			//Directory userDir=new Directory(fs.getFile("home"),username,mask,9987 /* XXX this is wrong */);
-			
-			// setDir(new Directory(username, (byte) 11111010, 123)); FIXME
-			// depois metodo que cria o user tem de ligar a sua pasta ao directorio "home"
+			Directory home = fs.createFileParents( "/home/"+username );
+			//Directory d=(Directory)(fs.getFile("home"));  XXX this might be a little dirty
+			//home.addFileIfNotExists(new Directory(username));
 		}
 		else {
             throw new InvalidUsernameException(username);
