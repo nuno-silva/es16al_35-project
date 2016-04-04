@@ -34,7 +34,21 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         super();
         init(parent, name, parent.getMask(), id, owner);
     }
+    
+    /*public File(Directory parent,String name,byte perm){
+		super();
+		init(parent,name,perm,parent.getOwner(),getFs().commitNewFileId());
+	} will think about this (Jorge)*/
 
+	protected void init(Directory parent,String name,byte perm){
+		setParentDir(parent);
+		setName(name);
+		setMask(perm);
+		setOwner(parent.getOwner());
+		setId(getOwner().getFs().commitNewFileId());
+		setLastMod(new DateTime());
+		
+	}
 
     protected void init(Directory parent, String name, byte perm, long id, User owner) {
         setName(name);
