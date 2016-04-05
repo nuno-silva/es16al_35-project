@@ -48,6 +48,7 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
     }
     
     /* Is this needed? Discuss please (Jorge) */
+    @Override
 	public void remove(FileSystem fs){
 		fs.removeUser(this);
 	}
