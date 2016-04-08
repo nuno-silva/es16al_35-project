@@ -1,5 +1,11 @@
 package pt.tecnico.mydrive.domain;
 
+class Session {
+	long token; // long is 64 bits in Java (signed or not, doesn't matter)
+	String workingPath; // same reason we used a String for User.homePath
+	DateTime expirationDate;
+}
+
 class FileSystem {
     long fileCounter;
 }
@@ -55,3 +61,7 @@ relation DomainRootHasFileSystem {
 	FileSystem playsRole fileSystem { multiplicity 0..1; }
 }
 
+relation UserHasSessions {
+	User playsRole user { multiplicity 1; }
+	Session playsRole session { multiplicity *; } // a user may have multiple active sessions
+}

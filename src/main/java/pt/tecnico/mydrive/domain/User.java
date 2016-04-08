@@ -43,6 +43,11 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
         fs.addUser(this);
     }
 
+    public boolean checkPassword(String password) {
+        return getPassword().equals(password);
+    }
+    
+
     public boolean checkUserName(String username) {
         char[] chars = username.toCharArray();
         for (char c : chars) {
