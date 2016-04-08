@@ -13,6 +13,10 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
 
     private static final Logger logger = LogManager.getLogger();
 
+	protected User(){
+		super();
+	}
+
     public User(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException {
         super();
         init(fs, username, password, name, mask);
@@ -47,7 +51,11 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
         return getPassword().equals(password);
     }
     
-
+    /* Is this needed? Discuss please (Jorge) */
+	public void remove(FileSystem fs){
+		fs.removeUser(this);
+	}
+	
     public boolean checkUserName(String username) {
         char[] chars = username.toCharArray();
         for (char c : chars) {

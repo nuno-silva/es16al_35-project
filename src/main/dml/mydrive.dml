@@ -35,6 +35,8 @@ class App extends PlainFile;
 
 class Link extends PlainFile;
 
+class SuperUser extends User;
+
 relation FileSystemHasUsers {
 	User playsRole user {multiplicity 0..*;}
 	FileSystem playsRole fs {multiplicity 1;}
@@ -54,6 +56,11 @@ relation FileSystemHasRootDir {
 relation DirectoryHasFiles {
 	Directory playsRole parentDir { multiplicity 1; }
 	File playsRole file { multiplicity *; }
+}
+
+relation FileSystemHasSuperUser{
+	FileSystem playsRole fileSystem { multiplicity 1; }
+	SuperUser playsRole superUser { multiplicity 1; }
 }
 
 relation DomainRootHasFileSystem {
