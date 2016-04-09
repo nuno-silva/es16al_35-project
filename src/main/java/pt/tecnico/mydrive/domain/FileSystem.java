@@ -88,6 +88,11 @@ public class FileSystem extends FileSystem_Base {
      */
     public Directory createFileParents(String path) {
         logger.debug("createFileParents path: " + path);
+
+        if( path.indexOf("/") != 0 ) {
+            throw new IllegalArgumentException("path '"+path+"' is not relative to '/'");
+        }
+
         Directory dir = getRootDir();
         String currentPath = "";
         String[] p = path.split("/");
