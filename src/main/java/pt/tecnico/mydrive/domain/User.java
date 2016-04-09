@@ -6,6 +6,7 @@ import org.jdom2.Element;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
+import pt.tecnico.mydrive.exception.UsernameAlreadyExistsException;
 
 
 public class User extends User_Base implements IXMLVisitable, IPermissionable {
@@ -17,35 +18,31 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
 		super();
 	}
 
-    public User(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException {
+    public User(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
         super();
         init(fs, username, password, name, mask);
     }
 
-    public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException {
+    public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
 		if (checkUserName(username)) {
 			setUsername(username);
 			setPassword(password);
 			setName(name);
 			setMask(mask);
-			setFs(fs);
+			
+			if( username.length() >=  3 )
+				fs.addUser( this );
+			else
+				throw new InvalidUsernameException( username );
+			
 			Directory home = fs.createFileParents( "/home/"+username );
-			//Directory d=(Directory)(fs.getFile("home"));  XXX this might be a little dirty
-			//home.addFileIfNotExists(new Directory(username));
+			setHomePath(home.getFullPath());
 		}
 		else {
             throw new InvalidUsernameException(username);
         }
     }
 
-    @Override
-    public void setFs( FileSystem fs ) {
-        if( fs == null ) {
-            super.setFs(fs);
-            return;
-        }
-        fs.addUser(this);
-    }
 
     public boolean checkPassword(String password) {
         return getPassword().equals(password);

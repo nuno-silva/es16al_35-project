@@ -6,7 +6,7 @@ import pt.tecnico.mydrive.exception.PermissionDeniedException;
 
 public class SuperUser extends SuperUser_Base {
 	
-	public SuperUser(FileSystem fs,String password) throws InvalidUsernameException{
+	public SuperUser(FileSystem fs,String password) {
 			super();
 			init(fs,"root",password,"Super User",(byte) 11111111); 
 	}

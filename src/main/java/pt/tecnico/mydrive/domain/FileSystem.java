@@ -16,6 +16,8 @@ import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
+import pt.tecnico.mydrive.exception.UsernameAlreadyExistsException;
+import pt.tecnico.mydrive.exception.UserNotFoundException;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -70,11 +72,7 @@ public class FileSystem extends FileSystem_Base {
         Directory homeDir = createDirectory(rootDir, "home", permission);
 
         // Create Super User
-        try {
-            createUser( "root", "***", "Super User" );
-        } catch (InvalidUsernameException e ) {
-            e.printStackTrace(); // should never happen. "root" is a valid username
-        }
+        new SuperUser(this, "***");
     }
 
     /** Creates all parent directories for the given file path, if they
@@ -177,15 +175,6 @@ public class FileSystem extends FileSystem_Base {
             logger.debug("Got file... " + f.getFullPath());
             return (PlainFile)f;
         }
-    }
-
-    /** creates a new User and its home directory in the FileSystem */
-    public void createUser(String username, String password, String name) throws InvalidUsernameException {
-        User user = new User(this, username, password, name, (byte) 00000000);
-        String userHome = "/home/" + username;
-        Directory home = createFileParents( userHome );
-        createDirectory(home, username, (byte) 000000);
-        user.setHomePath( userHome );
     }
 
     public List<String> pathContent (String path) throws UnknownPathException {
@@ -493,6 +482,37 @@ public class FileSystem extends FileSystem_Base {
         }
 
     }
+
+    @Override
+    public void addUser(User u) throws UsernameAlreadyExistsException{
+        	String username=u.getUsername();
+			if( hasUser( username ) ) {
+				throw new UsernameAlreadyExistsException( username );
+			} else {
+				super.addUser( u );
+			}
+			
+	}
+
+    public boolean hasUser(String username){
+		try{
+			getUser( username );
+			return true;
+		} catch (UserNotFoundException e){
+			return false;
+		}
+		
+	}
+
+
+    public User getUser(String username) {
+        for (User u: getUserSet()) {
+            if (u.getUsername() == username) {
+				return u;
+            }
+        }
+		throw new UserNotFoundException( username);
+	}
 
     public void xmlImportFromFile(String fileName) throws JDOMException, IOException {
         xmlImport(getXMLDocumentFromFile(fileName));
