@@ -9,33 +9,21 @@ import pt.tecnico.mydrive.domain.Directory;
 public class CreateFileService extends MyDriveService {
 
     private String fileName;
-    private String type;
-	private String content;
 	private byte permissions;
 
-    public CreateFileService(String fileName,String type,String owner,String parent,String content) {
+    public CreateFileService(String fileName,String owner,String parent) {
         this.fileName = fileName;
-        this.type = type;
         permissions=getUser(owner).getByteMask();
-        this.content=content;
     }
 
-	public CreateFileService(String fileName,String type,User owner,Directory parent) {
+	public CreateFileService(String fileName,User owner,Directory parent) {
         this.fileName = fileName;
-        this.type = type;
         permissions=owner.getByteMask();
-        content="";
     }
+
     @Override
-    protected void dispatch() throws EmptyFileNameException {
-		if(this.fileName=="") throw new EmptyFileNameException();
-		// TODO is type gonna be a String? Ask teacher
-		if(type=="link"){
-			if(content.trim()=="") 
-				throw new InvalidFileNameException(fileName);
-			//else
-				//new Link//ask teacher if this is the exception to throw!!
-		}
-		
-    }
+    protected void dispatch() throws EmptyFileNameException{
+		if( fileName.trim() == "" )
+			throw new EmptyFileNameException();
+	}
 }
