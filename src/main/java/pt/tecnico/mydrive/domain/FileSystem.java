@@ -69,14 +69,17 @@ public class FileSystem extends FileSystem_Base {
         setFileCounter(0);
         byte permission = (byte) 0b111101101;
 
+        // Create Super User
+        new SuperUser(this, "***");
+
         // Create root directory: "/"
         Directory rootDir = createRootDirectory();
 
         // Create home directory: "/home"
         Directory homeDir = createDirectory(rootDir, "home", permission);
-
-        // Create Super User
-        new SuperUser(this, "***");
+        
+        //Create root dir
+        Directory homeRoot = new Directory(this, homeDir, "root", permission);
     }
 
     /** Creates all parent directories for the given file path, if they
@@ -114,15 +117,14 @@ public class FileSystem extends FileSystem_Base {
 
     protected Directory createRootDirectory() {
         // FIXME: proper rootdir permission
-        Directory rootDir = new Directory( (byte) 0b11111010, peekNewFileId() );
-        commitNewFileId(); // only allocate new fileId if Directory constructor throws no exception
+        Directory rootDir = new Directory(this, (byte) 0b11111010 );
         setRootDir( rootDir );
         return rootDir;
     }
 
     public Directory createDirectory(Directory parent, String name, byte permission) {
         /* FIXME should this be protected? I don't think we should leak Directories out of the FileSystem (Nuno) */
-        Directory dir = new Directory( parent, name, permission, peekNewFileId() );
+        Directory dir = new Directory(this, parent, name, permission );
         commitNewFileId(); // only allocate new fileId if Directory constructor throws no exception
         return dir;
     }
@@ -149,7 +151,7 @@ public class FileSystem extends FileSystem_Base {
      * This Optional will contain the specified directory either way, it can never contain null.
      */
     public Optional<Directory> createDirectoryIfNotExists(Directory parent, String name, byte permission) {
-        Optional<Directory> opt = Directory.createIfNotExists(parent, name, permission, peekNewFileId() );
+        Optional<Directory> opt = Directory.createIfNotExists(this, parent, name, permission);
         if (!opt.isPresent()) {
             // Assuming that getFile() will succeed, since createIfNotExists() reported that the directory
             // already exists. This will result in an exception if something goes wrong with getFile(). If we were
@@ -166,8 +168,7 @@ public class FileSystem extends FileSystem_Base {
     }
 
     public PlainFile createPlainFile(Directory parent, String name, byte permission) {
-    	PlainFile newPlainFile = new PlainFile(parent, name, permission, peekNewFileId() );
-        commitNewFileId(); // only allocate new fileId if Directory constructor throws no exception
+    	PlainFile newPlainFile = new PlainFile(this, parent, name, permission);
         return newPlainFile;
     }
 
@@ -217,9 +218,9 @@ public class FileSystem extends FileSystem_Base {
         logger.debug("getFile: " + currentDir.getFullPath());
         return currentDir;
     }
-    
-    
-    
+
+
+
     public Document xmlExport() {
         Document doc = new Document(new Element("mydrive"));
         Element e;
@@ -383,11 +384,11 @@ public class FileSystem extends FileSystem_Base {
 
             // if it's an App, all the App's constructor, otherwise use PlainFile's
             if(isApp) {
-                opt = App.createIfNotExists(parent, fp.NAME,
-                        (byte)0b11111010, Long.valueOf(fp.ID), content);
+                opt = App.createIfNotExists(this, parent, fp.NAME,
+                        (byte)0b11111010,content);
             } else {
-                opt = PlainFile.createIfNotExists(parent, fp.NAME,
-                        (byte) 0b11111010, Long.valueOf(fp.ID), content);
+                opt = PlainFile.createIfNotExists(this, parent, fp.NAME,
+                        (byte) 0b11111010, content);
             }
             if (opt.isPresent()) {
                 newPlainFile = opt.get();
@@ -415,10 +416,9 @@ public class FileSystem extends FileSystem_Base {
      		} else {
      			pointer = "";
      		}
-     		File newLink = new Link(createFileParents(fp.PATH), fp.NAME,
-                                    (byte)0b00000001, Long.valueOf(fp.ID), pointer);
-            newLink.setLastMod(new DateTime()); // FIXME: placeholder lastMod
-            getRootDir().addFile(newLink);
+     		File newLink = new Link(this, createFileParents(fp.PATH), fp.NAME,
+                                    (byte)0b00000001, pointer);
+            getRootDir().addFile(newLink); // needed now?
             createFileParents(fp.PATH);
          }
     }
@@ -428,11 +428,10 @@ public class FileSystem extends FileSystem_Base {
         for(Element dir : dirs) {
         	fp = parseFileParams(dir, fp);
             Optional<Directory> opt =
-                    Directory.createIfNotExists(getRootDir(), fp.NAME, (byte)0b1111111, Long.valueOf(fp.ID));
+                    Directory.createIfNotExists(this, getRootDir(), fp.NAME, (byte)0b1111111);
             if (opt.isPresent()) {
                 logger.debug("Creating directory");
                 Directory newDir = opt.get();
-                newDir.setLastMod(new DateTime()); // FIXME: placeholder lastMod
                 createFileParents(fp.PATH);
                 getRootDir().addFileIfNotExists(newDir);
             }
@@ -491,6 +490,7 @@ public class FileSystem extends FileSystem_Base {
 
     @Override
     public void addUser(User u) throws UsernameAlreadyExistsException{
+		logger.trace("addUser " + u.getUsername());
         	String username=u.getUsername();
 			if( hasUser( username ) ) {
 				throw new UsernameAlreadyExistsException( username );
@@ -513,11 +513,15 @@ public class FileSystem extends FileSystem_Base {
 
     public User getUser(String username) {
         for (User u: getUserSet()) {
-            if (u.getUsername() == username) {
+            if (u.getUsername().equals(username)) {
 				return u;
             }
         }
-		throw new UserNotFoundException( username);
+		throw new UserNotFoundException( username );
+	}
+
+	public SuperUser getSuperUser() throws UserNotFoundException{
+		return (SuperUser)getUser("root");
 	}
 
     public void xmlImportFromFile(String fileName) throws JDOMException, IOException {

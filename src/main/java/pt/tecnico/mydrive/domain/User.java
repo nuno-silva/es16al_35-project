@@ -60,6 +60,7 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
 	}
 
     public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
+		logger.trace("User init " + username);
 		if (checkUserName(username)) {
 			setUsername(username);
 			setPassword(password);

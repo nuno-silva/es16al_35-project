@@ -14,58 +14,36 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     protected File() {
         super();
     }
-
-    public File(Directory parent, String name, byte perm, long id) {
+	
+	//all params
+    public File(FileSystem fs, Directory parent, User owner, String name, byte perm ) {
         super();
-        init(parent, name, perm, id, parent.getOwner());
+        init( fs, parent, owner, name, perm );
     }
-
-    public File(Directory parent, String name, long id){
+	//all but permissions
+    public File(FileSystem fs, Directory parent, User owner, String name){
         super();
-        init(parent, name, parent.getMask(), id, parent.getOwner());
+        init( fs, parent, owner, name, owner.getMask() );
     }
-
-    public File(Directory parent, String name, byte perm, long id, User owner) {
+	//all but owner
+    public File(FileSystem fs, Directory parent, String name, byte perm) {
         super();
-        init(parent, name, perm, id, owner);
+        init( fs, parent, fs.getSuperUser(), name, perm);
     }
 
-    public File(Directory parent, String name, long id, User owner) {
+	//all but permissions and owner
+    public File(FileSystem fs, Directory parent, String name) {
         super();
-        init(parent, name, parent.getMask(), id, owner);
-    }
-    
-    /*public File(Directory parent,String name,byte perm){
-		super();
-		init(parent,name,perm,parent.getOwner(),getFs().commitNewFileId());
-	} will think about this (Jorge)*/
-
-	protected void init(Directory parent,String name,byte perm){
-		setParentDir(parent);
-		setName(name);
-		setMask(perm);
-		setOwner(parent.getOwner());
-		setId(getOwner().getFs().commitNewFileId());
-		setLastMod(new DateTime());
-		
-	}
-
-    protected void init(Directory parent, String name, byte perm, long id, User owner) {
-        setName(name);
-        setId(id);
-        setMask(perm);
-        setParentDir(parent); // must be called after setName!
-        setLastMod(new DateTime());
-        setOwner(owner);
+        init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask() );
     }
 
-    protected void init(Directory parent, String name, byte perm, long id) {
-        setName(name);
-        setId(id);
-        setMask(perm);
-        setParentDir(parent);
-        setLastMod(new DateTime());
-        setOwner(parent.getOwner());
+    protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm) {
+        setName( name );
+        setId( fs.commitNewFileId() );
+        setMask( perm );
+        setOwner( owner );
+        setParentDir( parent ); // must be called after setName!
+        setLastMod( new DateTime() );
     }
 
     @Override
@@ -81,6 +59,7 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
 
     public void remove() {
         setParentDir(null);
+        setOwner(null);
         deleteDomainObject();
     }
 

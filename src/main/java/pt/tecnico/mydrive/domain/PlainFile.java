@@ -20,15 +20,63 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
         super();
     }
 
-    public PlainFile(Directory parent, String name, byte perm, long id, String content) {
+    //all params
+	public PlainFile(FileSystem fs, Directory parent, User owner, String name, byte perm, String content) {
+		super();
+		init( fs, parent, owner, name, perm, content);
+	}
+	
+	//all but content
+	public PlainFile(FileSystem fs, Directory parent, User owner, String name, byte perm){
+		super();
+		init( fs, parent, owner, name, perm,  "" );
+	}
+	//all but owner
+	public PlainFile(FileSystem fs, Directory parent, String name, byte perm, String content) {
+		super();
+		init( fs, parent, fs.getSuperUser(), name, perm, content );
+	}
+
+	//all but permissions
+	public PlainFile(FileSystem fs, Directory parent, User owner, String name, String content) {
+		super();
+		init( fs, parent, owner, name, owner.getMask(), content );
+	}
+
+	//all but content and owner
+    public PlainFile(FileSystem fs, Directory parent, String name, byte perm) {
         super();
-        init(parent, name, perm, id, content);
+        init( fs, parent, fs.getSuperUser() , name, perm, "" );
     }
 
-    public static Optional<? extends PlainFile> createIfNotExists(Directory parent, String name, byte perm, long id, String content) {
+    //all but content and permissions
+	public PlainFile(FileSystem fs, Directory parent, User owner, String name) {
+		super();
+		init( fs, parent, owner, name, owner.getMask(), "" );
+	}
+
+    //all permissions and owner
+	public PlainFile(FileSystem fs, Directory parent, String name, String content) {
+		super();
+		init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), content);
+	}
+
+	//all permissions, owner and content
+	public PlainFile(FileSystem fs, Directory parent, String name) {
+		super();
+		init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), "" );
+	}
+
+    protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm, String content){
+        super.init( fs, parent, owner, name, perm );
+        setContent( content );
+    }
+
+
+    public static Optional<? extends PlainFile> createIfNotExists(FileSystem fs, Directory parent, String name, byte perm, String content) {
         Optional<PlainFile> opt = Optional.empty();
         try {
-            PlainFile pf = new PlainFile(parent, name, perm, id, content);
+            PlainFile pf = new PlainFile(fs, parent, name, perm, content);
             opt = Optional.of(pf);
         } catch (FilenameAlreadyExistsException _) {
             logger.debug("PlainFile with name *[" + name + "]* already exists!");
@@ -36,21 +84,12 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
         return opt;
     }
 
-    /** construct an empty PlainFile */
-    public PlainFile( Directory parent, String name, byte perm, long id ) {
-        super();
-        init( parent, name, perm, id, "" );
-    }
-
     @Override
     public boolean isCdAble(){
 		return false;
 	}
 
-    protected void init(Directory parent, String name, byte perm, long id, String content){
-        super.init(parent, name, perm, id);
-        setContent(content);
-    }
+
 	public String readFileContent(){
 		return getContent();
 	}

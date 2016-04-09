@@ -15,24 +15,30 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     private static final Logger logger = Logger.getLogger(Directory.class);
     public static final String XML_TAG = "dir";
 
-    public Directory(Directory parent, String name, byte perm, long id) {
+    //all params
+    public Directory(FileSystem fs, Directory parent, User owner, String name, byte perm) {
         super();
-        init(parent, name, perm, id);
+        init( fs, parent, owner, name, perm );
     }
-
-	public Directory(Directory parent,String name,byte perm){
-		super();
-		init(parent,name,perm);
-	}
-	
-	public Directory(String name,byte perm){
-		super();
-		init(this,name,perm);
-	}
-	public Directory(String name){
-		super();
-		init(this,name,getMask());
-	}
+        
+    //all but owner
+    public Directory(FileSystem fs, Directory parent, String name, byte perm) {
+        super();
+        init( fs, parent, fs.getSuperUser(), name, perm );
+    }
+    
+    //all but perm
+    public Directory(FileSystem fs, Directory parent, User owner, String name) {
+        super();
+        init( fs, parent, owner, name, owner.getMask() );
+    }
+        
+     //all but owner and perm
+    public Directory(FileSystem fs, Directory parent, String name) {
+        super();
+        init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask() );
+    }
+    
     /**
      * Creates the directory if one with the same name and parent does not already exist.
      * @param parent parent Directory
@@ -41,10 +47,10 @@ public class Directory extends Directory_Base implements IXMLVisitable {
      * @param id ID
      * @return {@link java.util.Optional} containing either the newly created Directory or null.
      */
-    public static Optional<Directory> createIfNotExists(Directory parent, String name, byte perm, long id) {
+    public static Optional<Directory> createIfNotExists(FileSystem fs, Directory parent, String name, byte perm) {
         Optional<Directory> opt = Optional.empty();
         try {
-            Directory dir = new Directory(parent, name, perm, id);
+            Directory dir = new Directory(fs, parent, name, perm);
             opt = Optional.of(dir);
         } catch (FilenameAlreadyExistsException _) {
             logger.debug("Directory with name *[" + name + "]* already exists!");
@@ -68,9 +74,9 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
 
     /** constructor for root directory */
-    public Directory(byte perm, long id) {
+    public Directory(FileSystem fs, byte perm) {
         super();
-        init(this, "", perm, id);
+        init( fs, this, fs.getSuperUser(), "", perm);
     }
 
     @Override
