@@ -18,10 +18,41 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
 		super();
 	}
 
+	// all attrs
     public User(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
         super();
         init(fs, username, password, name, mask);
     }
+
+	//all but password
+	public User( FileSystem fs, String username, String name, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
+		super();
+		init( fs, username, username, name, mask );
+	}
+
+	//all but password and name
+	public User( FileSystem fs, String username, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
+		super();
+		init( fs, username, username, username, mask );
+	}
+
+	//all but mask
+	public User( FileSystem fs, String username, String password, String name ) throws InvalidUsernameException,UsernameAlreadyExistsException {
+		super();
+		init( fs, username, password, name, ( byte ) 0b11110000 );
+	}
+
+	//all but mask and name
+	public User( FileSystem fs, String username, String password) throws InvalidUsernameException,UsernameAlreadyExistsException {
+		super();
+		init( fs, username, password, username, ( byte ) 0b11110000 );
+	}
+
+	//all but mask, name and password
+	public User( FileSystem fs, String username) throws InvalidUsernameException,UsernameAlreadyExistsException {
+		super();
+		init( fs, username, username, username, ( byte ) 0b11110000 );
+	}
 
     public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
 		if (checkUserName(username)) {
