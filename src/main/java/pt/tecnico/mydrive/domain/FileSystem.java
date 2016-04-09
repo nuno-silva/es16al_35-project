@@ -16,8 +16,12 @@ import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
+
 import pt.tecnico.mydrive.exception.UsernameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.UserNotFoundException;
+
+import pt.tecnico.mydrive.exception.InvalidTokenException;
+
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -213,7 +217,9 @@ public class FileSystem extends FileSystem_Base {
         logger.debug("getFile: " + currentDir.getFullPath());
         return currentDir;
     }
-
+    
+    
+    
     public Document xmlExport() {
         Document doc = new Document(new Element("mydrive"));
         Element e;
@@ -530,5 +536,17 @@ public class FileSystem extends FileSystem_Base {
         XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
         out.output(doc, new FileOutputStream(fileName));
     }
-
+    
+    public Session getSession(long token) throws InvalidTokenException {
+        Set<User> users = getUserSet();
+        for(User u : users) {
+            try {
+                return u.getSession(token);
+            } catch (InvalidTokenException e) {
+                // expected
+            }
+        }
+        throw new InvalidTokenException(token);
+    }
+    
 }

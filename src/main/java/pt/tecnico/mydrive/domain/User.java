@@ -3,11 +3,16 @@ package pt.tecnico.mydrive.domain;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
+import org.joda.time.DateTime;
+import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
+
 import pt.tecnico.mydrive.exception.UsernameAlreadyExistsException;
 
+import pt.tecnico.mydrive.exception.InvalidTokenException;
+import java.util.Set;
 
 public class User extends User_Base implements IXMLVisitable, IPermissionable {
     public static final String XML_TAG = "user";
@@ -128,5 +133,25 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
     public String getANDedStringPermissions(IPermissionable other) {
         return MaskHelper.getStringPermissions(getANDedByteMask(other));
     }
-
+    
+    public Session getSession(long token) throws InvalidTokenException {
+        Set<Session> sessions = super.getSessionSet();
+        for(Session s : sessions) {
+            if(s.getToken() == token) {
+                if( s.getExpirationDate().isAfterNow() ) {
+                    s.remove();
+                    logger.warn("Tried to use expired token " + Long.toHexString(token));
+                    throw new InvalidTokenException(token, "Token expired");
+                } else {
+                    return s;
+                }
+            }
+        }
+        throw new InvalidTokenException(token, "Token not found");
+    }
+    
+    @Override
+    public Set<Session> getSessionSet() {
+        throw new UnsupportedOperationException();
+    }
 }
