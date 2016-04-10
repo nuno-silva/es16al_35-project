@@ -1,32 +1,57 @@
 package pt.tecnico.mydrive.service;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
+/* domain things */
+import pt.tecnico.mydrive.domain.FileSystem;
+import pt.tecnico.mydrive.domain.File;
+import pt.tecnico.mydrive.domain.Directory;
+
+/* services */
+import pt.tecnico.mydrive.service.ListDirectoryService;
+import pt.tecnico.mydrive.service.LoginService;
+
+/* exceptions */
+import pt.tecnico.mydrive.exception.FileNotFoundException;
+
 public class ListDirectoryTest extends AbstractServiceTest {
+	
+	
 
     protected void populate() {
-        /*Manager man = Manager.getInstance();
-		man.createUser("Testy","test","Mr Testy");
-        new Directory(p, "António", 444444444);
-        new Contact(p, "Abel", 555555555);
-        new Contact(p, "Beatriz", 777777777);
-        new Contact(p, "Bruno", 999999999);
-        new Contact(p, "Zélia", 222222222);
-        new Contact(p, "Zacarias", 666666666); */
-    }
+		
+		FileSystem fs = FileSystem.getInstance();
+		File f = fs.getFile("/home");
+		Directory d;
+		if ( f.isCdAble() ){ d = ( Directory ) f; }
+		else return; /* will think about this does in this case */
+		Directory dir=new Directory( fs, d, "testyDir" );
+	}
 
     @Test
     public void success() {
-        /*ListPersonPhoneBook service = new ListPersonPhoneBook("Ana");
-        service.execute();
-	List<ContactDto> cs = service.result();
-
-        // check contact listing
-        assertEquals("List with 6 Contacts", 6, cs.size());
-	assertEquals("First name is Abel", "Abel", cs.get(0).getName());
-	assertEquals("Last name is Zélia", "Zélia", cs.get(5).getName());
-	assertEquals("Third name is Beatriz", "Beatriz", cs.get(2).getName());
-	assertEquals("Third phoneNumber is 777777777", 777777777, cs.get(2).getPhoneNumber()); */
-	// it must be right, but all 6 should be tested ...
+		FileSystem fs = FileSystem.getInstance();
+		
+		/* LOGIN */
+		LoginService login = new LoginService( "root", "****" );
+		login.dispatch();
+		
+		ListDirectoryService ser=new ListDirectoryService( "/home", fs.getUser( "root" ).getByteMask() );
+		ser.dispatch();
+		/* Asserts */
     }
+    
+    @Test /* (expected = FileNotFoundException.class) FIXME uncomment when ListDirectoryService is complete */ 
+    public void incorrectDirName(){
+		FileSystem fs = FileSystem.getInstance();
+		/* LOGIN */
+		LoginService login = new LoginService( "root", "****" );
+		login.dispatch();
+
+		ListDirectoryService ser= new ListDirectoryService( "thisNameIsSoRetardThatN01W0ouldRemember1t", fs.getUser( "root" ).getByteMask() );
+		ser.dispatch();
+		/* asserts if needed */
+	}
 }

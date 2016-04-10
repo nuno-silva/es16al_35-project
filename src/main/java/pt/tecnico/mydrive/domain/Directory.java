@@ -20,25 +20,23 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         super();
         init( fs, parent, owner, name, perm );
     }
-        
+
     //all but owner
     public Directory(FileSystem fs, Directory parent, String name, byte perm) {
         super();
         init( fs, parent, fs.getSuperUser(), name, perm );
     }
-    
+
     //all but perm
     public Directory(FileSystem fs, Directory parent, User owner, String name) {
         super();
         init( fs, parent, owner, name, owner.getMask() );
     }
-        
      //all but owner and perm
     public Directory(FileSystem fs, Directory parent, String name) {
         super();
         init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask() );
     }
-    
     /**
      * Creates the directory if one with the same name and parent does not already exist.
      * @param parent parent Directory
