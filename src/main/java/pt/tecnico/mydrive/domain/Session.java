@@ -5,6 +5,9 @@ import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.exception.WrongPasswordException;
 import pt.tecnico.mydrive.exception.InvalidTokenException;
 
+import java.math.BigInteger;
+import java.util.Random;
+
 public class Session extends Session_Base {
 
     protected Session() {
@@ -15,21 +18,41 @@ public class Session extends Session_Base {
         if( ! u.checkPassword(password) ) {
             throw new WrongPasswordException(u.getUsername());
         }
-        // FIXME TODO
+        
+        long token = generateToken(fs);
+        DateTime expirationDate = renew();
+        init(fs, u, token, u.getHomePath(), expirationDate); 
+        fs.removeExpiredTokens();
     }
 
     protected void init(FileSystem fs, User u, long token, String workingPath, DateTime expirationDate) {
         setWorkingPath(workingPath);
         setExpirationDate(expirationDate);
-        /* TODO gerar token*/
-        /* TODO verificar se nao e' duplicado nem 0 */
         setToken(token);
-        /* TODO delete all expired tokens */
-        /* TODO add session to user */
+        u.addSession(this);
     }
     
-    protected boolean checkToken(FileSystem fs, long token) {
-        return token != 0;
+    protected long generateToken(FileSystem fs) {
+        long token;
+        
+        do {
+            token = (new BigInteger(64, new Random())).longValue();
+        } while( token == 0 || fs.hasSession(token) );
+        
+        return token;
+    }
+    
+    public boolean isExpired() {
+        return getExpirationDate().isAfterNow();
+    }
+    
+    public DateTime renew() {
+        if( isExpired() ) {
+            throw new InvalidTokenException(getToken(), "Session expired");
+        }
+        DateTime expirationDate = new DateTime().plusHours(2);
+        setExpirationDate(expirationDate);
+        return expirationDate;
     }
     
     

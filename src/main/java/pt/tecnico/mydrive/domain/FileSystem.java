@@ -558,4 +558,18 @@ public class FileSystem extends FileSystem_Base {
         throw new InvalidTokenException(token);
     }
     
+    public boolean hasSession(long token) {
+        try {
+            return true;
+        } catch (InvalidTokenException e) {
+            return false;
+        }
+    }
+    
+    public void removeExpiredTokens() {
+        Set<User> users = getUserSet();
+        for(User u : users) {
+            u.removeExpiredTokens();
+        }
+    }
 }

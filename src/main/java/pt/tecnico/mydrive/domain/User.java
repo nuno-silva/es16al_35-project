@@ -139,9 +139,9 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
         Set<Session> sessions = super.getSessionSet();
         for(Session s : sessions) {
             if(s.getToken() == token) {
-                if( s.getExpirationDate().isAfterNow() ) {
+                if( s.isExpired() ) {
                     s.remove();
-                    logger.warn("Tried to use expired token " + Long.toHexString(token));
+                    logger.warn("Tried to use an expired token " + Long.toHexString(token));
                     throw new InvalidTokenException(token, "Token expired");
                 } else {
                     return s;
@@ -151,8 +151,18 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
         throw new InvalidTokenException(token, "Token not found");
     }
     
+    public void removeExpiredTokens() {
+        Set<Session> sessions = super.getSessionSet();
+        for(Session s : sessions) {
+            if( s.isExpired() ) {
+                s.remove();
+            }
+        }
+    }
+    
     @Override
     public Set<Session> getSessionSet() {
         throw new UnsupportedOperationException();
     }
+    
 }
