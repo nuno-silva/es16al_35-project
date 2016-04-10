@@ -17,11 +17,11 @@ import pt.tecnico.mydrive.service.LoginService;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 
 public class ListDirectoryTest extends AbstractServiceTest {
-	
-	
+
+
 
     protected void populate() {
-		
+
 		FileSystem fs = FileSystem.getInstance();
 		File f = fs.getFile("/home");
 		Directory d;
@@ -33,17 +33,17 @@ public class ListDirectoryTest extends AbstractServiceTest {
     @Test
     public void success() {
 		FileSystem fs = FileSystem.getInstance();
-		
+
 		/* LOGIN */
 		LoginService login = new LoginService( "root", "****" );
 		login.dispatch();
-		
+
 		ListDirectoryService ser=new ListDirectoryService( "/home", fs.getUser( "root" ).getByteMask() );
 		ser.dispatch();
 		/* Asserts */
     }
-    
-    @Test /* (expected = FileNotFoundException.class) FIXME uncomment when ListDirectoryService is complete */ 
+
+    @Test /* (expected = FileNotFoundException.class) FIXME uncomment when ListDirectoryService is complete */
     public void incorrectDirName(){
 		FileSystem fs = FileSystem.getInstance();
 		/* LOGIN */
