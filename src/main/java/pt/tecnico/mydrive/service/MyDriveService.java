@@ -6,6 +6,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
+import pt.tecnico.mydrive.exception.UserNotFoundException;
 import pt.tecnico.mydrive.exception.MydriveException;
 
 import java.util.Optional;
@@ -22,12 +23,13 @@ public abstract class MyDriveService {
 
     static User getUser(String username) {
         if (username == null) {
-            throw new InvalidUsernameException("Username cannot be \"null\".");
+            throw new InvalidUsernameException("(null)", "it cannot be 'null'");
         }
         Optional<User> opt = getFileSystem().getUserByUsername(username);
 
         if (!opt.isPresent()) {
-            throw new InvalidUsernameException("User with username " + username + "does not exist.");
+            /* @Illya, if you didn't use Optionals, you'd save 4 lines of code here (getUser(String username) does just this) */
+            throw new UserNotFoundException(username);
         }
 
         return opt.get();

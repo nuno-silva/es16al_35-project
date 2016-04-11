@@ -15,8 +15,8 @@ public class SuperUser extends SuperUser_Base {
     }
     
     @Override
-    public void remove(FileSystem fs) throws PermissionDeniedException{
-        throw new PermissionDeniedException("deleting root user");
+    public void remove() throws PermissionDeniedException {
+        throw new PermissionDeniedException("can not delete SuperUser " + getUsername());
     }
     
     @Override

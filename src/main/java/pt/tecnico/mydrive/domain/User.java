@@ -61,7 +61,7 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
 
     public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException, UsernameAlreadyExistsException {
         logger.trace("User init " + username);
-        if (checkUserName(username)) {
+        if (checkUsername(username)) {
             setUsername(username);
             setPassword(password);
             setName(name);
@@ -70,7 +70,7 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
             if( username.length() >=  3 )
                 fs.addUser( this );
             else
-                throw new InvalidUsernameException( username );
+                throw new InvalidUsernameException( username , "usernames must be at least 3 characters long");
             
             Directory home = fs.createFileParents( "/home/"+username );
             setHomePath(home.getFullPath());
@@ -85,12 +85,12 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
         return getPassword().equals(password);
     }
     
-    /* Is this needed? Discuss please (Jorge) */
-    public void remove(FileSystem fs){
-        fs.removeUser(this);
+    public void remove() {
+        getFs().removeUser(this);
     }
-    
-    public boolean checkUserName(String username) {
+
+    /* FIXME I don't think this is needed (Nuno) */
+    public boolean checkUsername(String username) {
         char[] chars = username.toCharArray();
         for (char c : chars) {
             if(!Character.isLetter(c) && !Character.isDigit(c)) {
