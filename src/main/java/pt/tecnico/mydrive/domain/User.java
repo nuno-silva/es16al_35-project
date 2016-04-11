@@ -19,63 +19,63 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
 
     private static final Logger logger = LogManager.getLogger();
 
-	protected User(){
-		super();
-	}
+    protected User(){
+        super();
+    }
 
-	// all attrs
-    public User(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
+    // all attrs
+    public User(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException, UsernameAlreadyExistsException {
         super();
         init(fs, username, password, name, mask);
     }
 
-	//all but password
-	public User( FileSystem fs, String username, String name, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
-		super();
-		init( fs, username, username, name, mask );
-	}
+    //all but password
+    public User( FileSystem fs, String username, String name, byte mask) throws InvalidUsernameException, UsernameAlreadyExistsException {
+        super();
+        init( fs, username, username, name, mask );
+    }
 
-	//all but password and name
-	public User( FileSystem fs, String username, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
-		super();
-		init( fs, username, username, username, mask );
-	}
+    //all but password and name
+    public User( FileSystem fs, String username, byte mask) throws InvalidUsernameException, UsernameAlreadyExistsException {
+        super();
+        init( fs, username, username, username, mask );
+    }
 
-	//all but mask
-	public User( FileSystem fs, String username, String password, String name ) throws InvalidUsernameException,UsernameAlreadyExistsException {
-		super();
-		init( fs, username, password, name, ( byte ) 0b11110000 );
-	}
+    //all but mask
+    public User( FileSystem fs, String username, String password, String name ) throws InvalidUsernameException, UsernameAlreadyExistsException {
+        super();
+        init( fs, username, password, name, ( byte ) 0b11110000 );
+    }
 
-	//all but mask and name
-	public User( FileSystem fs, String username, String password) throws InvalidUsernameException,UsernameAlreadyExistsException {
-		super();
-		init( fs, username, password, username, ( byte ) 0b11110000 );
-	}
+    //all but mask and name
+    public User( FileSystem fs, String username, String password) throws InvalidUsernameException, UsernameAlreadyExistsException {
+        super();
+        init( fs, username, password, username, ( byte ) 0b11110000 );
+    }
 
-	//all but mask, name and password
-	public User( FileSystem fs, String username) throws InvalidUsernameException,UsernameAlreadyExistsException {
-		super();
-		init( fs, username, username, username, ( byte ) 0b11110000 );
-	}
+    //all but mask, name and password
+    public User( FileSystem fs, String username) throws InvalidUsernameException, UsernameAlreadyExistsException {
+        super();
+        init( fs, username, username, username, ( byte ) 0b11110000 );
+    }
 
-    public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
-		logger.trace("User init " + username);
-		if (checkUserName(username)) {
-			setUsername(username);
-			setPassword(password);
-			setName(name);
-			setMask(mask);
-			
-			if( username.length() >=  3 )
-				fs.addUser( this );
-			else
-				throw new InvalidUsernameException( username );
-			
-			Directory home = fs.createFileParents( "/home/"+username );
-			setHomePath(home.getFullPath());
-		}
-		else {
+    public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException, UsernameAlreadyExistsException {
+        logger.trace("User init " + username);
+        if (checkUserName(username)) {
+            setUsername(username);
+            setPassword(password);
+            setName(name);
+            setMask(mask);
+            
+            if( username.length() >=  3 )
+                fs.addUser( this );
+            else
+                throw new InvalidUsernameException( username );
+            
+            Directory home = fs.createFileParents( "/home/"+username );
+            setHomePath(home.getFullPath());
+        }
+        else {
             throw new InvalidUsernameException(username);
         }
     }
@@ -86,10 +86,10 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
     }
     
     /* Is this needed? Discuss please (Jorge) */
-	public void remove(FileSystem fs){
-		fs.removeUser(this);
-	}
-	
+    public void remove(FileSystem fs){
+        fs.removeUser(this);
+    }
+    
     public boolean checkUserName(String username) {
         char[] chars = username.toCharArray();
         for (char c : chars) {

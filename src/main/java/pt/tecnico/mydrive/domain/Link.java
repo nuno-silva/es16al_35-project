@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Link extends Link_Base implements IXMLVisitable {
-	public static final String LINE_SEPARATOR = "\n";
+    public static final String LINE_SEPARATOR = "\n";
     public static final String XML_TAG = "link";
 
     //all params
@@ -62,12 +62,13 @@ public class Link extends Link_Base implements IXMLVisitable {
 
     @Override
     public boolean isCdAble() {
-            return false;
-	}
+        return false;
+    }
 
     @Override
     public File getFileByName( String name ) {
-    	return this;
+        /* FIXME wtf is this? */
+        return this;
     }
 
     /** @returns the content of the PlainFile as a List of lines */
