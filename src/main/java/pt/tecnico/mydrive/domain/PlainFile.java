@@ -21,51 +21,51 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
     }
 
     //all params
-	public PlainFile(FileSystem fs, Directory parent, User owner, String name, byte perm, String content) {
-		super();
-		init( fs, parent, owner, name, perm, content);
-	}
-	
-	//all but content
-	public PlainFile(FileSystem fs, Directory parent, User owner, String name, byte perm){
-		super();
-		init( fs, parent, owner, name, perm,  "" );
-	}
-	//all but owner
-	public PlainFile(FileSystem fs, Directory parent, String name, byte perm, String content) {
-		super();
-		init( fs, parent, fs.getSuperUser(), name, perm, content );
-	}
+    public PlainFile(FileSystem fs, Directory parent, User owner, String name, byte perm, String content) {
+        super();
+        init( fs, parent, owner, name, perm, content);
+    }
+    
+    //all but content
+    public PlainFile(FileSystem fs, Directory parent, User owner, String name, byte perm){
+        super();
+        init( fs, parent, owner, name, perm,  "" );
+    }
+    //all but owner
+    public PlainFile(FileSystem fs, Directory parent, String name, byte perm, String content) {
+        super();
+        init( fs, parent, fs.getSuperUser(), name, perm, content );
+    }
 
-	//all but permissions
-	public PlainFile(FileSystem fs, Directory parent, User owner, String name, String content) {
-		super();
-		init( fs, parent, owner, name, owner.getMask(), content );
-	}
+    //all but permissions
+    public PlainFile(FileSystem fs, Directory parent, User owner, String name, String content) {
+        super();
+        init( fs, parent, owner, name, owner.getMask(), content );
+    }
 
-	//all but content and owner
+    //all but content and owner
     public PlainFile(FileSystem fs, Directory parent, String name, byte perm) {
         super();
         init( fs, parent, fs.getSuperUser() , name, perm, "" );
     }
 
     //all but content and permissions
-	public PlainFile(FileSystem fs, Directory parent, User owner, String name) {
-		super();
-		init( fs, parent, owner, name, owner.getMask(), "" );
-	}
+    public PlainFile(FileSystem fs, Directory parent, User owner, String name) {
+        super();
+        init( fs, parent, owner, name, owner.getMask(), "" );
+    }
 
     //all permissions and owner
-	public PlainFile(FileSystem fs, Directory parent, String name, String content) {
-		super();
-		init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), content);
-	}
+    public PlainFile(FileSystem fs, Directory parent, String name, String content) {
+        super();
+        init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), content);
+    }
 
-	//all permissions, owner and content
-	public PlainFile(FileSystem fs, Directory parent, String name) {
-		super();
-		init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), "" );
-	}
+    //all permissions, owner and content
+    public PlainFile(FileSystem fs, Directory parent, String name) {
+        super();
+        init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), "" );
+    }
 
     protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm, String content){
         super.init( fs, parent, owner, name, perm );
@@ -86,13 +86,14 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
 
     @Override
     public boolean isCdAble(){
-		return false;
-	}
+        return false;
+    }
 
 
-	public String readFileContent(){
-		return getContent();
-	}
+    public String readFileContent(){
+        return getContent();
+    }
+
     /** Execute the file: each line is interpreted as "<app path> <args>*"
      *  and each app is executed */
     public void execute() {
@@ -119,7 +120,8 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
 
     @Override
     public File getFileByName( String name ) {
-    	return this;
+        /* FIXME wtf is this? */
+        return this;
     }
 
     @Override

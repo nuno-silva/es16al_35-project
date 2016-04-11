@@ -15,24 +15,26 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     protected File() {
         super();
     }
-	
-	//all params
+    
+    //all params
     public File(FileSystem fs, Directory parent, User owner, String name, byte perm ) {
         super();
         init( fs, parent, owner, name, perm );
     }
-	//all but permissions
+
+    //all but permissions
     public File(FileSystem fs, Directory parent, User owner, String name){
         super();
         init( fs, parent, owner, name, owner.getMask() );
     }
-	//all but owner
+
+    //all but owner
     public File(FileSystem fs, Directory parent, String name, byte perm) {
         super();
         init( fs, parent, fs.getSuperUser(), name, perm);
     }
 
-	//all but permissions and owner
+    //all but permissions and owner
     public File(FileSystem fs, Directory parent, String name) {
         super();
         init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask() );
@@ -56,29 +58,32 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         parent.addFile(this);
     }
 
-    public boolean isCdAble() { return false; };
+    public boolean isCdAble() {
+        return false;
+    }
 
-	private boolean isRootAccess( User u ){ return u.equals( u.getFs().getSuperUser() ) ? true : false; }
-	
-	public boolean checkReadPermission( User u){
-		if( isRootAccess( u ) ) return true;
-		return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b10001000 ) ) == 0 )? false : true;
-	}
+    /* FIXME this is ugly \/ */
+    private boolean isRootAccess( User u ){ return u.equals( u.getFs().getSuperUser() ) ? true : false; }
+    
+    public boolean checkReadPermission( User u){
+        if( isRootAccess( u ) ) return true;
+        return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b10001000 ) ) == 0 )? false : true;
+    }
 
-	public boolean checkWritePermission( User u){
-		if( isRootAccess( u ) ) return true;
-		return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b01000100 ) ) == 0 )? false : true;
-	}
+    public boolean checkWritePermission( User u){
+        if( isRootAccess( u ) ) return true;
+        return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b01000100 ) ) == 0 )? false : true;
+    }
 
-	public boolean checkExecutePermission( User u){
-		if( isRootAccess( u ) ) return true;
-		return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b00100010 ) ) == 0 )? false : true;
-	}
+    public boolean checkExecutePermission( User u){
+        if( isRootAccess( u ) ) return true;
+        return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b00100010 ) ) == 0 )? false : true;
+    }
 
-	public boolean checkDeletePermission( User u){
-		if( isRootAccess( u ) ) return true;
-		return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b00010001 ) ) == 0 )? false : true;
-	}
+    public boolean checkDeletePermission( User u){
+        if( isRootAccess( u ) ) return true;
+        return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b00010001 ) ) == 0 )? false : true;
+    }
 
     public void remove() {
         setParentDir(null);

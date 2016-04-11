@@ -37,6 +37,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         super();
         init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask() );
     }
+
     /**
      * Creates the directory if one with the same name and parent does not already exist.
      * @param parent parent Directory
@@ -59,7 +60,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     public static Directory fromPath(String path, FileSystem fs) {
         /* FIXME why is this static method here? shouldn't this be done in FileSystem? (Nuno). Agreed(Jorge) */
         logger.debug("Directory.fromPath: " + path);
-    	Directory newDir = fs.createFileParents(path);
+        Directory newDir = fs.createFileParents(path);
         logger.debug("Directory.fromPath: newDir path: " + newDir.getFullPath());
         String [] parts = path.split("/");
         Optional<Directory> opt = fs.createDirectoryIfNotExists(newDir, parts[parts.length - 1], (byte)0b00000000);

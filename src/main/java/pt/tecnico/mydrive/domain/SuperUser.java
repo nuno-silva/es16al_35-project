@@ -18,18 +18,18 @@ public class SuperUser extends SuperUser_Base {
 			super();
 			init(fs,"root","***","Super User",(byte) 0b11111010); 
 	}
-	
-	@Override
-	public void remove(FileSystem fs) throws PermissionDeniedException{
-		throw new PermissionDeniedException("deleting root user");
-	}
-	
-	@Override
-	public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException,UsernameAlreadyExistsException {
-		setUsername(username);
-		setPassword(password);
-		setName(name);
-		setMask(mask);
-		fs.addUser(this);
-	}
+    
+    @Override
+    public void remove() throws PermissionDeniedException {
+        throw new PermissionDeniedException("can not delete SuperUser " + getUsername());
+    }
+    
+    @Override
+    public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException, UsernameAlreadyExistsException {
+        setUsername(username);
+        setPassword(password);
+        setName(name);
+        setMask(mask);
+        fs.addUser(this);
+    }
 }

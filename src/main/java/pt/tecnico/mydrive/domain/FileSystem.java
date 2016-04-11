@@ -29,24 +29,24 @@ import java.util.*;
 
 public class FileSystem extends FileSystem_Base {
 
-	/**
-	 * Contains parameters required by all File children.
-	 *
-	 */
-	private class FileParams {
-		// Android-ish
-		public String ID, NAME, MASK, LASTMOD, PATH;
-		public FileParams() { }
-		public FileParams parse (String id, String name, String mask, String lastMod, String path) {
-			ID = id;
-			NAME = name;
-			MASK = mask;
-			LASTMOD = lastMod;
-			PATH = path;
+    /**
+     * Contains parameters required by all File children.
+     *
+     */
+    private class FileParams {
+        // Android-ish
+        public String ID, NAME, MASK, LASTMOD, PATH;
+        public FileParams() { }
+        public FileParams parse (String id, String name, String mask, String lastMod, String path) {
+            ID = id;
+            NAME = name;
+            MASK = mask;
+            LASTMOD = lastMod;
+            PATH = path;
 
-			return this;
-		}
-	}
+            return this;
+        }
+    }
     private final static Logger logger = Logger.getLogger(FileSystem.class);
 
     public static FileSystem getInstance() {
@@ -173,7 +173,7 @@ public class FileSystem extends FileSystem_Base {
     }
 
     public PlainFile createPlainFile(Directory parent, String name, byte permission) {
-    	PlainFile newPlainFile = new PlainFile(this, parent, name, permission);
+        PlainFile newPlainFile = new PlainFile(this, parent, name, permission);
         return newPlainFile;
     }
 
@@ -201,23 +201,23 @@ public class FileSystem extends FileSystem_Base {
     }
     /*
     public void createReadMe() {
-    	List<String> users = pathContent("/home");
-    	Directory home = (Directory) getFile("/home");
-    	numFiles+=1;
+        List<String> users = pathContent("/home");
+        Directory home = (Directory) getFile("/home");
+        numFiles+=1;
 
-    	PlainFile readMe = new PlainFile(home, "README", (byte) 00000000, numFiles);
-    	readMe.setLines(users);
+        PlainFile readMe = new PlainFile(home, "README", (byte) 00000000, numFiles);
+        readMe.setLines(users);
     }
     */
     public File getFile(String path) throws UnknownPathException {
         logger.debug("getFile: " + path);
-    	File currentDir = getRootDir();
+        File currentDir = getRootDir();
 
-    	if(!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
-    		throw new UnknownPathException(path);
+        if(!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
+            throw new UnknownPathException(path);
 
         path = path.substring(1); // remove '/'
-    	for(String dir : path.split("/")) {
+        for(String dir : path.split("/")) {
             currentDir = currentDir.getFileByName(dir);
         }
         logger.debug("getFile: " + currentDir.getFullPath());
@@ -318,7 +318,7 @@ public class FileSystem extends FileSystem_Base {
 
     private FileParams parseFileParams(Element file, FileParams fp) {
         // This allows some code reuse
-    	Element e;
+        Element e;
         String id, name, mask, lastMod, path;
         id = file.getAttribute("id").getValue();
         logger.debug("File ID: " + id);
@@ -360,7 +360,7 @@ public class FileSystem extends FileSystem_Base {
     }
 
     private void xmlImportApps(List<Element> apps) {
-    	xmlImportContentFiles(apps, true);
+        xmlImportContentFiles(apps, true);
     }
 
     /**
@@ -410,28 +410,28 @@ public class FileSystem extends FileSystem_Base {
     }
 
     private void xmlImportLinks(List<Element> links) {
-    	 FileParams fp = new FileParams();
-    	 String pointer = null;
-     	 Element elem = null;
-         for(Element link : links) {
+        FileParams fp = new FileParams();
+        String pointer = null;
+        Element elem = null;
+        for(Element link : links) {
             fp = parseFileParams(link, fp);
             elem = link.getChild("pointer");
-     		if (elem != null) {
-     			pointer = elem.getText();
-     		} else {
-     			pointer = "";
-     		}
-     		File newLink = new Link(this, createFileParents(fp.PATH), fp.NAME,
+            if (elem != null) {
+                pointer = elem.getText();
+            } else {
+                pointer = "";
+            }
+            File newLink = new Link(this, createFileParents(fp.PATH), fp.NAME,
                                     (byte)0b00000001, pointer);
             getRootDir().addFile(newLink); // needed now?
             createFileParents(fp.PATH);
-         }
+        }
     }
 
     private void xmlImportDirectories(List<Element> dirs) {
         FileParams fp = new FileParams();
         for(Element dir : dirs) {
-        	fp = parseFileParams(dir, fp);
+            fp = parseFileParams(dir, fp);
             Optional<Directory> opt =
                     Directory.createIfNotExists(this, getRootDir(), fp.NAME, (byte)0b1111111);
             if (opt.isPresent()) {
@@ -495,39 +495,38 @@ public class FileSystem extends FileSystem_Base {
 
     @Override
     public void addUser(User u) throws UsernameAlreadyExistsException{
-		logger.trace("addUser " + u.getUsername());
-        	String username=u.getUsername();
-			if( hasUser( username ) ) {
-				throw new UsernameAlreadyExistsException( username );
-			} else {
-				super.addUser( u );
-			}
-			
-	}
+        logger.trace("addUser " + u.getUsername());
+        String username=u.getUsername();
+        if( hasUser( username ) ) {
+            throw new UsernameAlreadyExistsException( username );
+        } else {
+            super.addUser( u );
+        }
+    }
 
     public boolean hasUser(String username){
-		try{
-			getUser( username );
-			return true;
-		} catch (UserNotFoundException e){
-			return false;
-		}
-		
-	}
+        try{
+            getUser( username );
+            return true;
+        } catch (UserNotFoundException e){
+            return false;
+        }
+        
+    }
 
 
     public User getUser(String username) {
         for (User u: getUserSet()) {
             if (u.getUsername().equals(username)) {
-				return u;
+                return u;
             }
         }
-		throw new UserNotFoundException( username );
-	}
+        throw new UserNotFoundException( username );
+    }
 
-	public SuperUser getSuperUser() throws UserNotFoundException{
-		return (SuperUser)getUser("root");
-	}
+    public SuperUser getSuperUser() throws UserNotFoundException{
+        return (SuperUser)getUser("root");
+    }
 
     public void xmlImportFromFile(String fileName) throws JDOMException, IOException {
         xmlImport(getXMLDocumentFromFile(fileName));
