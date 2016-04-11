@@ -4,6 +4,7 @@ import org.jdom2.Element;
 import org.joda.time.DateTime;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
+import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
 
 import java.util.List;
@@ -38,7 +39,6 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     }
 
     protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm) {
-		setFs( fs );
         setName( name );
         setId( fs.commitNewFileId() );
         setMask( perm );
@@ -58,7 +58,7 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
 
     public boolean isCdAble() { return false; };
 
-	private boolean isRootAccess( User u ){ return u.equals( fs.getSuperUser() ) ? true : false; }
+	private boolean isRootAccess( User u ){ return u.equals( u.getFs().getSuperUser() ) ? true : false; }
 	
 	public boolean checkReadPermission( User u){
 		if( isRootAccess( u ) ) return true;
