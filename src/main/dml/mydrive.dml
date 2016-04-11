@@ -43,8 +43,8 @@ relation FileSystemHasUsers {
 }
 
 relation UserHasFiles {
-    File playsRole file;
-    User playsRole owner;
+    File playsRole file { multiplicity 0..*; }
+    User playsRole owner { multiplicity 1; }
 }
 
 relation FileSystemHasRootDir {
