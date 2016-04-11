@@ -37,6 +37,8 @@ public class CreateAppTest extends AbstractServiceTest {
          * 3) App has correct owner
          * 4) App has correct content
          * 
+         * What other tests should i make?
+         * 
          */
         assertNotNull("App was not created", work);
         assertEquals("App created with wrong name", "ApplicationTest", work.getName());
