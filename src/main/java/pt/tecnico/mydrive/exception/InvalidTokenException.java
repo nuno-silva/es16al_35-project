@@ -1,5 +1,7 @@
 package pt.tecnico.mydrive.exception;
 
+import pt.tecnico.mydrive.domain.Session;
+
 public class InvalidTokenException extends MydriveException {
 
 	private final long _token;
@@ -17,6 +19,6 @@ public class InvalidTokenException extends MydriveException {
 	
 	@Override
 	public String getMessage() {
-		return _msg + ": " + Long.toHexString(_token);
+		return _msg + ": " + Session.tokenToString(_token);
 	}
 }

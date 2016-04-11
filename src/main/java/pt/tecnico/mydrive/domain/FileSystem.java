@@ -540,6 +540,9 @@ public class FileSystem extends FileSystem_Base {
     }
     
     public Session getSession(long token) throws InvalidTokenException {
+        if( token == 0) {
+            throw new InvalidTokenException(token, "Token can not be 0");
+        }
         Set<User> users = getUserSet();
         for(User u : users) {
             try {
@@ -553,6 +556,7 @@ public class FileSystem extends FileSystem_Base {
     
     public boolean hasSession(long token) {
         try {
+            getSession(token);
             return true;
         } catch (InvalidTokenException e) {
             return false;

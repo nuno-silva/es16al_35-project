@@ -136,12 +136,15 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
     }
     
     public Session getSession(long token) throws InvalidTokenException {
+        if( token == 0) {
+            throw new InvalidTokenException(token, "Token can not be 0");
+        }
         Set<Session> sessions = super.getSessionSet();
         for(Session s : sessions) {
             if(s.getToken() == token) {
                 if( s.isExpired() ) {
                     s.remove();
-                    logger.warn("Tried to use an expired token " + Long.toHexString(token));
+                    logger.warn("Tried to use an expired token " + Session.tokenToString(token));
                     throw new InvalidTokenException(token, "Token expired");
                 } else {
                     return s;
