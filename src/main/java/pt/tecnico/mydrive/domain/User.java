@@ -12,10 +12,12 @@ import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.UsernameAlreadyExistsException;
 
 import pt.tecnico.mydrive.exception.InvalidTokenException;
+import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 import java.util.Set;
 
 public class User extends User_Base implements IXMLVisitable, IPermissionable {
     public static final String XML_TAG = "user";
+    private static final byte DEFAULT_MASK = (byte)0b11110000;
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -44,19 +46,19 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
     //all but mask
     public User( FileSystem fs, String username, String password, String name ) throws InvalidUsernameException, UsernameAlreadyExistsException {
         super();
-        init( fs, username, password, name, ( byte ) 0b11110000 );
+        init( fs, username, password, name, DEFAULT_MASK );
     }
 
     //all but mask and name
     public User( FileSystem fs, String username, String password) throws InvalidUsernameException, UsernameAlreadyExistsException {
         super();
-        init( fs, username, password, username, ( byte ) 0b11110000 );
+        init( fs, username, password, username, DEFAULT_MASK );
     }
 
     //all but mask, name and password
     public User( FileSystem fs, String username) throws InvalidUsernameException, UsernameAlreadyExistsException {
         super();
-        init( fs, username, username, username, ( byte ) 0b11110000 );
+        init( fs, username, username, username, DEFAULT_MASK );
     }
 
     public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException, UsernameAlreadyExistsException {
@@ -66,14 +68,20 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
             setPassword(password);
             setName(name);
             setMask(mask);
-            
+
             if( username.length() >=  3 )
                 fs.addUser( this );
             else
                 throw new InvalidUsernameException( username , "usernames must be at least 3 characters long");
-            
-            Directory home = fs.createFileParents( "/home/"+username );
-            setHomePath(home.getFullPath());
+
+            File home = fs.getFile("/home");
+            if( home.isCdAble() ) {
+                home = new Directory(fs, (Directory)home, this, username);
+                setHomePath(home.getFullPath());
+            } else {
+                setFs(null); // remove User from FileSystem
+                throw new IsNotCdAbleException("'"+ home.getFullPath()+" is not cdAble. Can't create user home.");
+            }
         }
         else {
             throw new InvalidUsernameException(username);
@@ -84,7 +92,7 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
     public boolean checkPassword(String password) {
         return getPassword().equals(password);
     }
-    
+
     public void remove() {
         getFs().removeUser(this);
     }
@@ -134,7 +142,7 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
     public String getANDedStringPermissions(IPermissionable other) {
         return MaskHelper.getStringPermissions(getANDedByteMask(other));
     }
-    
+
     public Session getSession(long token) throws InvalidTokenException {
         if( token == 0) {
             throw new InvalidTokenException(token, "Token can not be 0");
@@ -153,7 +161,7 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
         }
         throw new InvalidTokenException(token, "Token not found");
     }
-    
+
     public void removeExpiredTokens() {
         Set<Session> sessions = super.getSessionSet();
         for(Session s : sessions) {
@@ -162,10 +170,10 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
             }
         }
     }
-    
+
     @Override
     public Set<Session> getSessionSet() {
         throw new UnsupportedOperationException();
     }
-    
+
 }

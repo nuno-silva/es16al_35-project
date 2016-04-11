@@ -58,11 +58,6 @@ relation DirectoryHasFiles {
 	File playsRole file { multiplicity *; }
 }
 
-relation FileSystemHasSuperUser{
-	FileSystem playsRole fileSystem { multiplicity 1; }
-	SuperUser playsRole superUser { multiplicity 1; }
-}
-
 relation DomainRootHasFileSystem {
 	.pt.ist.fenixframework.DomainRoot playsRole root { multiplicity 0..1; }
 	FileSystem playsRole fileSystem { multiplicity 0..1; }
