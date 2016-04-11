@@ -18,14 +18,14 @@ public class CreateAppTest extends AbstractServiceTest {
 
 	@Override
 	protected void populate() {
-		FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+		FileSystem fs = FileSystem.getInstance();
 		Directory f = (Directory) fs.getFile("/home");  // FIXME : nao gosto do cast!
 		new App(fs, f, fs.getSuperUser(), "Work", "I have to work a lot during this week!");
 	}
     @Test
     public void success() {
         
-    	FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+    	FileSystem fs = FileSystem.getInstance();
     	/* <Gisson_was_here> :D . Had to change some of your procedures since I changed service soz */
     	Session s = new Session( fs, fs.getSuperUser(), "***" );
     	CreateFileService service = new CreateAppService("ApplicationTest", s.getToken(), "Do stuff...");

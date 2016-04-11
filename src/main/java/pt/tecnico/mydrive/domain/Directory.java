@@ -81,10 +81,10 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     @Override
     public String getFullPath() {
         if(getParentDir() == this) { // we're the root dir
-            logger.trace("Directory.getFullPath() reached root dir");
+            logger.trace("getFullPath() reached root dir");
             return "";
         } else {
-            logger.trace("Directory.getFullPath() " + super.getFullPath());
+            logger.trace("getFullPath() " + super.getName());
             return super.getFullPath();
         }
     }
@@ -92,10 +92,14 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     @Override
     public void addFile( File file ) throws FilenameAlreadyExistsException {
         String filename = file.getName();
+        logger.debug("addFile: '" + filename + "' in '" + getName() + "'");
         if( hasFile( filename ) ) {
+            logger.trace("addFile result: FilenameAlreadyExistsException");
             throw new FilenameAlreadyExistsException( filename, getFullPath() );
         } else {
+            logger.trace("addFile result:");
             super.addFile( file );
+            logger.trace("super.addFile( file )");
         }
     }
 
@@ -120,7 +124,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
 
     @Override
     public File getFileByName(String name) throws FileNotFoundException {
-        logger.debug("getFileByName: " + name);
+        logger.debug("getFileByName: '" + name + "' in '" + getName() + "'");
         if(name.equals(".")) {
             return this;
         } else if(name.equals("..")) {

@@ -52,8 +52,8 @@ public class FileSystem extends FileSystem_Base {
     public static FileSystem getInstance() {
         FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
         if( fs == null ) {
+            logger.trace("creating new FileSystem");
             fs = new FileSystem();
-            logger.trace("created new FileSystem");
         }
 
         return fs;
@@ -61,11 +61,11 @@ public class FileSystem extends FileSystem_Base {
 
     public FileSystem() {
         super();
-        setRoot(FenixFramework.getDomainRoot());
         init();
     }
 
     private void init() {
+        setRoot(FenixFramework.getDomainRoot());
         setFileCounter(0);
         byte permission = (byte) 0b111101101;
 
@@ -76,7 +76,7 @@ public class FileSystem extends FileSystem_Base {
         Directory rootDir = createRootDirectory();
 
         // Create home directory: "/home"
-        Directory homeDir = createDirectory(rootDir, "home", permission);
+        Directory homeDir = new Directory(this, rootDir, "home", permission);
         
         //Create root dir
         Directory homeRoot = new Directory(this, homeDir, "root", permission);
@@ -113,7 +113,7 @@ public class FileSystem extends FileSystem_Base {
             } catch(FileNotFoundException e) {
                 logger.debug("createFileParents creating directory: " + dirName + " | full path: " +
                         dir.getFullPath() + dirName);
-                dir = createDirectory(dir, dirName, dir.getMask());
+                dir = new Directory(this, dir, dirName, dir.getMask());
             }
             currentPath += "/" + dirName;
         }
@@ -125,13 +125,6 @@ public class FileSystem extends FileSystem_Base {
         Directory rootDir = new Directory(this, (byte) 0b11111010 );
         setRootDir( rootDir );
         return rootDir;
-    }
-
-    public Directory createDirectory(Directory parent, String name, byte permission) {
-        /* FIXME should this be protected? I don't think we should leak Directories out of the FileSystem (Nuno) */
-        Directory dir = new Directory(this, parent, name, permission );
-        commitNewFileId(); // only allocate new fileId if Directory constructor throws no exception
-        return dir;
     }
 
     /** get the next new file id (but don't store it) - use it when trying to create a new File*/
@@ -218,6 +211,7 @@ public class FileSystem extends FileSystem_Base {
 
         path = path.substring(1); // remove '/'
         for(String dir : path.split("/")) {
+            logger.trace("getFile: entering "+dir);
             currentDir = currentDir.getFileByName(dir);
         }
         logger.debug("getFile: " + currentDir.getFullPath());

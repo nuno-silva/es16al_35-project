@@ -68,6 +68,7 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
     }
 
     protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm, String content){
+        logger.trace("init name: "+name);
         super.init( fs, parent, owner, name, perm );
         setContent( content );
     }

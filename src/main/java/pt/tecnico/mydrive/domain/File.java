@@ -1,5 +1,6 @@
 package pt.tecnico.mydrive.domain;
 
+import org.apache.log4j.Logger;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
@@ -10,6 +11,7 @@ import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import java.util.List;
 
 public abstract class File extends File_Base implements IXMLVisitable, IPermissionable {
+    private static final Logger logger = Logger.getLogger(File.class);
     public static final String XML_TAG = "file";
 
     protected File() {
@@ -41,16 +43,18 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     }
 
     protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm) {
+        logger.trace("init name: "+name);
         setName( name );
-        setId( fs.commitNewFileId() );
         setMask( perm );
         setOwner( owner );
         setParentDir( parent ); // must be called after setName!
         setLastMod( new DateTime() );
+        setId( fs.commitNewFileId() ); // commitNewFileId must be called only when we're sure the File was successfully created
     }
 
     @Override
     public void setParentDir( Directory parent ) {
+        logger.trace("setParentDir name: "+getName());
         if( parent == null ) {
             super.setParentDir( parent );
             return;
@@ -106,6 +110,12 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
             throw new InvalidFileNameException(name);
         }
         super.setName(name);
+    }
+
+    @Override
+    public Directory getParentDir() {
+        logger.trace("getParentDir: " + getName());
+        return super.getParentDir();
     }
 
     @Override

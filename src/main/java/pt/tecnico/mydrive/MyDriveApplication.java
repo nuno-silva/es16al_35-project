@@ -61,7 +61,7 @@ public class MyDriveApplication {
         readme.setContent("lista de utilizadores");
         // Create "/usr/local/bin" directory:
         Directory local = fs.createFileParents("/usr/local/bin");
-        fs.createDirectory(local, "bin", (byte) 00000000);
+        new Directory(fs, local, "bin");
         // Print content of "/home/README":
         printContent("Content of PlainFile README: ", fs.fileContent("/home/README"));
         // Remove "/usr/local/bin":
