@@ -38,6 +38,7 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     }
 
     protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm) {
+		setFs( fs );
         setName( name );
         setId( fs.commitNewFileId() );
         setMask( perm );
@@ -56,6 +57,28 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     }
 
     public boolean isCdAble() { return false; };
+
+	private boolean isRootAccess( User u ){ return u.equals( fs.getSuperUser() ) ? true : false; }
+	
+	public boolean checkReadPermission( User u){
+		if( isRootAccess( u ) ) return true;
+		return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b10001000 ) ) == 0 )? false : true;
+	}
+
+	public boolean checkWritePermission( User u){
+		if( isRootAccess( u ) ) return true;
+		return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b01000100 ) ) == 0 )? false : true;
+	}
+
+	public boolean checkExecutePermission( User u){
+		if( isRootAccess( u ) ) return true;
+		return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b00100010 ) ) == 0 )? false : true;
+	}
+
+	public boolean checkDeletePermission( User u){
+		if( isRootAccess( u ) ) return true;
+		return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b00010001 ) ) == 0 )? false : true;
+	}
 
     public void remove() {
         setParentDir(null);
