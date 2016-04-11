@@ -14,6 +14,11 @@ public class SuperUser extends SuperUser_Base {
 			init(fs,"root",password,"Super User",(byte) 0b11111010); 
 	}
 	
+	public SuperUser(FileSystem fs) {
+			super();
+			init(fs,"root","***","Super User",(byte) 0b11111010); 
+	}
+	
 	@Override
 	public void remove(FileSystem fs) throws PermissionDeniedException{
 		throw new PermissionDeniedException("deleting root user");

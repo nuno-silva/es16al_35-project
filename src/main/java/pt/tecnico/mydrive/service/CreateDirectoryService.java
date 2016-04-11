@@ -5,8 +5,8 @@ import pt.tecnico.mydrive.exception.EmptyFileNameException;
 
 public class CreateDirectoryService extends CreateFileService {
 
-    public CreateDirectoryService(String fileName,String owner,String parent) {
-        super( fileName, owner, parent );
+    public CreateDirectoryService(String fileName,long token ) {
+        super( fileName, token );
     }
 
     @Override
