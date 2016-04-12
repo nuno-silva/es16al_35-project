@@ -1,16 +1,26 @@
 package pt.tecnico.mydrive.service;
 
 import pt.tecnico.mydrive.service.MyDriveService;
+import pt.tecnico.mydrive.domain.Session;
+import pt.tecnico.mydrive.domain.FileSystem;
+
+import pt.tecnico.mydrive.exception.WrongPasswordException;
+import pt.tecnico.mydrive.exception.UserNotFoundException;
 
 
 public class LoginService extends MyDriveService {
     
+	private String username, password;
+    
     public LoginService(String username, String password) {
-        /* FIXME TODO (dummy constructor) */
+        this.username=username;
+        this.password=password;
     }
 
     @Override
-    public void dispatch() {
-        /* FIXME TODO (dummy method) */
+    public void dispatch() throws UserNotFoundException,WrongPasswordException {
+		FileSystem fs = getFileSystem();
+		if( ! fs.getUser( username ).checkPassword( password ) ) throw new WrongPasswordException( username );
+        Session s = new Session( fs, fs.getUser( username ) , password );
     }
 }
