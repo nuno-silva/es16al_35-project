@@ -43,13 +43,13 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     }
 
     protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm) {
-        logger.trace("init name: "+name);
-        setName( name );
-        setMask( perm );
-        setOwner( owner );
-        setParentDir( parent ); // must be called after setName!
-        setLastMod( new DateTime() );
-        setId( fs.commitNewFileId() ); // commitNewFileId must be called only when we're sure the File was successfully created
+        logger.trace("init name: " + name);
+        setName(name);
+        setPermissions(perm);
+        setOwner(owner);
+        setParentDir(parent); // must be called after setName!
+        setLastMod(new DateTime());
+        setId(fs.commitNewFileId()); // commitNewFileId must be called only when we're sure the File was successfully created
     }
 
     @Override
@@ -125,17 +125,17 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
 
     @Override
     public String getStringPermissions() {
-        return MaskHelper.getStringPermissions(getMask());
+        return MaskHelper.getStringPermissions(getPermissions());
     }
 
     @Override
     public String getStringMask() {
-        return MaskHelper.getStringMask(getMask());
+        return MaskHelper.getStringMask(getPermissions());
     }
 
     @Override
     public byte getByteMask() {
-        return getMask();
+        return getPermissions();
     }
 
     @Override

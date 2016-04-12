@@ -94,7 +94,7 @@ public class XMLVisitor implements IXMLVisitor {
         String name, mask;
         DateTime lastMod;
         name = file.getName();
-        mask = MaskHelper.getStringMask(file.getMask());
+        mask = MaskHelper.getStringMask(file.getPermissions());
         lastMod = file.getLastMod();
         Element fileElement = new Element(File.XML_TAG); // temp placeholder
         fileElement.setAttribute(new Attribute("id", String.valueOf(file.getId())));
