@@ -1,7 +1,11 @@
 package pt.tecnico.mydrive.service;
 
+import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.Session;
+import pt.tecnico.mydrive.exception.FileNotFoundException;
+import pt.tecnico.mydrive.exception.InvalidTokenException;
 import pt.tecnico.mydrive.exception.MydriveException;
+import pt.tecnico.mydrive.exception.UnknownPathException;
 
 public class ChangeDirectoryService extends MyDriveService {
 	
@@ -15,8 +19,29 @@ public class ChangeDirectoryService extends MyDriveService {
 	
 	@Override
 	protected void dispatch() throws MydriveException {
-		//Session session = getFileSystem().getSession(token);
-		//session.setWorkingPath(path);
+		FileSystem fs = getFileSystem();
+		Session session = getFileSystem().getSession(token);
+		if (session.isExpired())
+			throw new InvalidTokenException(token);
+		
+		try {
+			if(path.substring(0, 1).matches("/")) {//path is absolute
+					fs.getFile(path);
+					session.setWorkingPath(path);
+			}
+			
+			else {								  //path is relative to current Directory
+				String fullPath = session.getWorkingPath();
+				fullPath.concat(path);
+				fs.getFile(fullPath);
+				session.setWorkingPath(fullPath);
+			}
+			
+		} catch (UnknownPathException e) {
+			throw new UnknownPathException(path);
+		} catch (FileNotFoundException e) {
+			throw new UnknownPathException(path);
+		}
 	}
 
 }

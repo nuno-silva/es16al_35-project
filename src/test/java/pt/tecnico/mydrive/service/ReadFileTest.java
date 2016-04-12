@@ -2,43 +2,180 @@ package pt.tecnico.mydrive.service;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Test;
 
+import pt.tecnico.mydrive.domain.App;
 import pt.tecnico.mydrive.domain.Directory;
 import pt.tecnico.mydrive.domain.File;
 import pt.tecnico.mydrive.domain.FileSystem;
+import pt.tecnico.mydrive.domain.Link;
 import pt.tecnico.mydrive.domain.PlainFile;
+import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.User;
+import pt.tecnico.mydrive.exception.FileNotFoundException;
 
 public class ReadFileTest extends AbstractServiceTest {
 
     protected void populate() {
-    	/*
+    	
     	FileSystem fs = FileSystem.getInstance();
-    	User mike = new User(fs, "mike", "lol", "Mike Doe", (byte) 1111000);
-    	File file = fs.getFile("/home/mike");
-    	new PlainFile(fs, (Directory) file, mike, "Test", (byte) 1111111, "Just a test string.");
-    	*/
+    	User user = new User(fs, "mike", "MIKE", "Ronald McDonald", (byte) 11111111); 
+    	File home = fs.getFile(user.getHomePath());
+    	new PlainFile(fs, (Directory) home, user, "TestPlainFile", (byte) 1111111, "Just a test string.");
+    	new Link(fs, (Directory) home, user, "TestLink", (byte) 1111111, "/home");
+    	new App(fs, (Directory) home, user, "TestApp", (byte) 1111111, "int main() {return 1;}");
     }
 
     @Test
-    public void success() {
-    	/*
-    	final String fileName = "Test";
+    public void successPlainFile() {
+    	
+    	final String fileName = "TestPlainFile";
     	long token;
     	
     	FileSystem fs = FileSystem.getInstance();
-    	User mike = getUser("mike");
+    	User user = fs.getUser("mike");
     	
     	//Login
-    	Session session = new Session(fs, mike, "lol");
+    	Session session = new Session(fs, user, "MIKE");
     	token = session.getToken();
     	
     	//Call ReadFileService
     	ReadFileService service = new ReadFileService(token, fileName);
     	service.dispatch();
     	
-    	//assertEquals();
-    	*/
+    	PlainFile file = (PlainFile) fs.getFile("/home/mike/" + fileName);
+    	String content = file.getContent();
+    	
+    	//assertEquals("Just a test string.", content);
     }
+    
+    @Test
+    public void successLink() {
+    	final String fileName = "TestLink";
+    	long token;
+    	
+    	FileSystem fs = FileSystem.getInstance();
+    	User user = fs.getUser("mike");
+    	
+    	//Login
+    	Session session = new Session(fs, user, "MIKE");
+    	token = session.getToken();
+    	
+    	//Call ReadFileService
+    	ReadFileService service = new ReadFileService(token, fileName);
+    	service.dispatch();
+    	
+    	Link file = (Link) fs.getFile("/home/mike/" + fileName);
+    	String content = file.getContent();
+    	
+    	//assertEquals("/home", content);
+    }
+    
+    @Test
+    public void successApp() {
+    	final String fileName = "TestApp";
+    	long token;
+    	
+    	FileSystem fs = FileSystem.getInstance();
+    	User user = fs.getUser("mike");
+    	
+    	//Login
+    	Session session = new Session(fs, user, "MIKE");
+    	token = session.getToken();
+    	
+    	//Call ReadFileService
+    	ReadFileService service = new ReadFileService(token, fileName);
+    	service.dispatch();
+    	
+    	PlainFile file = (PlainFile) fs.getFile("/home/mike/" + fileName);
+    	String content = file.getContent();
+    	
+    	//assertEquals("int main() {return 1;}", content);
+    }
+    
+    @Test
+    public void failPlainFile() {
+    	
+    	final String fileName = "TestPlainFile";
+    	long token;
+    	
+    	FileSystem fs = FileSystem.getInstance();
+    	User user = fs.getUser("mike");
+    	
+    	//Login
+    	Session session = new Session(fs, user, "MIKE");
+    	token = session.getToken();
+    	
+    	//Call ReadFileService
+    	ReadFileService service = new ReadFileService(token, fileName);
+    	service.dispatch();
+    	
+    	PlainFile file = (PlainFile) fs.getFile("/home/mike/" + fileName);
+    	String content = file.getContent();
+    	
+    	//assertNotEquals("bla bla", content);
+    }
+    
+    @Test
+    public void failLink() {
+    	final String fileName = "TestLink";
+    	long token;
+    	
+    	FileSystem fs = FileSystem.getInstance();
+    	User user = fs.getUser("mike");
+    	
+    	//Login
+    	Session session = new Session(fs, user, "MIKE");
+    	token = session.getToken();
+    	
+    	//Call ReadFileService
+    	ReadFileService service = new ReadFileService(token, fileName);
+    	service.dispatch();
+    	
+    	Link file = (Link) fs.getFile("/home/mike/" + fileName);
+    	String content = file.getContent();
+    	
+    	//assertNotEquals("bla bla", content);
+    }
+    
+    @Test
+    public void failApp() {
+    	final String fileName = "TestApp";
+    	long token;
+    	
+    	FileSystem fs = FileSystem.getInstance();
+    	User user = fs.getUser("mike");
+    	
+    	//Login
+    	Session session = new Session(fs, user, "MIKE");
+    	token = session.getToken();
+    	
+    	//Call ReadFileService
+    	ReadFileService service = new ReadFileService(token, fileName);
+    	service.dispatch();
+    	
+    	PlainFile file = (PlainFile) fs.getFile("/home/mike/" + fileName);
+    	String content = file.getContent();
+    	
+    	//assertNotEquals("bla bla", content);
+    }
+    /*
+    @Test (expected=FileNotFoundException.class)
+    public void fileNotFoundException() {
+    	final String fileName = "Test";
+    	long token;
+    	
+    	FileSystem fs = FileSystem.getInstance();
+    	User user = fs.getUser("mike");
+    	
+    	//Login
+    	Session session = new Session(fs, user, "MIKE");
+    	token = session.getToken();
+    	
+    	//Call ReadFileService
+    	ReadFileService service = new ReadFileService(token, fileName);
+    	service.dispatch();
+    }*/
 }
