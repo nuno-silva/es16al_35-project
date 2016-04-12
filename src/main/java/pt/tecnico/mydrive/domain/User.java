@@ -8,7 +8,7 @@ import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
-
+import pt.tecnico.mydrive.exception.InvalidPasswordException;
 import pt.tecnico.mydrive.exception.UsernameAlreadyExistsException;
 
 import pt.tecnico.mydrive.exception.InvalidTokenException;
@@ -88,8 +88,12 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
         }
     }
 
+	public static void assertValidUsername(String username) throws InvalidUsernameException{
+		if( username==null || username.length() <= 3  ) throw new InvalidUsernameException( username );
+	}
 
-    public boolean checkPassword(String password) {
+    public boolean checkPassword(String password) throws InvalidPasswordException {
+		if( password == null ) throw new InvalidPasswordException("Null password. I too can break the rules, bye!");
         return getPassword().equals(password);
     }
 

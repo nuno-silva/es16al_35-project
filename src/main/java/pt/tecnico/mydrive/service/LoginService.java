@@ -3,9 +3,11 @@ package pt.tecnico.mydrive.service;
 import pt.tecnico.mydrive.service.MyDriveService;
 import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.FileSystem;
+import pt.tecnico.mydrive.domain.User;
 
 import pt.tecnico.mydrive.exception.WrongPasswordException;
 import pt.tecnico.mydrive.exception.UserNotFoundException;
+import pt.tecnico.mydrive.exception.InvalidUsernameException;
 
 
 public class LoginService extends MyDriveService {
@@ -19,7 +21,8 @@ public class LoginService extends MyDriveService {
     }
 
     @Override
-    public void dispatch() throws UserNotFoundException,WrongPasswordException {
+    public void dispatch() throws UserNotFoundException,WrongPasswordException, InvalidUsernameException {
+		User.assertValidUsername( username );
 		FileSystem fs = getFileSystem();
 		if( ! fs.getUser( username ).checkPassword( password ) ) throw new WrongPasswordException( username );
         Session s = new Session( fs, fs.getUser( username ) , password );
