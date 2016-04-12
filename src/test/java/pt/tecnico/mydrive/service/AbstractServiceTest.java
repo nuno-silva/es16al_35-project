@@ -17,8 +17,8 @@ public abstract class AbstractServiceTest {
 
     @BeforeClass // run once berfore each test class
     public static void setUpBeforeAll() throws Exception {
-        // run tests with a clean database!!!
-        MyDriveApplication.init();
+	// run tests with a clean database!!!
+	MyDriveApplication.init();
     }
 
     @Before // run before each test

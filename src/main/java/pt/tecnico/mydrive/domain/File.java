@@ -10,8 +10,8 @@ import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import java.util.List;
 
 public abstract class File extends File_Base implements IXMLVisitable, IPermissionable {
-    public static final String XML_TAG = "file";
     private static final Logger logger = Logger.getLogger(File.class);
+    public static final String XML_TAG = "file";
 
     protected File() {
         super();
@@ -51,6 +51,16 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         setId(fs.commitNewFileId()); // commitNewFileId must be called only when we're sure the File was successfully created
     }
 
+    @Override
+    public void setParentDir(Directory parent) {
+        logger.trace("setParentDir name: " + getName());
+        if (parent == null) {
+            super.setParentDir(parent);
+            return;
+        }
+        parent.addFile(this);
+    }
+
     public boolean isCdAble() {
         return false;
     }
@@ -72,14 +82,14 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         return u.hasDeletePermission(this);
     }
 
+    // A user-friendly interface for permissions
+
     /**
      * Checks if {@link File}'s permissions are positive for a certain mask
      */
     private boolean hasPermission(byte baseMask) {
         return MaskHelper.andMasks(getPermissions(), baseMask) == baseMask;
     }
-
-    // A user-friendly interface for permissions
 
     public boolean ownerCanRead() {
         return hasPermission(MaskHelper.OWNER_READ_MASK);
@@ -142,16 +152,6 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     public Directory getParentDir() {
         logger.trace("getParentDir: " + getName());
         return super.getParentDir();
-    }
-
-    @Override
-    public void setParentDir(Directory parent) {
-        logger.trace("setParentDir name: " + getName());
-        if (parent == null) {
-            super.setParentDir(parent);
-            return;
-        }
-        parent.addFile(this);
     }
 
     @Override

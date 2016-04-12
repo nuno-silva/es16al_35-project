@@ -1,28 +1,35 @@
 package pt.tecnico.mydrive.service;
 
+import static org.junit.Assert.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.core.WriteOnReadError;
+import pt.tecnico.mydrive.MyDriveApplication;
+
+import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.Session;
-import pt.tecnico.mydrive.domain.User;
-import pt.tecnico.mydrive.exception.InvalidPasswordException;
-import pt.tecnico.mydrive.exception.InvalidUsernameException;
-import pt.tecnico.mydrive.exception.UserNotFoundException;
-import pt.tecnico.mydrive.exception.WrongPasswordException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import pt.tecnico.mydrive.service.LoginService;
+import pt.tecnico.mydrive.exception.WrongPasswordException;
+import pt.tecnico.mydrive.exception.InvalidUsernameException;
+import pt.tecnico.mydrive.exception.InvalidPasswordException;
+import pt.tecnico.mydrive.exception.UserNotFoundException;
+
+import javax.transaction.NotSupportedException;
+import javax.transaction.SystemException;
 
 public class LoginTest extends AbstractServiceTest {
     protected static final Logger log = LogManager.getRootLogger();
 
     private final String inexistent_username = "ajfbajfiabipfbwep";
-    private final String valid_username = "nuno";
-    private final String valid_password = "that's right dude";
-    private final String invalid_username = "no";
-    private final String invalid_password = "I'm wrong";
-    private User valid_user;
+    private final String valid_username      = "nuno";
+    private final String valid_password      = "that's right dude";
+    private final String invalid_username    = "no";
+    private final String invalid_password    = "I'm wrong";
+    private User   valid_user;
 
     @Override
     protected void populate() {
@@ -43,7 +50,7 @@ public class LoginTest extends AbstractServiceTest {
 
         assertEquals("Session not created", token, s.getToken());
         assertEquals("Session with wrong user", valid_user, s.getUser());
-        assertFalse("Session expired", s.isExpired());
+        assertFalse( "Session expired", s.isExpired());
     }
 
     @Test

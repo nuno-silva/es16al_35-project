@@ -23,50 +23,56 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
     //all params
     public PlainFile(FileSystem fs, Directory parent, User owner, String name, byte perm, String content) {
         super();
-        init(fs, parent, owner, name, perm, content);
+        init( fs, parent, owner, name, perm, content);
     }
-
+    
     //all but content
-    public PlainFile(FileSystem fs, Directory parent, User owner, String name, byte perm) {
+    public PlainFile(FileSystem fs, Directory parent, User owner, String name, byte perm){
         super();
-        init(fs, parent, owner, name, perm, "");
+        init( fs, parent, owner, name, perm,  "" );
     }
-
     //all but owner
     public PlainFile(FileSystem fs, Directory parent, String name, byte perm, String content) {
         super();
-        init(fs, parent, fs.getSuperUser(), name, perm, content);
+        init( fs, parent, fs.getSuperUser(), name, perm, content );
     }
 
     //all but permissions
     public PlainFile(FileSystem fs, Directory parent, User owner, String name, String content) {
         super();
-        init(fs, parent, owner, name, owner.getMask(), content);
+        init( fs, parent, owner, name, owner.getMask(), content );
     }
 
     //all but content and owner
     public PlainFile(FileSystem fs, Directory parent, String name, byte perm) {
         super();
-        init(fs, parent, fs.getSuperUser(), name, perm, "");
+        init( fs, parent, fs.getSuperUser() , name, perm, "" );
     }
 
     //all but content and permissions
     public PlainFile(FileSystem fs, Directory parent, User owner, String name) {
         super();
-        init(fs, parent, owner, name, owner.getMask(), "");
+        init( fs, parent, owner, name, owner.getMask(), "" );
     }
 
     //all permissions and owner
     public PlainFile(FileSystem fs, Directory parent, String name, String content) {
         super();
-        init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), content);
+        init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), content);
     }
 
     //all permissions, owner and content
     public PlainFile(FileSystem fs, Directory parent, String name) {
         super();
-        init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), "");
+        init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), "" );
     }
+
+    protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm, String content){
+        logger.trace("init name: "+name);
+        super.init( fs, parent, owner, name, perm );
+        setContent( content );
+    }
+
 
     public static Optional<? extends PlainFile> createIfNotExists(FileSystem fs, Directory parent, String name, byte perm, String content) {
         Optional<PlainFile> opt = Optional.empty();
@@ -79,54 +85,42 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
         return opt;
     }
 
-    protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm, String content) {
-        logger.trace("init name: " + name);
-        super.init(fs, parent, owner, name, perm);
-        setContent(content);
-    }
-
     @Override
-    public boolean isCdAble() {
+    public boolean isCdAble(){
         return false;
     }
 
 
-    public String readFileContent() {
+    public String readFileContent(){
         return getContent();
     }
 
-    /**
-     * Execute the file: each line is interpreted as "<app path> <args>*"
-     * and each app is executed
-     */
+    /** Execute the file: each line is interpreted as "<app path> <args>*"
+     *  and each app is executed */
     public void execute() {
         // FIXME: not sure what this should return
         // TODO: method not needed for the first sprint
     }
 
-    /**
-     * sets the content of the PlainFile as a List of lines
-     */
-    public void setLines(List<String> lines) {
+    /** sets the content of the PlainFile as a List of lines */
+    public void setLines( List<String> lines ) {
         String content = "";
-        for (String line : lines) {
+        for( String line : lines ) {
             content += line + LINE_SEPARATOR;
         }
-        setContent(content);
+        setContent( content );
     }
 
-    /**
-     * @returns the content of the PlainFile as a List of lines
-     */
+    /** @returns the content of the PlainFile as a List of lines */
     @Override
     public List<String> showContent() {
         String content = getContent();
-        List<String> lines = Arrays.asList(content.split(LINE_SEPARATOR));
+        List<String> lines = Arrays.asList( content.split( LINE_SEPARATOR ) );
         return lines;
     }
 
     @Override
-    public File getFileByName(String name) {
+    public File getFileByName( String name ) {
         /* FIXME wtf is this? */
         return this;
     }

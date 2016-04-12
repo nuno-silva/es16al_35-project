@@ -9,14 +9,14 @@ import pt.tecnico.mydrive.exception.UsernameAlreadyExistsException;
 public class SuperUser extends SuperUser_Base {
 
 
-    public SuperUser(FileSystem fs, String password) {
+    public SuperUser(FileSystem fs,String password) {
         super();
-        init(fs, "root", password, "Super User", (byte) 0b11111010);
+        init(fs,"root",password,"Super User",(byte) 0b11111010);
     }
 
     public SuperUser(FileSystem fs) {
         super();
-        init(fs, "root", "***", "Super User", (byte) 0b11111010);
+        init(fs,"root","***","Super User",(byte) 0b11111010);
     }
 
     @Override
