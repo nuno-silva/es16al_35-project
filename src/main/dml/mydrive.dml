@@ -21,7 +21,7 @@ class User {
 class File {
 	String name;
 	long id;
-	byte mask; // A.K.A. file permissions
+	byte permissions; // A.K.A. file permissions
 	DateTime lastMod;
 }
 

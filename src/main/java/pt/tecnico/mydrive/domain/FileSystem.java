@@ -114,7 +114,7 @@ public class FileSystem extends FileSystem_Base {
             } catch(FileNotFoundException e) {
                 logger.debug("createFileParents creating directory: " + dirName + " | full path: " +
                         dir.getFullPath() + dirName);
-                dir = new Directory(this, dir, dirName, dir.getMask());
+                dir = new Directory(this, dir, dirName, dir.getPermissions());
             }
             currentPath += "/" + dirName;
         }

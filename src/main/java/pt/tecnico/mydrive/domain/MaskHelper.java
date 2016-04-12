@@ -11,6 +11,15 @@ public class MaskHelper {
     private static final String HR_MASK_NONE = "-";
     private static final String DEFAULT_HR_MASK = HR_MASK_NONE + HR_MASK_NONE + HR_MASK_NONE + HR_MASK_NONE;
 
+    public final static byte OWNER_READ_MASK = (byte)10000000;
+    public final static byte OWNER_WRITE_MASK = (byte)01000000;
+    public final static byte OWNER_EXEC_MASK = (byte)00100000;
+    public final static byte OWNER_DELETE_MASK = (byte)00010000;
+    public final static byte OTHER_READ_MASK = (byte)00001000;
+    public final static byte OTHER_WRITE_MASK = (byte)00000100;
+    public final static byte OTHER_EXEC_MASK = (byte)00000010;
+    public final static byte OTHER_DELETE_MASK = (byte)00000001;
+
     private MaskHelper() { } // prevent instantiation
 
     /**
