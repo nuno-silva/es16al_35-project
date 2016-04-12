@@ -16,6 +16,6 @@ public class WriteFileService extends MyDriveService {
 
     @Override
     protected void dispatch() throws MydriveException {
-        
+
     }
 }

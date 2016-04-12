@@ -10,18 +10,8 @@ import org.jdom2.output.XMLOutputter;
 import org.joda.time.DateTime;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.fenixframework.dml.Slot;
 import pt.tecnico.mydrive.domain.xml.XMLVisitor;
-import pt.tecnico.mydrive.exception.FileNotFoundException;
-import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
-import pt.tecnico.mydrive.exception.InvalidUsernameException;
-import pt.tecnico.mydrive.exception.UnknownPathException;
-
-import pt.tecnico.mydrive.exception.UsernameAlreadyExistsException;
-import pt.tecnico.mydrive.exception.UserNotFoundException;
-
-import pt.tecnico.mydrive.exception.InvalidTokenException;
-
+import pt.tecnico.mydrive.exception.*;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,39 +19,21 @@ import java.util.*;
 
 public class FileSystem extends FileSystem_Base {
 
-    /**
-     * Contains parameters required by all File children.
-     *
-     */
-    private class FileParams {
-        // Android-ish
-        public String ID, NAME, MASK, LASTMOD, PATH;
-        public FileParams() { }
-        public FileParams parse (String id, String name, String mask, String lastMod, String path) {
-            ID = id;
-            NAME = name;
-            MASK = mask;
-            LASTMOD = lastMod;
-            PATH = path;
-
-            return this;
-        }
-    }
     private final static Logger logger = Logger.getLogger(FileSystem.class);
+
+    protected FileSystem() {
+        super();
+        init();
+    }
 
     public static FileSystem getInstance() {
         FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
-        if( fs == null ) {
+        if (fs == null) {
             logger.trace("creating new FileSystem");
             fs = new FileSystem();
         }
 
         return fs;
-    }
-
-    protected FileSystem() {
-        super();
-        init();
     }
 
     protected void init() {
@@ -82,36 +54,38 @@ public class FileSystem extends FileSystem_Base {
         Directory homeRoot = new Directory(this, homeDir, "root", permission);
     }
 
-    /** Creates all parent directories for the given file path, if they
+    /**
+     * Creates all parent directories for the given file path, if they
      * don't exist. Does NOT create the given file.
+     *
      * @returns the given file's parent Directory
      */
     @Deprecated /* avoid using this method as it does not take owners and permissions into account */
     public Directory createFileParents(String path) {
         logger.debug("createFileParents path: " + path);
 
-        if( path.indexOf("/") != 0 ) {
-            throw new IllegalArgumentException("path '"+path+"' is not relative to '/'");
+        if (path.indexOf("/") != 0) {
+            throw new IllegalArgumentException("path '" + path + "' is not relative to '/'");
         }
 
         Directory dir = getRootDir();
         String currentPath = "";
         String[] p = path.split("/");
         int i = 1; // p[0] is ""
-        for( ; i < p.length - 1; i++ ) {
+        for (; i < p.length - 1; i++) {
             String dirName = p[i];
             logger.debug("createFileParents p[" + i + "]: " + dirName);
             try {
                 File f = dir.getFileByName(dirName);
-                if(!f.isCdAble()) {
+                if (!f.isCdAble()) {
                     // there's a file with that name
                     logger.debug("createFileParents filename already exists: " + dirName);
                     throw new FilenameAlreadyExistsException(dirName, currentPath);
                 }
                 logger.debug("createFileParents directory already exists: " + dirName
-                + " | full path: " + dir.getFullPath());
+                        + " | full path: " + dir.getFullPath());
                 dir = (Directory) f;
-            } catch(FileNotFoundException e) {
+            } catch (FileNotFoundException e) {
                 logger.debug("createFileParents creating directory: " + dirName + " | full path: " +
                         dir.getFullPath() + dirName);
                 dir = new Directory(this, dir, dirName, dir.getPermissions());
@@ -123,26 +97,31 @@ public class FileSystem extends FileSystem_Base {
 
     protected Directory createRootDirectory() {
         // FIXME: proper rootdir permission
-        Directory rootDir = new Directory(this, (byte) 0b11111010 );
-        setRootDir( rootDir );
+        Directory rootDir = new Directory(this, (byte) 0b11111010);
+        setRootDir(rootDir);
         return rootDir;
     }
 
-    /** get the next new file id (but don't store it) - use it when trying to create a new File*/
+    /**
+     * get the next new file id (but don't store it) - use it when trying to create a new File
+     */
     protected long peekNewFileId() {
         long newId = getFileCounter() + 1;
         return newId;
     }
 
-    /** "allocates" a new file id (when you're sure a new File was/will be created */
+    /**
+     * "allocates" a new file id (when you're sure a new File was/will be created
+     */
     protected long commitNewFileId() {
         long newId = peekNewFileId();
-        setFileCounter( newId );
+        setFileCounter(newId);
         return newId;
     }
 
     /**
      * Creates the {@link Directory} if it does not exist, in either case, returns a {@link Optional} with that directory.
+     *
      * @param parent
      * @param name
      * @param permission
@@ -159,7 +138,7 @@ public class FileSystem extends FileSystem_Base {
             // mentioned in the classes).
             String path = parent.getFullPath() + name;
             logger.debug("Full Path: " + path);
-            opt = Optional.of((Directory)(this.getFile(path)));
+            opt = Optional.of((Directory) (this.getFile(path)));
         } else {
             commitNewFileId(); // new directory has been created
         }
@@ -174,25 +153,26 @@ public class FileSystem extends FileSystem_Base {
     public PlainFile createPlainFileIfNotExists(Directory parent, String name, byte permission) {
         try {
             return createPlainFile(parent, name, permission);
-        } catch(FilenameAlreadyExistsException _) {
+        } catch (FilenameAlreadyExistsException _) {
             File f = getFile(parent.getFullPath() + "/" + name);
             logger.debug("Got file... " + f.getFullPath());
-            return (PlainFile)f;
+            return (PlainFile) f;
         }
     }
 
-    public List<String> pathContent (String path) throws UnknownPathException {
+    public List<String> pathContent(String path) throws UnknownPathException {
         /* FIXME duplicate of fileContent() ? */
         return getFile(path).showContent();
     }
 
-    public List<String> fileContent (String path) throws UnknownPathException {
+    public List<String> fileContent(String path) throws UnknownPathException {
         return getFile(path).showContent();
     }
 
-    public void removeFile (String path) throws UnknownPathException {
+    public void removeFile(String path) throws UnknownPathException {
         getFile(path).remove();
     }
+
     /*
     public void createReadMe() {
         List<String> users = pathContent("/home");
@@ -207,19 +187,17 @@ public class FileSystem extends FileSystem_Base {
         logger.debug("getFile: " + path);
         File currentDir = getRootDir();
 
-        if(!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
+        if (!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
             throw new UnknownPathException(path);
 
         path = path.substring(1); // remove '/'
-        for(String dir : path.split("/")) {
-            logger.trace("getFile: entering "+dir);
+        for (String dir : path.split("/")) {
+            logger.trace("getFile: entering " + dir);
             currentDir = currentDir.getFileByName(dir);
         }
         logger.debug("getFile: " + currentDir.getFullPath());
         return currentDir;
     }
-
-
 
     public Document xmlExport() {
         Document doc = new Document(new Element("mydrive"));
@@ -242,7 +220,7 @@ public class FileSystem extends FileSystem_Base {
             doc.getRootElement().addContent(e);
             if (file.isCdAble()) {
                 // if file is CDable, add all of it's children to the queue
-                for(File f : ((Directory)file).getFileSet()) {
+                for (File f : ((Directory) file).getFileSet()) {
                     logger.info("Adding " + f.getName() + " to directory queue");
                     if (file != f) {
                         /* this prevents infinite loops, since the root directory contains itself as
@@ -261,14 +239,17 @@ public class FileSystem extends FileSystem_Base {
      * Returns {@link Optional} containing the User with the specified  username. If no User with such username is
      * found, an empty {@link Optional} is returned. The caller should always call {@link Optional#isPresent()} before
      * accessing the value.
+     *
      * @param username the username of the {@link User} to find
      * @return {@link Optional} containing the {@link User} with the specified username
      */
     public Optional<User> getUserByUsername(String username) {
         Optional<User> opt = Optional.empty();
-        if (username == null) { return opt; }
+        if (username == null) {
+            return opt;
+        }
 
-        for (User u: getUserSet()) {
+        for (User u : getUserSet()) {
             if (u.getUsername() == username) {
                 opt = Optional.of(u);
                 return opt;
@@ -309,7 +290,6 @@ public class FileSystem extends FileSystem_Base {
         /* FIXME after importing everything, is the fileCounter begin set to
          * the greatest fileID that was imported? */
     }
-
 
     private FileParams parseFileParams(Element file, FileParams fp) {
         // This allows some code reuse
@@ -361,14 +341,14 @@ public class FileSystem extends FileSystem_Base {
     /**
      * Import content files from XML (i.e. PlainFiles Apps).
      *
-     * @param  contentFiles - list of Elements to import
-     * @param isApp - if true, create App files. If false, create PlainFiles
+     * @param contentFiles - list of Elements to import
+     * @param isApp        - if true, create App files. If false, create PlainFiles
      */
     private void xmlImportContentFiles(List<Element> contentFiles, boolean isApp) {
         FileParams fp = new FileParams();
         String content;
         Element elem;
-        for (Element contentFile :  contentFiles) {
+        for (Element contentFile : contentFiles) {
             fp = parseFileParams(contentFile, fp);
             elem = contentFile.getChild("content");
             if (elem != null) {
@@ -383,9 +363,9 @@ public class FileSystem extends FileSystem_Base {
             Directory parent = createFileParents(fp.PATH);
 
             // if it's an App, all the App's constructor, otherwise use PlainFile's
-            if(isApp) {
+            if (isApp) {
                 opt = App.createIfNotExists(this, parent, fp.NAME,
-                        (byte)0b11111010,content);
+                        (byte) 0b11111010, content);
             } else {
                 opt = PlainFile.createIfNotExists(this, parent, fp.NAME,
                         (byte) 0b11111010, content);
@@ -408,7 +388,7 @@ public class FileSystem extends FileSystem_Base {
         FileParams fp = new FileParams();
         String pointer = null;
         Element elem = null;
-        for(Element link : links) {
+        for (Element link : links) {
             fp = parseFileParams(link, fp);
             elem = link.getChild("pointer");
             if (elem != null) {
@@ -417,7 +397,7 @@ public class FileSystem extends FileSystem_Base {
                 pointer = "";
             }
             File newLink = new Link(this, createFileParents(fp.PATH), fp.NAME,
-                                    (byte)0b00000001, pointer);
+                    (byte) 0b00000001, pointer);
             getRootDir().addFile(newLink); // needed now?
             createFileParents(fp.PATH);
         }
@@ -425,10 +405,10 @@ public class FileSystem extends FileSystem_Base {
 
     private void xmlImportDirectories(List<Element> dirs) {
         FileParams fp = new FileParams();
-        for(Element dir : dirs) {
+        for (Element dir : dirs) {
             fp = parseFileParams(dir, fp);
             Optional<Directory> opt =
-                    Directory.createIfNotExists(this, getRootDir(), fp.NAME, (byte)0b1111111);
+                    Directory.createIfNotExists(this, getRootDir(), fp.NAME, (byte) 0b1111111);
             if (opt.isPresent()) {
                 logger.debug("Creating directory");
                 Directory newDir = opt.get();
@@ -478,7 +458,7 @@ public class FileSystem extends FileSystem_Base {
 
             try {
                 // FIXME: hardcoded mask
-                addUser(new User( this, username, password, name, (byte)0b00000000));
+                addUser(new User(this, username, password, name, (byte) 0b00000000));
             } catch (InvalidUsernameException e) {
                 e.printStackTrace();
             }
@@ -489,38 +469,37 @@ public class FileSystem extends FileSystem_Base {
     }
 
     @Override
-    public void addUser(User u) throws UsernameAlreadyExistsException{
+    public void addUser(User u) throws UsernameAlreadyExistsException {
         logger.trace("addUser " + u.getUsername());
-        String username=u.getUsername();
-        if( hasUser( username ) ) {
-            throw new UsernameAlreadyExistsException( username );
+        String username = u.getUsername();
+        if (hasUser(username)) {
+            throw new UsernameAlreadyExistsException(username);
         } else {
-            super.addUser( u );
+            super.addUser(u);
         }
     }
 
-    public boolean hasUser(String username){
-        try{
-            getUser( username );
+    public boolean hasUser(String username) {
+        try {
+            getUser(username);
             return true;
-        } catch (UserNotFoundException e){
+        } catch (UserNotFoundException e) {
             return false;
         }
 
     }
 
-
     public User getUser(String username) {
-        for (User u: getUserSet()) {
+        for (User u : getUserSet()) {
             if (u.getUsername().equals(username)) {
                 return u;
             }
         }
-        throw new UserNotFoundException( username );
+        throw new UserNotFoundException(username);
     }
 
-    public SuperUser getSuperUser() throws UserNotFoundException{
-        return (SuperUser)getUser("root");
+    public SuperUser getSuperUser() throws UserNotFoundException {
+        return (SuperUser) getUser("root");
     }
 
     public void xmlImportFromFile(String fileName) throws JDOMException, IOException {
@@ -541,11 +520,11 @@ public class FileSystem extends FileSystem_Base {
     }
 
     public Session getSession(long token) throws InvalidTokenException {
-        if( token == 0) {
+        if (token == 0) {
             throw new InvalidTokenException(token, "Token can not be 0");
         }
         Set<User> users = getUserSet();
-        for(User u : users) {
+        for (User u : users) {
             try {
                 return u.getSession(token);
             } catch (InvalidTokenException e) {
@@ -566,8 +545,29 @@ public class FileSystem extends FileSystem_Base {
 
     public void removeExpiredTokens() {
         Set<User> users = getUserSet();
-        for(User u : users) {
+        for (User u : users) {
             u.removeExpiredTokens();
+        }
+    }
+
+    /**
+     * Contains parameters required by all File children.
+     */
+    private class FileParams {
+        // Android-ish
+        public String ID, NAME, MASK, LASTMOD, PATH;
+
+        public FileParams() {
+        }
+
+        public FileParams parse(String id, String name, String mask, String lastMod, String path) {
+            ID = id;
+            NAME = name;
+            MASK = mask;
+            LASTMOD = lastMod;
+            PATH = path;
+
+            return this;
         }
     }
 }

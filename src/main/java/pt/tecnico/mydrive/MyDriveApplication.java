@@ -18,19 +18,19 @@ import java.util.List;
 
 /**
  * Hello world!
- *
  */
 
 public class MyDriveApplication {
     static final Logger log = LogManager.getRootLogger();
+
     public static void main(String[] args) {
         setup();
         try {
-            for( String f: args ) {
-                xmlScan( f );
+            for (String f : args) {
+                xmlScan(f);
             }
         } catch (JDOMException e) {
-            e.printStackTrace() ;
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,9 +39,9 @@ public class MyDriveApplication {
     }
 
     @Atomic
-    public static void xmlScan( String fileName ) throws JDOMException, IOException {
+    public static void xmlScan(String fileName) throws JDOMException, IOException {
         FileSystem fs = FileSystem.getInstance();
-        fs.xmlImportFromFile( fileName );
+        fs.xmlImportFromFile(fileName);
     }
 
     @Atomic
@@ -55,7 +55,7 @@ public class MyDriveApplication {
         FileSystem fs = FileSystem.getInstance();
         /* FIXME: this was only needed for the first spring, but I'm leaving it
          * here because it's useful for testing */
-        
+
         // Create "/home/README":
         PlainFile readme = fs.createPlainFileIfNotExists((Directory) fs.getFile("/home"), "README", (byte) 00000000);
         readme.setContent("lista de utilizadores");
@@ -81,9 +81,9 @@ public class MyDriveApplication {
     }
 
     public static void printContent(String description, List<String> content) {
-        System.out.println( description );
-        for( String line : content ) {
-            System.out.println( line );
+        System.out.println(description);
+        for (String line : content) {
+            System.out.println(line);
         }
     }
 }

@@ -4,6 +4,14 @@ package pt.tecnico.mydrive.domain;
  * Static helper class containing mask helper methods.
  */
 public class MaskHelper {
+    public final static byte OWNER_READ_MASK = (byte) 10000000;
+    public final static byte OWNER_WRITE_MASK = (byte) 01000000;
+    public final static byte OWNER_EXEC_MASK = (byte) 00100000;
+    public final static byte OWNER_DELETE_MASK = (byte) 00010000;
+    public final static byte OTHER_READ_MASK = (byte) 00001000;
+    public final static byte OTHER_WRITE_MASK = (byte) 00000100;
+    public final static byte OTHER_EXEC_MASK = (byte) 00000010;
+    public final static byte OTHER_DELETE_MASK = (byte) 00000001;
     private static final String HR_MASK_READ = "r";
     private static final String HR_MASK_WRITE = "w";
     private static final String HR_MASK_EXECUTE = "x";
@@ -11,16 +19,8 @@ public class MaskHelper {
     private static final String HR_MASK_NONE = "-";
     private static final String DEFAULT_HR_MASK = HR_MASK_NONE + HR_MASK_NONE + HR_MASK_NONE + HR_MASK_NONE;
 
-    public final static byte OWNER_READ_MASK = (byte)10000000;
-    public final static byte OWNER_WRITE_MASK = (byte)01000000;
-    public final static byte OWNER_EXEC_MASK = (byte)00100000;
-    public final static byte OWNER_DELETE_MASK = (byte)00010000;
-    public final static byte OTHER_READ_MASK = (byte)00001000;
-    public final static byte OTHER_WRITE_MASK = (byte)00000100;
-    public final static byte OTHER_EXEC_MASK = (byte)00000010;
-    public final static byte OTHER_DELETE_MASK = (byte)00000001;
-
-    private MaskHelper() { } // prevent instantiation
+    private MaskHelper() {
+    } // prevent instantiation
 
     /**
      * Returns the {@link java.lang.String} representation of the binary mask.
@@ -61,7 +61,7 @@ public class MaskHelper {
      * will return "----".
      *
      * @return the {@link java.lang.String} human-readable representation of the provided {@link java.lang.String}
-     *  representation of the binary mask.
+     * representation of the binary mask.
      */
     private static String maskBitsToHR(String bits) {
         if (bits.length() < 4) {
