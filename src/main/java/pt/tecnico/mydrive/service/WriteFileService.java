@@ -37,7 +37,7 @@ public class WriteFileService extends MyDriveService {
             throw new PermissionDeniedException(activeUser.getUsername() + " has no write permissions for "
                     + f.getFullPath());
         }
-        
+
         PlainFile pf = (PlainFile)f;
         pf.setContent(content);
     }

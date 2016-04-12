@@ -11,6 +11,8 @@ import pt.tecnico.mydrive.domain.*;
 public class XMLVisitor implements IXMLVisitor {
     private static XMLVisitor instance = null;
 
+    private XMLVisitor() { /* empty on purpose */ }
+
     // TODO: not reflection safe
     public static XMLVisitor getInstance() {
         if (instance == null) {
@@ -19,10 +21,9 @@ public class XMLVisitor implements IXMLVisitor {
         return instance;
     }
 
-    private XMLVisitor() { /* empty on purpose */ }
     @Override
     public Element visit(Directory directory) {
-        Element dirElement = visit((File)directory);
+        Element dirElement = visit((File) directory);
         dirElement.setName(Directory.XML_TAG);
         return dirElement;
     }
@@ -31,7 +32,7 @@ public class XMLVisitor implements IXMLVisitor {
     public Element visit(PlainFile plainFile) {
         String content;
         content = plainFile.getContent();
-        Element fileElem = visit((File)plainFile);
+        Element fileElem = visit((File) plainFile);
         fileElem.setName(PlainFile.XML_TAG);
 
         if (content != null && content != "") {
@@ -45,9 +46,9 @@ public class XMLVisitor implements IXMLVisitor {
     public Element visit(Link link) {
         String pointer;
         pointer = link.getContent();
-        Element linkElem = visit((File)link);
+        Element linkElem = visit((File) link);
         linkElem.setName(Link.XML_TAG);
-        if(pointer != null && pointer != "") {
+        if (pointer != null && pointer != "") {
             linkElem.addContent(new Element("pointer").setText(pointer));
         }
         return linkElem;
@@ -82,7 +83,7 @@ public class XMLVisitor implements IXMLVisitor {
 
     @Override
     public Element visit(App app) {
-        return visit((PlainFile)app).setName(App.XML_TAG);
+        return visit((PlainFile) app).setName(App.XML_TAG);
     }
 
     @Override

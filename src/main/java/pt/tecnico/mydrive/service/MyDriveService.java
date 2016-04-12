@@ -1,13 +1,13 @@
 package pt.tecnico.mydrive.service;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import pt.ist.fenixframework.Atomic;
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
-import pt.tecnico.mydrive.exception.UserNotFoundException;
 import pt.tecnico.mydrive.exception.MydriveException;
+import pt.tecnico.mydrive.exception.UserNotFoundException;
 
 import java.util.Optional;
 
@@ -17,7 +17,7 @@ import java.util.Optional;
 public abstract class MyDriveService {
     protected final static Logger logger = LogManager.getRootLogger();
 
-    static FileSystem getFileSystem()  {
+    protected static FileSystem getFileSystem() {
         return FileSystem.getInstance();
     }
 

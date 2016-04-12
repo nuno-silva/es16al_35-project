@@ -12,38 +12,48 @@ import java.util.List;
 import java.util.Optional;
 
 public class Directory extends Directory_Base implements IXMLVisitable {
-    private static final Logger logger = Logger.getLogger(Directory.class);
     public static final String XML_TAG = "dir";
+    private static final Logger logger = Logger.getLogger(Directory.class);
 
     //all params
     public Directory(FileSystem fs, Directory parent, User owner, String name, byte perm) {
         super();
-        init( fs, parent, owner, name, perm );
+        init(fs, parent, owner, name, perm);
     }
 
     //all but owner
     public Directory(FileSystem fs, Directory parent, String name, byte perm) {
         super();
-        init( fs, parent, fs.getSuperUser(), name, perm );
+        init(fs, parent, fs.getSuperUser(), name, perm);
     }
 
     //all but perm
     public Directory(FileSystem fs, Directory parent, User owner, String name) {
         super();
-        init( fs, parent, owner, name, owner.getMask() );
+        init(fs, parent, owner, name, owner.getMask());
     }
-     //all but owner and perm
+
+    //all but owner and perm
     public Directory(FileSystem fs, Directory parent, String name) {
         super();
-        init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask() );
+        init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask());
+    }
+
+    /**
+     * constructor for root directory
+     */
+    public Directory(FileSystem fs, byte perm) {
+        super();
+        init(fs, this, fs.getSuperUser(), "", perm);
     }
 
     /**
      * Creates the directory if one with the same name and parent does not already exist.
+     *
      * @param parent parent Directory
-     * @param name name
-     * @param perm permissions
-     * @param id ID
+     * @param name   name
+     * @param perm   permissions
+     * @param id     ID
      * @return {@link java.util.Optional} containing either the newly created Directory or null.
      */
     public static Optional<Directory> createIfNotExists(FileSystem fs, Directory parent, String name, byte perm) {
@@ -62,8 +72,8 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         logger.debug("Directory.fromPath: " + path);
         Directory newDir = fs.createFileParents(path);
         logger.debug("Directory.fromPath: newDir path: " + newDir.getFullPath());
-        String [] parts = path.split("/");
-        Optional<Directory> opt = fs.createDirectoryIfNotExists(newDir, parts[parts.length - 1], (byte)0b00000000);
+        String[] parts = path.split("/");
+        Optional<Directory> opt = fs.createDirectoryIfNotExists(newDir, parts[parts.length - 1], (byte) 0b00000000);
         return opt.get(); // NOTE: the Optional is guaranteed to have a Directory (read javadoc for more info)
     }
 
@@ -72,15 +82,9 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         return true;
     }
 
-    /** constructor for root directory */
-    public Directory(FileSystem fs, byte perm) {
-        super();
-        init( fs, this, fs.getSuperUser(), "", perm);
-    }
-
     @Override
     public String getFullPath() {
-        if(getParentDir() == this) { // we're the root dir
+        if (getParentDir() == this) { // we're the root dir
             logger.trace("getFullPath() reached root dir");
             return "";
         } else {
@@ -90,15 +94,15 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
 
     @Override
-    public void addFile( File file ) throws FilenameAlreadyExistsException {
+    public void addFile(File file) throws FilenameAlreadyExistsException {
         String filename = file.getName();
         logger.debug("addFile: '" + filename + "' in '" + getName() + "'");
-        if( hasFile( filename ) ) {
+        if (hasFile(filename)) {
             logger.trace("addFile result: FilenameAlreadyExistsException");
-            throw new FilenameAlreadyExistsException( filename, getFullPath() );
+            throw new FilenameAlreadyExistsException(filename, getFullPath());
         } else {
             logger.trace("addFile result:");
-            super.addFile( file );
+            super.addFile(file);
             logger.trace("super.addFile( file )");
         }
     }
@@ -113,39 +117,39 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
 
     @Override
-    public void removeFile( File file ) throws FileNotFoundException {
+    public void removeFile(File file) throws FileNotFoundException {
         String filename = file.getName();
-        if( !hasFile( filename ) ) {
-            throw new FileNotFoundException( filename );
+        if (!hasFile(filename)) {
+            throw new FileNotFoundException(filename);
         } else {
-            super.removeFile( file );
+            super.removeFile(file);
         }
     }
 
     @Override
     public File getFileByName(String name) throws FileNotFoundException {
         logger.debug("getFileByName: '" + name + "' in '" + getName() + "'");
-        if(name.equals(".")) {
+        if (name.equals(".")) {
             return this;
-        } else if(name.equals("..")) {
+        } else if (name.equals("..")) {
             return getParentDir();
         }
 
-        for(File f : getFileSet()) {
-            if(f.getName().equals(name)) {
+        for (File f : getFileSet()) {
+            if (f.getName().equals(name)) {
                 return f;
             }
         }
         throw new FileNotFoundException(name);
     }
 
-    public boolean hasFile( String name ) {
+    public boolean hasFile(String name) {
         try {
-            getFileByName( name );
-            System.out.println("FOUND FILE!!!!!!!!!!!!!+"+name+"!!!!");
+            getFileByName(name);
+            System.out.println("FOUND FILE!!!!!!!!!!!!!+" + name + "!!!!");
             return true;
         } catch (FileNotFoundException e) {
-			System.out.println("NOTTTTTTOTOTOTOTOTO!!!!!!!!!!!!!+"+name+"!!!!");
+            System.out.println("NOTTTTTTOTOTOTOTOTO!!!!!!!!!!!!!+" + name + "!!!!");
             return false;
         }
     }
@@ -157,17 +161,19 @@ public class Directory extends Directory_Base implements IXMLVisitable {
 
         files.add(".");
         files.add("..");
-        for( File f : getFileSet() ) {
-            files.add( f.getName() );
+        for (File f : getFileSet()) {
+            files.add(f.getName());
         }
         // TODO: the format should be "<type> <perm> <dim> <owner> <date> <name>", but not for the first sprint, I think
         return files;
     }
 
-    /** removes the Directory (from its parent) and all its Files */
+    /**
+     * removes the Directory (from its parent) and all its Files
+     */
     @Override
     public void remove() {
-        for( File f : getFileSet() ) {
+        for (File f : getFileSet()) {
             f.remove();
         }
         super.remove(); // remove the directory from its parent

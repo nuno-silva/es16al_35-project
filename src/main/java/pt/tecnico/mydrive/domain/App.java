@@ -15,49 +15,49 @@ public class App extends App_Base implements IXMLVisitable {
     //all params
     public App(FileSystem fs, Directory parent, User owner, String name, byte perm, String content) {
         super();
-        init( fs, parent, owner, name, perm, content );
+        init(fs, parent, owner, name, perm, content);
     }
 
     //all but perm
     public App(FileSystem fs, Directory parent, User owner, String name, String content) {
         super();
-        init( fs, parent, owner, name, owner.getMask(), content );
+        init(fs, parent, owner, name, owner.getMask(), content);
     }
-     
+
     //all but owner
     public App(FileSystem fs, Directory parent, String name, byte perm, String content) {
         super();
-        init( fs, parent, fs.getSuperUser(), name, perm, content );
+        init(fs, parent, fs.getSuperUser(), name, perm, content);
     }
 
     //all but content
     public App(FileSystem fs, Directory parent, User owner, String name, byte perm) {
         super();
-        init( fs, parent, owner, name, perm, "" );
+        init(fs, parent, owner, name, perm, "");
     }
-    
+
     //all but content and perm
     public App(FileSystem fs, Directory parent, User owner, String name) {
         super();
-        init( fs, parent, owner, name, owner.getMask(), "" );
+        init(fs, parent, owner, name, owner.getMask(), "");
     }
 
     //all but content and owner
     public App(FileSystem fs, Directory parent, String name, byte perm) {
         super();
-        init( fs, parent, fs.getSuperUser(), name, perm, "" );
+        init(fs, parent, fs.getSuperUser(), name, perm, "");
     }
-    
+
     //all but owner and perm
     public App(FileSystem fs, Directory parent, String name, String content) {
         super();
-        init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), content );
+        init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), content);
     }
-    
+
     //all but owner, perm and content
     public App(FileSystem fs, Directory parent, String name) {
         super();
-        init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), "" );
+        init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), "");
     }
 
     public static Optional<? extends PlainFile> createIfNotExists(FileSystem fs, Directory parent, String name, byte perm, String content) {
