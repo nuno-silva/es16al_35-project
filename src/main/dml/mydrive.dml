@@ -48,7 +48,6 @@ relation UserHasFiles {
 }
 
 relation FileSystemHasRootDir {
-
 	FileSystem playsRole fs { multiplicity 1; }
 	Directory playsRole rootDir {  multiplicity 0..1; }
 }
