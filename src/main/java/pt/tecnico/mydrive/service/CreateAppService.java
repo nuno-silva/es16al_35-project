@@ -1,5 +1,8 @@
 package pt.tecnico.mydrive.service;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import pt.tecnico.mydrive.exception.MydriveException;
 import pt.tecnico.mydrive.exception.EmptyFileNameException;
 import pt.tecnico.mydrive.exception.IsNotCdAbleException;
@@ -25,6 +28,10 @@ public class CreateAppService extends CreatePlainFileService {
 		File f = fs.getFile( s.getWorkingPath() );
 		if( !f.isCdAble() ) throw new IsNotCdAbleException();
 		Directory d = (Directory) f;
-		new App( fs, d, s.getUser(), getContent() );
+		List<String> l=d.showContent();
+		for(String se : l)
+			System.out.println("AAAAAAAAAAAAAND THIS FILE IS!: "+se);
+		System.out.println("Creating file: "+getFileName()+" at: "+d.getName());
+		new App( fs, d, s.getUser(), getFileName(), getContent() );
     }
 }

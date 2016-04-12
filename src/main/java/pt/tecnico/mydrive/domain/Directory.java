@@ -142,8 +142,10 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     public boolean hasFile( String name ) {
         try {
             getFileByName( name );
+            System.out.println("FOUND FILE!!!!!!!!!!!!!+"+name+"!!!!");
             return true;
         } catch (FileNotFoundException e) {
+			System.out.println("NOTTTTTTOTOTOTOTOTO!!!!!!!!!!!!!+"+name+"!!!!");
             return false;
         }
     }
