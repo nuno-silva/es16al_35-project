@@ -1,7 +1,11 @@
 package pt.tecnico.mydrive.exception;
 
-/**
- * Created by iluxonchik on 12-04-2016.
- */
-public class WriteDirectoryException {
+public class WriteDirectoryException extends MydriveException {
+    public WriteDirectoryException() {
+        super();
+    }
+
+    public WriteDirectoryException(String msg) {
+        super(msg);
+    }
 }

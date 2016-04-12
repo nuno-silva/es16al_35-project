@@ -1,18 +1,18 @@
 package pt.tecnico.mydrive.exception;
 
 public class WrongPasswordException extends MydriveException {
-	private final String _username;
-	
-	public WrongPasswordException( String username ) {
-		_username = username;
-	}
+    private final String _username;
 
-	public String getUsername() {
-		return _username;
-	}
+    public WrongPasswordException(String username) {
+        _username = username;
+    }
 
-	@Override
-	public String getMessage() {
-		return "The password for '" + _username + "' is wrong";
-	}
+    public String getUsername() {
+        return _username;
+    }
+
+    @Override
+    public String getMessage() {
+        return "The password for '" + _username + "' is wrong";
+    }
 }
