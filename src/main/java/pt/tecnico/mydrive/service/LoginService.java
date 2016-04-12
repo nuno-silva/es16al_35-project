@@ -11,6 +11,7 @@ import pt.tecnico.mydrive.exception.UserNotFoundException;
 public class LoginService extends MyDriveService {
     
 	private String username, password;
+    private long token;
     
     public LoginService(String username, String password) {
         this.username=username;
@@ -22,5 +23,10 @@ public class LoginService extends MyDriveService {
 		FileSystem fs = getFileSystem();
 		if( ! fs.getUser( username ).checkPassword( password ) ) throw new WrongPasswordException( username );
         Session s = new Session( fs, fs.getUser( username ) , password );
+        token = s.getToken();
     }
+
+    public long result(){
+		return token;
+	}
 }
