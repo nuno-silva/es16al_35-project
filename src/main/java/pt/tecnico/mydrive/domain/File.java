@@ -17,7 +17,7 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     protected File() {
         super();
     }
-    
+
     //all params
     public File(FileSystem fs, Directory parent, User owner, String name, byte perm ) {
         super();
@@ -68,7 +68,7 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
 
     /* FIXME this is ugly \/ */
     private boolean isRootAccess( User u ){ return u.equals( u.getFs().getSuperUser() ) ? true : false; }
-    
+
     public boolean checkReadPermission( User u){
         if( isRootAccess( u ) ) return true;
         return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b10001000 ) ) == 0 )? false : true;

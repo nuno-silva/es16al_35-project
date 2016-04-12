@@ -59,12 +59,12 @@ public class FileSystem extends FileSystem_Base {
         return fs;
     }
 
-    public FileSystem() {
+    protected FileSystem() {
         super();
         init();
     }
 
-    private void init() {
+    protected void init() {
         setRoot(FenixFramework.getDomainRoot());
         setFileCounter(0);
         byte permission = (byte) 0b111101101;
@@ -77,7 +77,7 @@ public class FileSystem extends FileSystem_Base {
 
         // Create home directory: "/home"
         Directory homeDir = new Directory(this, rootDir, "home", permission);
-        
+
         //Create root dir
         Directory homeRoot = new Directory(this, homeDir, "root", permission);
     }
@@ -86,6 +86,7 @@ public class FileSystem extends FileSystem_Base {
      * don't exist. Does NOT create the given file.
      * @returns the given file's parent Directory
      */
+    @Deprecated /* avoid using this method as it does not take owners and permissions into account */
     public Directory createFileParents(String path) {
         logger.debug("createFileParents path: " + path);
 
@@ -505,7 +506,7 @@ public class FileSystem extends FileSystem_Base {
         } catch (UserNotFoundException e){
             return false;
         }
-        
+
     }
 
 
@@ -538,7 +539,7 @@ public class FileSystem extends FileSystem_Base {
         XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
         out.output(doc, new FileOutputStream(fileName));
     }
-    
+
     public Session getSession(long token) throws InvalidTokenException {
         if( token == 0) {
             throw new InvalidTokenException(token, "Token can not be 0");
@@ -553,7 +554,7 @@ public class FileSystem extends FileSystem_Base {
         }
         throw new InvalidTokenException(token);
     }
-    
+
     public boolean hasSession(long token) {
         try {
             getSession(token);
@@ -562,7 +563,7 @@ public class FileSystem extends FileSystem_Base {
             return false;
         }
     }
-    
+
     public void removeExpiredTokens() {
         Set<User> users = getUserSet();
         for(User u : users) {

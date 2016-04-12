@@ -17,14 +17,15 @@ public class Session extends Session_Base {
     }
 
     public Session(FileSystem fs, User u, String password) {
+        super();
         if( ! u.checkPassword(password) ) {
             throw new WrongPasswordException(u.getUsername());
         }
 
         long token = generateToken(fs);
         DateTime expirationDate = renewExpirationDate();
-        init(fs, u, token, u.getHomePath(), expirationDate);
         fs.removeExpiredTokens();
+        init(fs, u, token, u.getHomePath(), expirationDate);
         logger.debug("new Session: token " + tokenToString(token));
     }
 
@@ -46,7 +47,8 @@ public class Session extends Session_Base {
     }
 
     public boolean isExpired() {
-        return getExpirationDate().isAfterNow();
+        logger.trace("isExpired: token " + tokenToString(getToken()));
+        return getExpirationDate().isBeforeNow();
     }
 
     public DateTime renewExpirationDate() {
@@ -57,6 +59,7 @@ public class Session extends Session_Base {
 
 
     public void remove() {
+        logger.trace("remove: token " + tokenToString(getToken()));
         setUser(null);
         deleteDomainObject();
     }
