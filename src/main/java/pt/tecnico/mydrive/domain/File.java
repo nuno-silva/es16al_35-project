@@ -18,27 +18,27 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     }
 
     //all params
-    public File(FileSystem fs, Directory parent, User owner, String name, byte perm ) {
+    public File(FileSystem fs, Directory parent, User owner, String name, byte perm) {
         super();
-        init( fs, parent, owner, name, perm );
+        init(fs, parent, owner, name, perm);
     }
 
     //all but permissions
-    public File(FileSystem fs, Directory parent, User owner, String name){
+    public File(FileSystem fs, Directory parent, User owner, String name) {
         super();
-        init( fs, parent, owner, name, owner.getMask() );
+        init(fs, parent, owner, name, owner.getMask());
     }
 
     //all but owner
     public File(FileSystem fs, Directory parent, String name, byte perm) {
         super();
-        init( fs, parent, fs.getSuperUser(), name, perm);
+        init(fs, parent, fs.getSuperUser(), name, perm);
     }
 
     //all but permissions and owner
     public File(FileSystem fs, Directory parent, String name) {
         super();
-        init( fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask() );
+        init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask());
     }
 
     protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm) {
@@ -52,10 +52,10 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     }
 
     @Override
-    public void setParentDir( Directory parent ) {
-        logger.trace("setParentDir name: "+getName());
-        if( parent == null ) {
-            super.setParentDir( parent );
+    public void setParentDir(Directory parent) {
+        logger.trace("setParentDir name: " + getName());
+        if (parent == null) {
+            super.setParentDir(parent);
             return;
         }
         parent.addFile(this);
@@ -65,27 +65,21 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         return false;
     }
 
-    /* FIXME this is ugly \/ */
-    private boolean isRootAccess( User u ){ return u.equals( u.getFs().getSuperUser() ) ? true : false; }
-
-    public boolean checkReadPermission( User u){
-        if( isRootAccess( u ) ) return true;
-        return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b10001000 ) ) == 0 )? false : true;
+    // Note: methods kept here for backwards compatibility
+    public boolean checkReadPermission(User u) {
+        return u.hasReadPermission(this);
     }
 
-    public boolean checkWritePermission( User u){
-        if( isRootAccess( u ) ) return true;
-        return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b01000100 ) ) == 0 )? false : true;
+    public boolean checkWritePermission(User u) {
+        return u.hasWritePermission(this);
     }
 
-    public boolean checkExecutePermission( User u){
-        if( isRootAccess( u ) ) return true;
-        return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b00100010 ) ) == 0 )? false : true;
+    public boolean checkExecutePermission(User u) {
+        return u.hasExecutePermission(this);
     }
 
-    public boolean checkDeletePermission( User u){
-        if( isRootAccess( u ) ) return true;
-        return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b00010001 ) ) == 0 )? false : true;
+    public boolean checkDeletePermission(User u) {
+        return u.hasDeletePermission(this);
     }
 
     // A user-friendly interface for permissions
@@ -135,18 +129,20 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         deleteDomainObject();
     }
 
-    /** @returns the full path for this file (eg. "/home/root/file") */
+    /**
+     * @returns the full path for this file (eg. "/home/root/file")
+     */
     public String getFullPath() {
         return getParentDir().getFullPath() + "/" + getName();
     }
 
-    public abstract File getFileByName( String name );
+    public abstract File getFileByName(String name);
 
     public abstract List<String> showContent();
 
     @Override
     public void setName(String name) throws InvalidFileNameException {
-        if( name.contains("/") || name.contains("\0") ) {
+        if (name.contains("/") || name.contains("\0")) {
             throw new InvalidFileNameException(name);
         }
         super.setName(name);

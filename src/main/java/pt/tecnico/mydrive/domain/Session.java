@@ -18,7 +18,7 @@ public class Session extends Session_Base {
 
     public Session(FileSystem fs, User u, String password) {
         super();
-        if( ! u.checkPassword(password) ) {
+        if (!u.checkPassword(password)) {
             throw new WrongPasswordException(u.getUsername());
         }
 
@@ -41,7 +41,7 @@ public class Session extends Session_Base {
 
         do {
             token = (new BigInteger(64, new Random())).longValue();
-        } while( token == 0 || fs.hasSession(token) );
+        } while (token == 0 || fs.hasSession(token));
 
         return token;
     }
