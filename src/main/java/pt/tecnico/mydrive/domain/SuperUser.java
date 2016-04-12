@@ -20,6 +20,26 @@ public class SuperUser extends SuperUser_Base {
     }
 
     @Override
+    public boolean hasReadPermission(File f) {
+        return true;
+    }
+
+    @Override
+    public boolean hasWritePermission(File f) {
+        return true;
+    }
+
+    @Override
+    public boolean hasExecutePermission(File f) {
+        return true;
+    }
+
+    @Override
+    public boolean hasDeletePermission(File f) {
+        return true;
+    }
+
+    @Override
     public void remove() throws PermissionDeniedException {
         throw new PermissionDeniedException("can not delete SuperUser " + getUsername());
     }

@@ -112,6 +112,23 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
         return true;
     }
 
+    // Permission checking methods
+    public boolean hasReadPermission(File f) {
+        return (f.getOwner().equals(this)) ? f.ownerCanRead() : f.otherCanRead();
+    }
+
+    public boolean hasWritePermission(File f) {
+        return (f.getOwner().equals(this)) ? f.ownerCanWrite(): f.otherCanWrite();
+    }
+
+    public boolean hasExecutePermission(File f) {
+        return (f.getOwner().equals(this)) ? f.ownerCanExecute() : f.otherCanExecute();
+    }
+
+    public boolean hasDeletePermission(File f) {
+        return (f.getOwner().equals(this)) ? f.ownerCanDelete() : f.otherCanDelete();
+    }
+
     @Override
     public Element accept(IXMLVisitor visitor) {
         return visitor.visit(this);

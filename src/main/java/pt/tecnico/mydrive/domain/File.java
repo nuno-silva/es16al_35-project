@@ -5,7 +5,6 @@ import org.jdom2.Element;
 import org.joda.time.DateTime;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
-import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
 
 import java.util.List;
@@ -87,6 +86,47 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     public boolean checkDeletePermission( User u){
         if( isRootAccess( u ) ) return true;
         return ( ( ( u.getByteMask() & this.getByteMask() ) & ( (byte)0b00010001 ) ) == 0 )? false : true;
+    }
+
+    // A user-friendly interface for permissions
+
+    /**
+     * Checks if {@link File}'s permissions are positive for a certain mask
+     */
+    private boolean hasPermission(byte baseMask) {
+        return MaskHelper.andMasks(getPermissions(), baseMask) == baseMask;
+    }
+
+    public boolean ownerCanRead() {
+        return hasPermission(MaskHelper.OWNER_READ_MASK);
+    }
+
+    public boolean ownerCanWrite() {
+        return hasPermission(MaskHelper.OWNER_WRITE_MASK);
+    }
+
+    public boolean ownerCanExecute() {
+        return hasPermission(MaskHelper.OWNER_EXEC_MASK);
+    }
+
+    public boolean ownerCanDelete() {
+        return hasPermission(MaskHelper.OWNER_DELETE_MASK);
+    }
+
+    public boolean otherCanRead() {
+        return hasPermission(MaskHelper.OTHER_READ_MASK);
+    }
+
+    public boolean otherCanWrite() {
+        return hasPermission(MaskHelper.OTHER_WRITE_MASK);
+    }
+
+    public boolean otherCanExecute() {
+        return hasPermission(MaskHelper.OTHER_EXEC_MASK);
+    }
+
+    public boolean otherCanDelete() {
+        return hasPermission(MaskHelper.OTHER_DELETE_MASK);
     }
 
     public void remove() {
