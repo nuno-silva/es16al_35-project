@@ -3,6 +3,7 @@ package pt.tecnico.mydrive.service;
 import org.junit.Test;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.mydrive.domain.*;
+import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -20,13 +21,12 @@ public class CreateAppTest extends AbstractServiceTest {
     public void success() {
 
         FileSystem fs = FileSystem.getInstance();
-        /* <Gisson_was_here> :D . Had to change some of your procedures since I changed service soz */
-        Session s = new Session(fs, fs.getSuperUser(), "***");
-        CreateFileService service = new CreateAppService("ApplicationTest", s.getToken(), "Do stuff...");
-    	/* </Gisson_was_here> */
+        LoginService lser = new LoginService( "root", "***" );
+        lser.execute();
+        CreateFileService service = new CreateAppService("ApplicationTest", lser.result(), "Do stuff...");
         service.execute();
 
-        File work = fs.getFile("/home/ApplicationTest");
+        File work = fs.getFile("/home/root/ApplicationTest");
         /*
          * Tests:
          * 1) App was created
@@ -41,22 +41,20 @@ public class CreateAppTest extends AbstractServiceTest {
         assertEquals("App created with wrong name", "ApplicationTest", work.getName());
         assertEquals("App created with wrong owner", fs.getSuperUser(), work.getOwner());
         assertEquals("App created with wrong content", "Do stuff...", ((App) work).getContent()); // ha outra maneira de fazer isto sem cast? 
-        // Nope. Aliás basta só fazeres cast para PlainFile.  ( Jorge )
 
     }
 
-    @Test //(expected = FilenameAlreadyExistsException.class)
+    @Test (expected = FilenameAlreadyExistsException.class)
     public void unauthorizedAppCreation() {
-		/* <Gisson_was_here> :D */
         FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
-        Session s = new Session(fs, fs.getSuperUser(), "***");
-    	
+        LoginService lser = new LoginService( "root", "***" );
+        lser.execute();
     	/*
     	 * Tests:
     	 * App with existing name cannot be created in same directory - maybe this could on the CreateFileTest
     	 */
-        CreateFileService service = new CreateAppService("Work", s.getToken(), "Do stuff...");
-    	/* </Gisson_was_here> */
+    	 fs.getSession(lser.result()).setWorkingPath("/home");
+        CreateFileService service = new CreateAppService("Work", lser.result(), "Do stuff...");
         service.execute();
     }
 }
