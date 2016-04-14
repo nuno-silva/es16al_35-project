@@ -14,8 +14,8 @@ public class ReadFileTest extends AbstractServiceTest {
         new Link(fs, (Directory) home, user, "TestLink", (byte) 1111111, "/home");
         new App(fs, (Directory) home, user, "TestApp", (byte) 1111111, "int main() {return 1;}");
     }
-/*
-    @Test
+
+    //@Test
     public void successPlainFile() {
 
         final String fileName = "TestPlainFile";
@@ -38,7 +38,7 @@ public class ReadFileTest extends AbstractServiceTest {
         //assertEquals("Just a test string.", content);
     }
 
-    @Test
+    //@Test
     public void successLink() {
         final String fileName = "TestLink";
         long token;
@@ -60,7 +60,7 @@ public class ReadFileTest extends AbstractServiceTest {
         //assertEquals("/home", content);
     }
 
-    @Test
+    //@Test
     public void successApp() {
         final String fileName = "TestApp";
         long token;
@@ -82,7 +82,7 @@ public class ReadFileTest extends AbstractServiceTest {
         //assertEquals("int main() {return 1;}", content);
     }
 
-    @Test
+    //@Test
     public void failPlainFile() {
 
         final String fileName = "TestPlainFile";
@@ -105,7 +105,7 @@ public class ReadFileTest extends AbstractServiceTest {
         //assertNotEquals("bla bla", content);
     }
 
-    @Test
+    //@Test
     public void failLink() {
         final String fileName = "TestLink";
         long token;
@@ -127,7 +127,7 @@ public class ReadFileTest extends AbstractServiceTest {
         //assertNotEquals("bla bla", content);
     }
 
-    @Test
+    //@Test
     public void failApp() {
         final String fileName = "TestApp";
         long token;
@@ -149,7 +149,7 @@ public class ReadFileTest extends AbstractServiceTest {
         //assertNotEquals("bla bla", content);
     }
     
-    @Test (expected=FileNotFoundException.class)
+    //@Test (expected=FileNotFoundException.class)
     public void fileNotFoundException() {
     	final String fileName = "Test";
     	long token;
@@ -164,5 +164,5 @@ public class ReadFileTest extends AbstractServiceTest {
     	//Call ReadFileService
     	ReadFileService service = new ReadFileService(token, fileName);
     	service.dispatch();
-    }*/
+    }
 }
