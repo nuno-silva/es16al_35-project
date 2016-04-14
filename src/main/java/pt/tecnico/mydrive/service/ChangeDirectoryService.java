@@ -11,6 +11,7 @@ public class ChangeDirectoryService extends MyDriveService {
 
     private long token;
     private String path;
+    private String workingDir;
 
     public ChangeDirectoryService(long token, String path) {
         this.token = token;
@@ -34,6 +35,7 @@ public class ChangeDirectoryService extends MyDriveService {
                 fs.getFile(fullPath);
                 session.setWorkingPath(fullPath);
             }
+            workingDir = session.getWorkingPath();
 
         } catch (UnknownPathException e) {
             throw new UnknownPathException(path);
@@ -41,5 +43,11 @@ public class ChangeDirectoryService extends MyDriveService {
             throw new UnknownPathException(path);
         }
     }
+    
+    protected String result() {
+    	return workingDir;
+    }
+    
+    
 
 }

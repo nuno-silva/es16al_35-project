@@ -133,12 +133,4 @@ public class ChangeDirectoryTest extends AbstractServiceTest {
     	return res;
     }
     
-    private Session getSession(long validToken) {
-        FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
-        //TODO
-
-        return fs.getSession(validToken);
-        //return null;
-    }
-    
 }
