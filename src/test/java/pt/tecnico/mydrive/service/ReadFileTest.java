@@ -14,7 +14,7 @@ public class ReadFileTest extends AbstractServiceTest {
         new Link(fs, (Directory) home, user, "TestLink", (byte) 1111111, "/home");
         new App(fs, (Directory) home, user, "TestApp", (byte) 1111111, "int main() {return 1;}");
     }
-
+/*
     @Test
     public void successPlainFile() {
 
@@ -148,7 +148,7 @@ public class ReadFileTest extends AbstractServiceTest {
 
         //assertNotEquals("bla bla", content);
     }
-    /*
+    
     @Test (expected=FileNotFoundException.class)
     public void fileNotFoundException() {
     	final String fileName = "Test";
