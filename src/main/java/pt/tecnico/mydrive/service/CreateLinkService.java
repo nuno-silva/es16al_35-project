@@ -24,6 +24,7 @@ public class CreateLinkService extends CreatePlainFileService {
         File f = fs.getFile(s.getWorkingPath());
         if (!f.isCdAble()) throw new IsNotCdAbleException();
         Directory d = (Directory) f;
-        new Link(fs, d, s.getUser(), getContent());
+        new Link(fs, d, s.getUser(), getFileName(), getContent());
+        
     }
 }
