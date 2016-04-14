@@ -2,6 +2,8 @@ package pt.tecnico.mydrive.service;
 
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.Session;
+import pt.tecnico.mydrive.exception.EmptyFileNameException;
+import pt.tecnico.mydrive.exception.EmptyPathException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.InvalidTokenException;
 import pt.tecnico.mydrive.exception.MydriveException;
@@ -20,6 +22,10 @@ public class ChangeDirectoryService extends MyDriveService {
 
     @Override
     protected void dispatch() throws MydriveException {
+    	if (path.trim() == "") {
+            throw new EmptyPathException(path);
+        }
+    	
         FileSystem fs = getFileSystem();
         Session session = getFileSystem().getSession(token);
         if (session.isExpired())
