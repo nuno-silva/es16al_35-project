@@ -15,7 +15,6 @@ public class CreateAppService extends CreatePlainFileService {
         super(fileName, token, "");
     }
 
-
     @Override
     protected void dispatch() throws EmptyFileNameException, IsNotCdAbleException, PermissionDeniedException {
         super.dispatchAux();
