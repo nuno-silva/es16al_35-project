@@ -8,11 +8,12 @@ import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.EmptyFileNameException;
 import pt.tecnico.mydrive.exception.InvalidTokenException;
-import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 import pt.tecnico.mydrive.exception.MydriveException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.ReadDirectoryException;
-import pt.tecnico.mydrive.exception.WriteDirectoryException;
+import pt.tecnico.mydrive.exception.UnknownPathException;
+import pt.tecnico.mydrive.exception.FileNotFoundException;
+
 
 public class ReadFileService extends MyDriveService {
 
@@ -47,9 +48,12 @@ public class ReadFileService extends MyDriveService {
             throw new PermissionDeniedException(activeUser.getUsername() + " has no read permissions for "
                     + f.getFullPath());
         }
-        
         String fullpathtofile = session.getWorkingPath() + "/" + fileName;
-        PlainFile linkfile = (PlainFile) fs.getFile(fullpathtofile);
-        linkfile.getContent();
+        try {
+        	PlainFile linkfile = (PlainFile) fs.getFile(fullpathtofile);
+            linkfile.getContent();
+        }catch (UnknownPathException e) {
+        	throw new FileNotFoundException(fileName);
+        }
     }
 }
