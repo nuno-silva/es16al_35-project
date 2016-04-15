@@ -4,16 +4,20 @@ import pt.tecnico.mydrive.domain.File;
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.Directory;
 import pt.tecnico.mydrive.domain.Session;
+import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.InvalidTokenException;
+import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 import pt.tecnico.mydrive.exception.MydriveException;
+import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
+import pt.tecnico.mydrive.exception.UserNotFoundException;
 
 public class DeleteFileService extends MyDriveService {
 
     private String fileName;
-    private String path;
+    private String path, workingDir;
     private long token;
 
     public DeleteFileService(long token, String fileName) {
@@ -22,32 +26,19 @@ public class DeleteFileService extends MyDriveService {
     }
 
     @Override
-    protected void dispatch() throws MydriveException {
+    protected void dispatch() throws MydriveException, PermissionDeniedException {
         FileSystem fs = getFileSystem();
-        Session session = getFileSystem().getSession(token);
-        if (session.isExpired())
-            throw new InvalidTokenException(token);
-        try {
-            if (path.substring(0, 1).matches("/")) {//path is absolute
-                fs.getFile(path);
-                session.setWorkingPath(path);
-            } else {                                  //path is relative to current Directory
-                String fullPath = session.getWorkingPath();
-                fullPath.concat(path);
-                fs.getFile(fullPath);
-                session.setWorkingPath(fullPath);
-            }
+        Session session = fs.getSession(token);
+        workingDir = session.getWorkingPath();
+            
+        User activeUser = session.getUser();
 
-        } catch (UnknownPathException e) {
-            throw new UnknownPathException(path);
-        } catch (FileNotFoundException e) {
-            throw new UnknownPathException(path);
-        }
-        File f = fs.getFile(session.getWorkingPath());
+        File f = fs.getFile(workingDir);
+
         if (!f.isCdAble()) throw new IsNotCdAbleException();
-        String fullpathtofile = session.getWorkingPath() + "/" + fileName;
+        String fullpathtofile = session.getWorkingPath() + "/" + this.fileName;
         File file = fs.getFile(fullpathtofile);
-        file.remove();
-        
+
+        file.remove(activeUser);
     }
 }
