@@ -23,17 +23,17 @@ public class LoginTest extends AbstractServiceTest {
     private final String invalid_username = "no";
     private final String invalid_password = "I'm wrong";
     private User valid_user;
+    private FileSystem fs;
 
     @Override
     protected void populate() {
-        FileSystem fs = FileSystem.getInstance();
+        fs = FileSystem.getInstance();
 
         valid_user = new User(fs, valid_username, valid_password, "Test Me");
     }
 
     @Test
     public void success() {
-        FileSystem fs = FileSystem.getInstance();
         LoginService service = new LoginService(valid_username, valid_password);
         service.execute();
 
@@ -48,7 +48,6 @@ public class LoginTest extends AbstractServiceTest {
 
     @Test
     public void successWithMultipleLogins() {
-        FileSystem fs = FileSystem.getInstance();
         LoginService service1 = new LoginService(valid_username, valid_password);
         LoginService service2 = new LoginService(valid_username, valid_password);
         service1.execute();
@@ -89,13 +88,13 @@ public class LoginTest extends AbstractServiceTest {
         service.execute();
     }
 
-    @Test(expected = InvalidUsernameException.class)
+    @Test(expected = UserNotFoundException.class)
     public void successWithEmptyUsername1() {
         LoginService service = new LoginService("", valid_password);
         service.execute();
     }
 
-    @Test(expected = InvalidUsernameException.class)
+    @Test(expected = UserNotFoundException.class)
     public void successWithInvalidUsername() {
         LoginService service = new LoginService(invalid_username, valid_password);
         service.execute();
