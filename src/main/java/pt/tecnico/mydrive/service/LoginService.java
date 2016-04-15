@@ -20,7 +20,6 @@ public class LoginService extends MyDriveService {
 
     @Override
     public void dispatch() throws UserNotFoundException, WrongPasswordException, InvalidUsernameException {
-        User.assertValidUsername(username);
         FileSystem fs = getFileSystem();
         if (!fs.getUser(username).checkPassword(password)) throw new WrongPasswordException(username);
         Session s = new Session(fs, fs.getUser(username), password);

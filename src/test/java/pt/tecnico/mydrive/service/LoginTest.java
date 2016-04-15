@@ -99,12 +99,6 @@ public class LoginTest extends AbstractServiceTest {
         service.execute();
     }
 
-    @Test(expected = InvalidUsernameException.class)
-    public void successWithNullUsername() {
-        LoginService service = new LoginService(null, valid_password);
-        service.execute();
-    }
-
     @Test(expected = InvalidPasswordException.class)
     public void successWithNullPassword() {
         LoginService service = new LoginService(valid_username, null);
@@ -114,12 +108,6 @@ public class LoginTest extends AbstractServiceTest {
     @Test(expected = UserNotFoundException.class)
     public void successWithEmptyUsername1() {
         LoginService service = new LoginService("", valid_password);
-        service.execute();
-    }
-
-    @Test(expected = UserNotFoundException.class)
-    public void successWithInvalidUsername() {
-        LoginService service = new LoginService(invalid_username, valid_password);
         service.execute();
     }
 }
