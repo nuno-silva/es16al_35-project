@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
+import pt.tecnico.mydrive.exception.PermissionDeniedException;
 
 import java.util.List;
 
@@ -113,6 +114,19 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         return hasPermission(MaskHelper.OTHER_DELETE_MASK);
     }
 
+    public void remove(User initiator) throws PermissionDeniedException {
+        Directory parent = getParentDir();
+        if(!initiator.hasWritePermission(parent)) {
+            throw new PermissionDeniedException("User '" + initiator.getUsername()
+                                                + "' can not write to '"+parent.getFullPath()+"'");
+        }
+        if(!initiator.hasDeletePermission(this)) {
+            throw new PermissionDeniedException("User '" + initiator.getUsername()
+                                                + "' can not delete '"+getFullPath()+"'");
+        }
+        remove();
+    }
+
     public void remove() {
         setParentDir(null);
         setOwner(null);
@@ -126,7 +140,13 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
         return getParentDir().getFullPath() + "/" + getName();
     }
 
-    public abstract File getFileByName(String name);
+    public File getFileByName(String name) {
+        throw new UnsupportedOperationException();
+    }
+
+    public File getFileByName(String name, User initiator) {
+        throw new UnsupportedOperationException();
+    }
 
     public abstract List<String> showContent();
 

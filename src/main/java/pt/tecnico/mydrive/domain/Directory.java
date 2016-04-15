@@ -2,10 +2,12 @@ package pt.tecnico.mydrive.domain;
 
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
+import java.util.Set;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
+import pt.tecnico.mydrive.exception.PermissionDeniedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +95,14 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         }
     }
 
+    public void addFile(File file, User initiator) throws FilenameAlreadyExistsException, PermissionDeniedException {
+        if(!initiator.hasWritePermission(this)) {
+            throw new PermissionDeniedException("User '" + initiator.getUsername()
+                                                + "' can not write to '"+getFullPath()+"'");
+        }
+        addFile(file);
+    }
+
     @Override
     public void addFile(File file) throws FilenameAlreadyExistsException {
         String filename = file.getName();
@@ -116,6 +126,14 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         }
     }
 
+   public void removeFile(File file, User initiator) throws FileNotFoundException, PermissionDeniedException {
+        if(!initiator.hasWritePermission(this)) {
+            throw new PermissionDeniedException("User '" + initiator.getUsername()
+                                                + "' can not write to '"+getFullPath()+"'");
+        }
+        removeFile(file);
+    }
+
     @Override
     public void removeFile(File file) throws FileNotFoundException {
         String filename = file.getName();
@@ -125,6 +143,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
             super.removeFile(file);
         }
     }
+
 
     @Override
     public File getFileByName(String name) throws FileNotFoundException {
@@ -143,9 +162,26 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         throw new FileNotFoundException(name);
     }
 
+    public File getFileByName(String name, User initiator) throws FileNotFoundException, PermissionDeniedException {
+        if(!initiator.hasExecutePermission(this)) {
+            throw new PermissionDeniedException("User '" + initiator.getUsername()
+                                                + "' can not read '"+getFullPath()+"'");
+        }
+        return getFileByName(name);
+    }
+
     public boolean hasFile(String name) {
         try {
             getFileByName(name);
+            return true;
+        } catch (FileNotFoundException e) {
+            return false;
+        }
+    }
+
+    public boolean hasFile(String name, User initiator) {
+        try {
+            getFileByName(name, initiator);
             return true;
         } catch (FileNotFoundException e) {
             return false;
@@ -166,6 +202,23 @@ public class Directory extends Directory_Base implements IXMLVisitable {
         return files;
     }
 
+    @Override
+    public void remove(User initiator) throws PermissionDeniedException {
+        Directory parent = getParentDir();
+        if(!initiator.hasWritePermission(parent)) {
+            throw new PermissionDeniedException("User '" + initiator.getUsername()
+                                                + "' can not write to '"+parent.getFullPath()+"'");
+        }
+        if(!initiator.hasDeletePermission(this)) {
+            throw new PermissionDeniedException("User '" + initiator.getUsername()
+                                                + "' can not delete '"+getFullPath()+"'");
+        }
+        for (File f : getFileSet()) {
+            f.remove(initiator);
+        }
+        super.remove(initiator); // remove the directory from its parent
+    }
+
     /**
      * removes the Directory (from its parent) and all its Files
      */
@@ -181,5 +234,14 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     @Override
     public Element accept(IXMLVisitor visitor) {
         return visitor.visit(this);
+    }
+
+    /** getFileCheck with permission checks */
+    public Set<File> getFileSet(User initiator) throws PermissionDeniedException {
+        if(!initiator.hasReadPermission(this)) {
+            throw new PermissionDeniedException("User '" + initiator.getUsername()
+                                                + "' can not list '"+getFullPath()+"'");
+        }
+        return getFileSet();
     }
 }
