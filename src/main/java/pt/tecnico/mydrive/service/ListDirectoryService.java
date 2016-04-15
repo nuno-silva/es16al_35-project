@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import pt.tecnico.mydrive.service.dto.FileDto;
 import pt.tecnico.mydrive.exception.IsNotCdAbleException;
+import pt.tecnico.mydrive.exception.PermissionDeniedException;
 
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.Session;
+import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.domain.File;
 import pt.tecnico.mydrive.domain.PlainFile;
 import pt.tecnico.mydrive.domain.App;
@@ -28,14 +30,16 @@ public class ListDirectoryService extends MyDriveService {
     protected void dispatch() {
         FileSystem fs = FileSystem.getInstance();
         Session s = fs.getSession(_token);
+        User    u = s.getUser();
 
         String workingPath = s.getWorkingPath();
         File wf = fs.getFile(workingPath);
+
         if(wf.isCdAble()) {
             Directory workingDir = (Directory)wf;
             _files = new ArrayList<FileDto>();
             // add all Files in workingDir
-            for( File f : workingDir.getFileSet()) {
+            for( File f : workingDir.getFileSet(u)) {
                 _files.add(new FileDto(f.getName(),
                                        f.getId(),
                                        f.getPermissions(),
