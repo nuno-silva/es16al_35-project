@@ -3,7 +3,6 @@ package pt.tecnico.mydrive.service;
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.User;
-import pt.tecnico.mydrive.exception.EmptyFileNameException;
 import pt.tecnico.mydrive.exception.EmptyPathException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.InvalidTokenException;
@@ -29,7 +28,7 @@ public class ChangeDirectoryService extends MyDriveService {
         }
     	
         FileSystem fs = getFileSystem();
-        Session session = getFileSystem().getSession(token);
+        Session session = fs.getSession(token);
         if (session.isExpired())
             throw new InvalidTokenException(token);
 
@@ -40,6 +39,7 @@ public class ChangeDirectoryService extends MyDriveService {
             } else {                                  //path is relative to current Directory
                 String fullPath = session.getWorkingPath();
                 fullPath.concat(path);
+                System.out.println(fullPath);
                 fs.getFile(fullPath);
                 session.setWorkingPath(fullPath);
             }
