@@ -179,7 +179,7 @@ public class FileSystem extends FileSystem_Base {
         Directory home = (Directory) getFile("/home");
         numFiles+=1;
 
-        PlainFile readMe = new PlainFile(home, "README", (byte) 00000000, numFiles);
+        PlainFile readMe = new PlainFile(home, "README", (byte) 0b00000000, numFiles);
         readMe.setLines(users);
     }
     */

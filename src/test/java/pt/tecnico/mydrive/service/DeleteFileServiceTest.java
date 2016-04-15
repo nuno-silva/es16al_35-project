@@ -36,10 +36,10 @@ public final class DeleteFileServiceTest extends AbstractServiceTest {
         fs = FileSystem.getInstance();
         // anyone can do anything with his files
         theGame = new User(fs, "TheGame", "Dr.Dre", "The Protegé Of The D.R.E.", (byte)0b11111111);
-        
+
         Directory gameHome = (Directory) fs.getFile(theGame.getHomePath());
         new PlainFile(fs, gameHome, theGame, FILE_PERM_REMOVE, theGame.getByteMask(), "Dr.Dre, Dr.Dre, Dr.Dre, Compton");
-        new PlainFile(fs, gameHome, theGame, FILE_NO_PERM_REMOVE, (byte)11101110, "Touch Dre, catch an exception");
+        new PlainFile(fs, gameHome, theGame, FILE_NO_PERM_REMOVE, (byte)0b11101110, "Touch Dre, catch an exception");
 
         // Create an empty directory, with permission to remove it
         new Directory(fs, gameHome, theGame, DIR_PERM_REMOVE, theGame.getByteMask());
@@ -62,21 +62,21 @@ public final class DeleteFileServiceTest extends AbstractServiceTest {
 
         // Create a directory with permission to delete, but with some files with no permission to delete
         Directory laxFiles = new Directory(fs, gameHome, theGame, DIR_PERM_REMOVE_FILE_NO_PERM_REMOVE, theGame.getByteMask());
-        new PlainFile(fs, laxFiles, theGame, "California_Sunshine", (byte)11101110, "California sunshine," +
+        new PlainFile(fs, laxFiles, theGame, "California_Sunshine", (byte)0b11101110, "California sunshine," +
                 "in the Summer time");
         new PlainFile(fs, laxFiles, theGame, "LAX_Files", theGame.getByteMask(), "L.A.X. Chronicles, L.A.X. Files," +
                                                                                                         "case closed");
 
         // Create a directory with no permission to delete, but with some files with permission to delete
-        Directory red = new Directory(fs, gameHome, theGame, DIR_NO_PERM_REMOVE_FILE_PERM_REMOVE, (byte)11101110);
+        Directory red = new Directory(fs, gameHome, theGame, DIR_NO_PERM_REMOVE_FILE_PERM_REMOVE, (byte)0b11101110);
         new PlainFile(fs, red, theGame, "Dr.Dre_Intro", theGame.getByteMask(), "Dr.Dre Dr.Dre Dr.Dre Dre Dre Dre");
-        new PlainFile(fs, red, theGame, "Dr.Dre_Outro", (byte)11101110, "Dr.Dre is leaving ;(");
+        new PlainFile(fs, red, theGame, "Dr.Dre_Outro", (byte)0b11101110, "Dr.Dre is leaving ;(");
 
         // Let's login a user
         Session s = new Session(fs, theGame, "Dr.Dre");
         token = s.getToken();
     }
-/*
+
     @Test
     public void successRemoveFile() {
         DeleteFileService dfs = new DeleteFileService(token, FILE_PERM_REMOVE);
@@ -96,11 +96,11 @@ public final class DeleteFileServiceTest extends AbstractServiceTest {
         File f = getFileByPath(theGame.getHomePath() + "/" + DIR_PERM_REMOVE);
         assertNull("Directory has not been deleted", f);
     }
-*/
+
     /**
      * Single level recursion directory deletion test
      */
-    /*
+
     @Test
     public void successRemoveDirectoryRec1() {
         DeleteFileService dfs = new DeleteFileService(token, DIR_PERM_REMOVE_REC1);
@@ -117,12 +117,12 @@ public final class DeleteFileServiceTest extends AbstractServiceTest {
         f = getFileByPath(theGame.getHomePath() + "/" + DIR_PERM_REMOVE_REC1 + "/" + DIR_PERM_REMOVE_REC1_F2);
         assertNull("File 2 within the directory has not been deleted", f);
     }
-*/
+
     /**
      * Multiple level recursion directory deletion test (directory A with directory B in it, directory B has directory C
      * in it, all of the directories are non-empty; deleting directory A should remove all of them)
      */
-    /*
+
     @Test
     public void successRemoveDirectoryRec2() {
         final String FIRST_LEVEL = theGame.getHomePath() + "/" + DIR_PERM_REMOVE_REC2;
@@ -159,49 +159,49 @@ public final class DeleteFileServiceTest extends AbstractServiceTest {
         f = getFileByPath(THIRD_LEVEL + DIR_PERM_REMOVE_REC2_DIR1_DIR1_F1);
         assertNull("File within the third-level directory has not been deleted", f);
     }
-*/
-/*
+
+
     @Test(expected = PermissionDeniedException.class)
     public void failRemoveFile() {
         DeleteFileService dfs = new DeleteFileService(token, FILE_NO_PERM_REMOVE);
         dfs.execute();
     }
-*/
+
     /**
      * Directory with permission to remove, but it contains files that cannot be removed
      */
-    /*
+
     @Test(expected = PermissionDeniedException.class)
     public void failRemoveDirectory1() {
         DeleteFileService dfs = new DeleteFileService(token, DIR_PERM_REMOVE_FILE_NO_PERM_REMOVE);
         dfs.execute();
     }
-*/
+
     /**
      * Directory with no permission to remove, but it contains files that can be removed
      */
-    /*
+
     @Test(expected = PermissionDeniedException.class)
     public void failRemoveDirectory2() {
         DeleteFileService dfs = new DeleteFileService(token, DIR_NO_PERM_REMOVE_FILE_PERM_REMOVE);
         dfs.execute();
     }
-*/
-    /*
+
+
     @Test(expected = FileNotFoundException.class)
     public void removeInvalidFile() {
         DeleteFileService dfs = new DeleteFileService(token, INVALID_FILENAME);
         dfs.execute();
     }
-*/
-    /*
+
+
     private File getFileByPath(String path) {
         try {
             return fs.getFile(path);
         } catch (FileNotFoundException e ) {
             return null;
         }
-       
+
     }
-*/
+
 }

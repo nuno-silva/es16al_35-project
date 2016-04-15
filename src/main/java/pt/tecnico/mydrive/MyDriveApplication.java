@@ -57,7 +57,7 @@ public class MyDriveApplication {
          * here because it's useful for testing */
 
         // Create "/home/README":
-        PlainFile readme = fs.createPlainFileIfNotExists((Directory) fs.getFile("/home"), "README", (byte) 00000000);
+        PlainFile readme = fs.createPlainFileIfNotExists((Directory) fs.getFile("/home"), "README", (byte) 0b00000000);
         readme.setContent("lista de utilizadores");
         // Create "/usr/local/bin" directory:
         Directory local = fs.createFileParents("/usr/local/bin");
