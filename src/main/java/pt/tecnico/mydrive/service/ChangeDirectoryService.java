@@ -14,7 +14,6 @@ public class ChangeDirectoryService extends MyDriveService {
 
     private long token;
     private String path;
-    private String workingDir;
 
     public ChangeDirectoryService(long token, String path) {
         this.token = token;
@@ -29,9 +28,9 @@ public class ChangeDirectoryService extends MyDriveService {
     	
         FileSystem fs = getFileSystem();
         Session session = fs.getSession(token);
-        if (session.isExpired())
+        if (session.isExpired()){
             throw new InvalidTokenException(token);
-
+        }
         try {
             if (path.substring(0, 1).matches("/")) {//path is absolute
                 fs.getFile(path);
@@ -43,7 +42,6 @@ public class ChangeDirectoryService extends MyDriveService {
                 fs.getFile(fullPath);
                 session.setWorkingPath(fullPath);
             }
-            workingDir = session.getWorkingPath();
             
             User activeUser = session.getUser();
             if (!activeUser.getStringPermissions().equals(fs.getFile(path).getStringPermissions()))
@@ -55,9 +53,5 @@ public class ChangeDirectoryService extends MyDriveService {
         } catch (FileNotFoundException e) {
             throw new UnknownPathException(path);
         }
-    }
-    
-    protected String result() {
-    	return workingDir;
     }
 }
