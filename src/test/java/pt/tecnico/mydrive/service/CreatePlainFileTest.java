@@ -15,6 +15,7 @@ import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
+import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
 
 
@@ -27,6 +28,7 @@ public class CreatePlainFileTest extends AbstractServiceTest {
         Directory f = (Directory) fs.getFile("/home");
         new App(fs, f, fs.getSuperUser(), "Test1", "I have a lot of work to do during this week!");
         new User(fs, "bbranco", "es2016", "Bernardo", DEFAULT_MASK);
+        new User(fs, "jorge", "es2016", "jorgeheleno", DEFAULT_MASK);
 	}
 	
     @Test
@@ -105,6 +107,19 @@ public class CreatePlainFileTest extends AbstractServiceTest {
         service.execute();
     	
     }
+    
+    
+    @Test (expected = PermissionDeniedException.class)
+    public void createPlainFileinOtherUserDir() {
+        FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+        LoginService lser = new LoginService( "bbranco", "es2016" );
+        lser.execute();
+    	fs.getSession(lser.result()).setWorkingPath("/home/jorge");
+        CreatePlainFileService service = new CreatePlainFileService("TestBernardo", lser.result(), "I have a lot of work to do during this week!");
+        service.execute();
+    	
+    }
+    
 	/*
 	 * Tests:
 	 * PlainFile with existing name cannot be created in same directory

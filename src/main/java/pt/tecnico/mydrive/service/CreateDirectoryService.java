@@ -1,6 +1,13 @@
 package pt.tecnico.mydrive.service;
 
+import pt.tecnico.mydrive.domain.Directory;
+import pt.tecnico.mydrive.domain.File;
+import pt.tecnico.mydrive.domain.FileSystem;
+import pt.tecnico.mydrive.domain.PlainFile;
+import pt.tecnico.mydrive.domain.Session;
+import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.EmptyFileNameException;
+import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 
 public class CreateDirectoryService extends CreateFileService {
 
@@ -11,5 +18,12 @@ public class CreateDirectoryService extends CreateFileService {
     @Override
     protected void dispatch() throws EmptyFileNameException {
         super.dispatch();
+        FileSystem fs = getFileSystem();
+        Session s = fs.getSession(getToken());
+        File f = fs.getFile(s.getWorkingPath());
+        if (!f.isCdAble()) throw new IsNotCdAbleException();
+        Directory d = (Directory) f;
+        new Directory(fs, d, s.getUser(), getFileName());
+
     }
 }

@@ -22,18 +22,18 @@ public class CreateLinkTest extends AbstractServiceTest {
         
         //User(FileSystem fs, String username, String password, String name, byte mask)
 	}
-/*
+
     @Test
     public void successUser() {
         
     	FileSystem fs = FileSystem.getInstance();
     	LoginService lser = new LoginService( "bbranco", "es2016" );
     	lser.execute();	
-    	CreateLinkService service = new CreateLinkService("TestLink", lser.result(), "/home/root");
+    	CreateLinkService service = new CreateLinkService("TestLink", lser.result(), "/home/root/hello");
     	service.execute();
         
         Link linkFile = (Link) fs.getFile("/home/bbranco/TestLink");
-        */
+        
         /*
          * Tests:
          * 1) Link was created
@@ -44,14 +44,13 @@ public class CreateLinkTest extends AbstractServiceTest {
          * 6) Link has correct path
          * 
          */
-	/*
+	
         assertNotNull("Link was not created", linkFile);
         assertEquals("Link created with wrong name", "TestLink", linkFile.getName());
-        assertEquals("Link created with wrong owner", fs.getUserByUsername("bbranco"), linkFile.getOwner());
+        assertEquals("Link created with wrong owner", fs.getUser("bbranco"), linkFile.getOwner());
         assertEquals("Link created with wrong permissions", linkFile.getByteMask(), DEFAULT_MASK);
-        assertEquals("Link created with wrong content", "/home/root", linkFile.getContent());
-        assertEquals("Link created with wrong content", "/home/root/TestLink", linkFile.getFullPath());
+        assertEquals("Link created with wrong content", "/home/root/hello", linkFile.getContent());
 																									
     }
-*/
+
 }
