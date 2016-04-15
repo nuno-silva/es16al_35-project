@@ -43,20 +43,23 @@ public class WriteFileTest extends AbstractServiceTest {
 
     }
 
-    //@Test
+    @Test
     public void success() {
         WriteFileService service = new WriteFileService(valid_token, good_plain_file_name, good_plain_file_content);
+        service.execute();
         assertEquals("file content is wrong", good_plain_file_content, good_plain_file.getContent());
     }
 
     @Test(expected = FileNotFoundException.class)
     public void successWithInexistentFile() {
         WriteFileService service = new WriteFileService(valid_token, invalid_plain_file_name, good_plain_file_content);
+        service.execute();
     }
 
     @Test(expected = InvalidTokenException.class)
     public void successWithInvalidSession() {
         WriteFileService service = new WriteFileService(invalidToken, good_plain_file_name, good_plain_file_content);
+        service.execute();
     }
 
 
