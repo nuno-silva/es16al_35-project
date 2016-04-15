@@ -2,11 +2,13 @@ package pt.tecnico.mydrive.service;
 
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.Session;
+import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.EmptyFileNameException;
 import pt.tecnico.mydrive.exception.EmptyPathException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.InvalidTokenException;
 import pt.tecnico.mydrive.exception.MydriveException;
+import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.UnknownPathException;
 
 public class ChangeDirectoryService extends MyDriveService {
@@ -42,7 +44,12 @@ public class ChangeDirectoryService extends MyDriveService {
                 session.setWorkingPath(fullPath);
             }
             workingDir = session.getWorkingPath();
-
+            
+            User activeUser = session.getUser();
+            if (!activeUser.getStringPermissions().equals(fs.getFile(path).getStringPermissions()))
+            	throw new PermissionDeniedException(activeUser.getUsername() + " has no read permissions for "
+                        + session.getWorkingPath());
+            
         } catch (UnknownPathException e) {
             throw new UnknownPathException(path);
         } catch (FileNotFoundException e) {
@@ -53,7 +60,4 @@ public class ChangeDirectoryService extends MyDriveService {
     protected String result() {
     	return workingDir;
     }
-    
-    
-
 }
