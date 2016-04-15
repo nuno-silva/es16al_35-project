@@ -1,5 +1,6 @@
 package pt.tecnico.mydrive.domain;
 
+import org.apache.log4j.Logger;
 import org.jdom2.Element;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
 import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
@@ -8,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Link extends Link_Base implements IXMLVisitable {
+    private static final Logger logger = Logger.getLogger(Link.class);
     public static final String LINE_SEPARATOR = "\n";
     public static final String XML_TAG = "link";
     private final FileSystem fs;
@@ -54,46 +56,26 @@ public class Link extends Link_Base implements IXMLVisitable {
         this(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), "");
     }
 
-
     @Override
     public boolean isCdAble() {
+        /* TODO ver se isto e' preciso */
         return false;
     }
 
-    @Override
-    public File getFileByName(String name) {
-        /* FIXME wtf is this? */
-        return this;
-    }
 
     /**
-     * @returns the content of the pointed {@link PlainFile} as a List of lines
-     */
-    @Override
-    public List<String> showContent() {
-        PlainFile f = getPointedFile();
-        List<String> lines = Arrays.asList(f.getContent().split(LINE_SEPARATOR));
-        return lines;
-    }
-
-    @Override
-    public void setContent(String newContent) {
-        getPointedFile().setContent(newContent);
-    }
-
-    /**
-     * Gets the actual {@link PlainFile} that the {@link Link} points to.
+     * Gets the actual {@link File} that the {@link Link} points to.
      *
-     * @return {@link PlainFile} pointed by this {@link Link}
+     * @return {@link File} pointed by this {@link Link}
      */
-    private PlainFile getPointedFile() {
+    public File getPointedFile() {
         String content = getContent().trim();
         if (!content.startsWith("/")) {
             // relative path, so append the path of the link to it
+             /* TODO FIXME get using a relative path */
             content = getParentDir().getFullPath() + "/" + content;
         }
-        // TODO: this ignores executables, basically treats them as plain files
-        return (PlainFile) fs.getFile(content);
+        return fs.getFile(content);
     }
 
     @Override

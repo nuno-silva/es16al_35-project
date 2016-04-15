@@ -145,6 +145,12 @@ public class Directory extends Directory_Base implements IXMLVisitable {
     }
 
 
+    public File getFile(String path, boolean followLinks) {
+        /* TODO*/
+        /* se n seguir links e passar por um link dá filenotfoundexception */
+        return null;
+    }
+
     @Override
     public File getFileByName(String name) throws FileNotFoundException {
         logger.debug("getFileByName: '" + name + "' in '" + getName() + "'");
