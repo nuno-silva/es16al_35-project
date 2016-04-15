@@ -2,6 +2,7 @@ package pt.tecnico.mydrive.service;
 
 import static org.junit.Assert.*;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import pt.tecnico.mydrive.domain.*;
 import pt.tecnico.mydrive.exception.EmptyFileNameException;
@@ -18,7 +19,7 @@ public class ReadFileTest extends AbstractServiceTest {
         User user = new User(fs, "mike", "MIKE", "Ronald McDonald", (byte) 0xff);
         File home = fs.getFile(user.getHomePath());
         new PlainFile(fs, (Directory) home, user, "TestPlainFile", (byte) 0xff, "Just a test string.");
-        //new Link(fs, (Directory) home, user, "TestLink", (byte) 1111111, "/home");
+        new Link(fs, (Directory) home, user, "TestLink", (byte) 0xff, "/home");
         new App(fs, (Directory) home, user, "TestApp", (byte) 0xff, "pt.tecnico.mydrive.service.populate");
     }
 
@@ -45,7 +46,7 @@ public class ReadFileTest extends AbstractServiceTest {
         assertEquals("Just a test string.", content);
     }
 
-    //@Test
+    @Test
     public void successLink() {
         final String fileName = "TestLink";
         long token;
@@ -64,7 +65,7 @@ public class ReadFileTest extends AbstractServiceTest {
         Link file = (Link) fs.getFile("/home/mike/" + fileName);
         String content = file.getContent();
 
-        //assertEquals("/home", content);
+        assertEquals("/home", content);
     }
 
     @Test
@@ -112,7 +113,7 @@ public class ReadFileTest extends AbstractServiceTest {
         assertNotEquals("bla bla", content);
     }
 
-    //@Test
+    @Test
     public void failLink() {
         final String fileName = "TestLink";
         long token;
@@ -131,7 +132,7 @@ public class ReadFileTest extends AbstractServiceTest {
         Link file = (Link) fs.getFile("/home/mike/" + fileName);
         String content = file.getContent();
 
-        //assertNotEquals("bla bla", content);
+        assertNotEquals("bla bla", content);
     }
 
     @Test
@@ -176,11 +177,18 @@ public class ReadFileTest extends AbstractServiceTest {
     @Test (expected = InvalidTokenException.class)
     public void failInvalidToken() {
         final String fileName = "Test";
-        long token = 1;
+        long token;
 
         FileSystem fs = FileSystem.getInstance();
         User user = fs.getUser("mike");
         
+        //Login
+        Session session = new Session(fs, user, "MIKE");
+        token = session.getToken();
+        
+        DateTime expirationDate = new DateTime().minusHours(5);
+        session.setExpirationDate(expirationDate);
+        System.out.println(session.getExpirationDate());
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
         service.dispatch();
