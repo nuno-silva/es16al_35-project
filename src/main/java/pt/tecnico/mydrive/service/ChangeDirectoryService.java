@@ -1,5 +1,6 @@
 package pt.tecnico.mydrive.service;
 
+import pt.tecnico.mydrive.domain.Directory;
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.User;
@@ -22,6 +23,7 @@ public class ChangeDirectoryService extends MyDriveService {
 
     @Override
     protected void dispatch() throws MydriveException {
+    	String absPath;
     	if (path.trim() == "") {
             throw new EmptyPathException(path);
         }
@@ -31,23 +33,24 @@ public class ChangeDirectoryService extends MyDriveService {
         if (session.isExpired()){
             throw new InvalidTokenException(token);
         }
+
         try {
-            if (path.substring(0, 1).matches("/")) {//path is absolute
-                fs.getFile(path);
+        	if (path.charAt(0) == '/' ) {//path is absolute
+        		fs.getFile(path);
                 session.setWorkingPath(path);
-            } else {                                  //path is relative to current Directory
-                String fullPath = session.getWorkingPath();
-                fullPath.concat(path);
-                System.out.println(fullPath);
-                fs.getFile(fullPath);
-                session.setWorkingPath(fullPath);
-            }
+                absPath = path;
+        	}
+        	else { //relative
+        		absPath = fs.getFile(session.getWorkingPath() + "/" + path).getFullPath();
+        		session.setWorkingPath(absPath);
+        	}
+
             
             User activeUser = session.getUser();
-            if (!activeUser.getStringPermissions().equals(fs.getFile(path).getStringPermissions()))
+            if (!activeUser.getStringPermissions().equals(fs.getFile(absPath).getStringPermissions()))
             	throw new PermissionDeniedException(activeUser.getUsername() + " has no read permissions for "
                         + session.getWorkingPath());
-            
+          
         } catch (UnknownPathException e) {
             throw new UnknownPathException(path);
         } catch (FileNotFoundException e) {
