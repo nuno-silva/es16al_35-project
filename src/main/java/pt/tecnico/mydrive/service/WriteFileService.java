@@ -20,14 +20,10 @@ public class WriteFileService extends MyDriveService {
 
     @Override
     protected void dispatch() throws MydriveException {
-        if (fileName.trim() == "") {
-            throw new EmptyFileNameException();
-        }
         FileSystem fs = getFileSystem();
         Session s = fs.getSession(token);
         Directory cwd = (Directory) fs.getFile(s.getWorkingPath());
         File f = cwd.getFileByName(fileName);
-        // TODO: Check if fileName is too long (?)
         if (f.isCdAble()) {
             throw new WriteDirectoryException("Cannot write in " + f.getFullPath() + " since it's a directory.");
         }
