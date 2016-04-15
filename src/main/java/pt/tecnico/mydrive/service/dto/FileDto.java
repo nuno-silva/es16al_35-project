@@ -2,10 +2,11 @@ package pt.tecnico.mydrive.service.dto;
 
 import org.joda.time.DateTime;
 
+
 public class FileDto implements Comparable<FileDto> {
     public enum FileType {
         DIRECTORY,
-        PLAINFILE, LINK, APP
+        PLAINFILE, LINK, APP, FILE
     }
 
     private String name;
@@ -14,13 +15,37 @@ public class FileDto implements Comparable<FileDto> {
     private DateTime lastMod;
     private FileType type;
 
-    public FileDto(String name) {
-        /* TODO */
+    public FileDto(String name, long id, byte permissions, DateTime lastMod, FileType type) {
+        this.name = name;
+        this.id   = id;
+        this.permissions = permissions;
+        this.lastMod = lastMod;
+        this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public byte getPermissions() {
+        return permissions;
+    }
+
+    public DateTime getlastMod() {
+        return lastMod;
+    }
+
+    public FileType getType() {
+        return type;
     }
 
     @Override
     public int compareTo(FileDto other) {
-        /* TODO */
-        return 0;
+        return getName().compareTo(other.getName());
     }
+
 }
