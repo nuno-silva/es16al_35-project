@@ -37,6 +37,8 @@ class Link extends PlainFile;
 
 class SuperUser extends User;
 
+class GuestUser extends User;
+
 relation FileSystemHasUsers {
 	User playsRole user {multiplicity 0..*;}
 	FileSystem playsRole fs {multiplicity 1;}
