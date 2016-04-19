@@ -21,7 +21,7 @@ public class Session extends Session_Base {
         }
 
         long token = generateToken(fs);
-        DateTime expirationDate = renewExpirationDate();
+        DateTime expirationDate = u.renewExpirationDate();
         fs.removeExpiredTokens();
         init(fs, u, token, u.getHomePath(), expirationDate);
         logger.debug("new Session: token " + tokenToString(token));
@@ -50,13 +50,7 @@ public class Session extends Session_Base {
 
     public boolean isExpired() {
         logger.trace("isExpired: token " + tokenToString(getToken()));
-        return getExpirationDate().isBeforeNow();
-    }
-
-    public DateTime renewExpirationDate() {
-        DateTime expirationDate = new DateTime().plusHours(2);
-        setExpirationDate(expirationDate);
-        return expirationDate;
+        return getUser().isExpired(this);
     }
 
     public void remove() {

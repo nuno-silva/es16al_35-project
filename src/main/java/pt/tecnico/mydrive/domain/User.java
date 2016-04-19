@@ -1,5 +1,6 @@
 package pt.tecnico.mydrive.domain;
 
+import org.joda.time.DateTime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
@@ -188,6 +189,15 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
     @Override
     public Set<Session> getSessionSet() {
         throw new UnsupportedOperationException();
+    }
+
+    public DateTime renewExpirationDate(){
+      DateTime expirationDate = new DateTime().plusHours(2);
+      return expirationDate;
+    }
+
+    public boolean isExpired(Session s){
+      return s.getExpirationDate().isBeforeNow();
     }
 
 }

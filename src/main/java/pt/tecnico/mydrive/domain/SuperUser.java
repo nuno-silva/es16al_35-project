@@ -1,5 +1,6 @@
 package pt.tecnico.mydrive.domain;
 
+import org.joda.time.DateTime;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.UsernameAlreadyExistsException;
@@ -52,5 +53,11 @@ public class SuperUser extends SuperUser_Base {
         setMask(mask);
         fs.addUser(this);
         setHomePath("/home/root");
+    }
+
+    @Override
+    public DateTime renewExpirationDate(){
+      DateTime expirationDate = new DateTime().plusMinutes(10);
+      return expirationDate;
     }
 }
