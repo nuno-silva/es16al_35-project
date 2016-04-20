@@ -142,7 +142,7 @@
 				<version>1.0-SNAPSHOT</version>
 				<configuration>
 					<names>false</names>
-					<outputDirectory>../info</outputDirectory>
+					<outputDirectory>info</outputDirectory>
 					<url>http://yuml.me/diagram/scruffy;dir:lr/class/</url>
 				</configuration>
 				<executions>
