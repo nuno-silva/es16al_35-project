@@ -15,10 +15,10 @@ public class GuestUser extends GuestUser_Base {
   }
 
   @Override
-  public void init(FileSystem fs, String username, String password, String name, byte mask) throws IsNotCdAbleException{
+  public void init(FileSystem fs, String username, String password, String name, byte mask) throws IsNotCdAbleException {
     logger.trace("Guest User init " + username);
     setUsername(username);
-    setPassword(password);
+    super.setPassword(password);
     setName(name);
     setMask(mask);
     File home = fs.getFile("/home");
@@ -29,13 +29,15 @@ public class GuestUser extends GuestUser_Base {
         setFs(null); // remove User from FileSystem
         throw new IsNotCdAbleException("'" + home.getFullPath() + " is not cdAble. Can't create user home.");
     }
+    fs.addUser(this);
   }
 
   @Override
   public void remove() throws PermissionDeniedException {
       throw new PermissionDeniedException("can not delete GuestUser " + getUsername());
   }
-
+  
+  @Override
   public boolean isExpired(Session s){
     return false;
   }

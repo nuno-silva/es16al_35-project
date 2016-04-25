@@ -52,6 +52,9 @@ public class FileSystem extends FileSystem_Base {
 
         //Create root dir
         Directory homeRoot = new Directory(this, homeDir, "root", permission);
+
+	// Create guest user
+	new GuestUser(this);
     }
 
     /**
