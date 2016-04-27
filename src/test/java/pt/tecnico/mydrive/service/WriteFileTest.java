@@ -39,6 +39,7 @@ public class WriteFileTest extends AbstractServiceTest {
         //good_plain_file_path = good_plain_file.getFullPath();
 
         LoginService login = new LoginService( valid_username, valid_password );
+        login.execute();
         valid_token = login.result();
 
     }
