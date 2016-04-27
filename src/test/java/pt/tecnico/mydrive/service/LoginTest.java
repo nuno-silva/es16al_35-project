@@ -12,6 +12,7 @@ import pt.tecnico.mydrive.exception.UserNotFoundException;
 import pt.tecnico.mydrive.exception.WrongPasswordException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertFalse;
 
 public class LoginTest extends AbstractServiceTest {
@@ -46,6 +47,7 @@ public class LoginTest extends AbstractServiceTest {
         assertEquals("Session not created", token, s.getToken());
         assertEquals("Session with wrong user", valid_user, s.getUser());
         assertFalse("Session expired", s.isExpired());
+        assertNotEquals("Token is 0!", token, 0);
     }
 
     @Test
@@ -64,6 +66,7 @@ public class LoginTest extends AbstractServiceTest {
 
         assertEquals("Session 1 not created", token1, s1.getToken());
         assertEquals("Session 2 not created", token2, s2.getToken());
+        assertNotEquals("Sessions with duplicate tokens", token1, token2);
     }
 
     @Test
