@@ -191,9 +191,9 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>pt.tecnico.mydrive.MyDriveApplication</mainClass>
+				<mainClass>pt.tecnico.mydrive.presentation.MydriveShell</mainClass> 
 					<killAfter>-1</killAfter>
-				</configuration>
+						</configuration>
 			</plugin>
 		</plugins>
 	</build>
