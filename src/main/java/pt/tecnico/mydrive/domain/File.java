@@ -3,14 +3,14 @@ package pt.tecnico.mydrive.domain;
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
-import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
-import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
+import pt.tecnico.mydrive.domain.xml.XMLVisitable;
+import pt.tecnico.mydrive.domain.xml.XMLVisitor;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 
 import java.util.List;
 
-public abstract class File extends File_Base implements IXMLVisitable, IPermissionable {
+public abstract class File extends File_Base implements XMLVisitable, IPermissionable {
     public static final String XML_TAG = "file";
     private static final Logger logger = Logger.getLogger(File.class);
 
@@ -175,7 +175,7 @@ public abstract class File extends File_Base implements IXMLVisitable, IPermissi
     }
 
     @Override
-    public Element accept(IXMLVisitor visitor) {
+    public Element accept(XMLVisitor visitor) {
         return visitor.visit(this);
     }
 

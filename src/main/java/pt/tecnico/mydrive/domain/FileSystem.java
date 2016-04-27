@@ -10,7 +10,7 @@ import org.jdom2.output.XMLOutputter;
 import org.joda.time.DateTime;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
-import pt.tecnico.mydrive.domain.xml.XMLVisitor;
+import pt.tecnico.mydrive.domain.xml.XMLExporterVisitor;
 import pt.tecnico.mydrive.exception.*;
 
 import java.io.FileOutputStream;
@@ -224,7 +224,7 @@ public class FileSystem extends FileSystem_Base {
         // Convert all users to xml
         Set<User> users = getUserSet();
         for (User u : users) {
-            e = u.accept(XMLVisitor.getInstance());
+            e = u.accept(XMLExporterVisitor.getInstance());
             doc.getRootElement().addContent(e);
         }
 
@@ -235,7 +235,7 @@ public class FileSystem extends FileSystem_Base {
         while (!queue.isEmpty()) {
             file = queue.poll();
             logger.trace("Working with " + file.getName());
-            e = file.accept(XMLVisitor.getInstance());
+            e = file.accept(XMLExporterVisitor.getInstance());
             doc.getRootElement().addContent(e);
             if (file.isCdAble()) {
                 // if file is CDable, add all of it's children to the queue

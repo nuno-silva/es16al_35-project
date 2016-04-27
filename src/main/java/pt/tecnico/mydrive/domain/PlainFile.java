@@ -2,15 +2,15 @@ package pt.tecnico.mydrive.domain;
 
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
-import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
-import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
+import pt.tecnico.mydrive.domain.xml.XMLVisitable;
+import pt.tecnico.mydrive.domain.xml.XMLVisitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class PlainFile extends PlainFile_Base implements IXMLVisitable {
+public class PlainFile extends PlainFile_Base implements XMLVisitable {
     public static final String LINE_SEPARATOR = "\n";
     public static final String XML_TAG = "plain";
     private static final Logger logger = Logger.getLogger(PlainFile.class);
@@ -132,7 +132,7 @@ public class PlainFile extends PlainFile_Base implements IXMLVisitable {
     }
 
     @Override
-    public Element accept(IXMLVisitor visitor) {
+    public Element accept(XMLVisitor visitor) {
         return visitor.visit(this);
     }
 }

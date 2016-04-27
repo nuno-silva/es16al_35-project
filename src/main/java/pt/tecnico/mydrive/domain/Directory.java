@@ -3,8 +3,8 @@ package pt.tecnico.mydrive.domain;
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
 import java.util.Set;
-import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
-import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
+import pt.tecnico.mydrive.domain.xml.XMLVisitable;
+import pt.tecnico.mydrive.domain.xml.XMLVisitor;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Directory extends Directory_Base implements IXMLVisitable {
+public class Directory extends Directory_Base implements XMLVisitable {
     public static final String XML_TAG = "dir";
     private static final Logger logger = Logger.getLogger(Directory.class);
 
@@ -238,7 +238,7 @@ public class Directory extends Directory_Base implements IXMLVisitable {
 
 
     @Override
-    public Element accept(IXMLVisitor visitor) {
+    public Element accept(XMLVisitor visitor) {
         return visitor.visit(this);
     }
 

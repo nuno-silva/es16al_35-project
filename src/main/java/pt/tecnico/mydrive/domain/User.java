@@ -4,13 +4,13 @@ import org.joda.time.DateTime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
-import pt.tecnico.mydrive.domain.xml.IXMLVisitable;
-import pt.tecnico.mydrive.domain.xml.IXMLVisitor;
+import pt.tecnico.mydrive.domain.xml.XMLVisitable;
+import pt.tecnico.mydrive.domain.xml.XMLVisitor;
 import pt.tecnico.mydrive.exception.*;
 
 import java.util.Set;
 
-public class User extends User_Base implements IXMLVisitable, IPermissionable {
+public class User extends User_Base implements XMLVisitable, IPermissionable {
     public static final String XML_TAG = "user";
     private static final byte DEFAULT_MASK = (byte) 0b11110000;
 
@@ -124,7 +124,7 @@ public class User extends User_Base implements IXMLVisitable, IPermissionable {
     }
 
     @Override
-    public Element accept(IXMLVisitor visitor) {
+    public Element accept(XMLVisitor visitor) {
         return visitor.visit(this);
     }
 
