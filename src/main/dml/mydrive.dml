@@ -18,6 +18,11 @@ class User {
 	String homePath; // discussable (please discuss this in issue #4 if needed)
 }
 
+class Variable {
+	String name;
+	String value;
+}
+
 class File {
 	String name;
 	long id;
@@ -67,4 +72,9 @@ relation DomainRootHasFileSystem {
 relation UserHasSessions {
 	User playsRole user { multiplicity 1; }
 	Session playsRole session { multiplicity *; } // a user may have multiple active sessions
+}
+
+relation SessionHasVariables {
+	Session playsRole session { multiplicity 1; }
+	Variable playsRole variable { multiplicity *; }
 }

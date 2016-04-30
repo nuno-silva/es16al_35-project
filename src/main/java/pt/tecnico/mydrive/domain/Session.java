@@ -58,4 +58,26 @@ public class Session extends Session_Base {
         setUser(null);
         deleteDomainObject();
     }
+
+    @Override
+    public void addVariable(Variable nv) {
+        for(Variable v : getVariableSet()) {
+            if(v.getName().equals(nv.getName())) {
+                v.setValue(nv.getValue());
+                /* FIXME: the caller will be left with a wrong reference to
+                 * the variable, but this is how they did it in es16t1tipo-sol.pdf */
+                return;
+            }
+        }
+        super.addVariable(nv);
+    }
+
+    public boolean hasVariable(String name) {
+        for(Variable v : getVariableSet()) {
+            if(v.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
