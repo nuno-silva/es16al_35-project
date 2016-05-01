@@ -52,21 +52,24 @@ public class Directory extends Directory_Base implements XMLVisitable {
     /**
      * Creates the directory if one with the same name and parent does not already exist.
      *
-     * @param parent parent Directory
-     * @param name   name
-     * @param perm   permissions
-     * @param id     ID
-     * @return {@link java.util.Optional} containing either the newly created Directory or null.
+     * @return {@link Optional} containing the {@link Directory} if it was created or one with such a name was found
+     * or an empty Option, in case a {@link File} with such path and name exists, but it's not a Directory.
      */
-    public static Optional<Directory> createIfNotExists(FileSystem fs, Directory parent, String name, byte perm) {
-        Optional<Directory> opt = Optional.empty();
+    protected static Optional<Directory> createIfNotExists(FileSystem fs, Directory parent, String name, byte perm) {
         try {
             Directory dir = new Directory(fs, parent, name, perm);
-            opt = Optional.of(dir);
+            return Optional.of(dir);
         } catch (FilenameAlreadyExistsException _) {
-            logger.debug("Directory with name *[" + name + "]* already exists!");
+            logger.debug("File(possibly a directory) with name *[" + name + "]* already exists!");
+            File f = parent.getFileByName(name);
+            if (f.isCdAble()) {
+                // File exists and it's a Directory
+                return Optional.of((Directory)f);
+            } else {
+                return Optional.empty(); // file with such a name and path exists, but it's not a Directory
+            }
+
         }
-        return opt;
     }
 
     public static Directory fromPath(String path, FileSystem fs) {
