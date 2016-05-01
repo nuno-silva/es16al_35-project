@@ -70,7 +70,6 @@ public class Directory extends Directory_Base implements XMLVisitable {
     }
 
     public static Directory fromPath(String path, FileSystem fs) {
-        /* FIXME why is this static method here? shouldn't this be done in FileSystem? (Nuno). Agreed(Jorge) */
         logger.debug("Directory.fromPath: " + path);
         Directory newDir = fs.createFileParents(path);
         logger.debug("Directory.fromPath: newDir path: " + newDir.getFullPath());
@@ -98,7 +97,7 @@ public class Directory extends Directory_Base implements XMLVisitable {
     public void addFile(File file, User initiator) throws FilenameAlreadyExistsException, PermissionDeniedException {
         if(!initiator.hasWritePermission(this)) {
             throw new PermissionDeniedException("User '" + initiator.getUsername()
-                                                + "' can not write to '"+getFullPath()+"'");
+                    + "' can not write to '"+getFullPath()+"'");
         }
         addFile(file);
     }
@@ -126,10 +125,10 @@ public class Directory extends Directory_Base implements XMLVisitable {
         }
     }
 
-   public void removeFile(File file, User initiator) throws FileNotFoundException, PermissionDeniedException {
+    public void removeFile(File file, User initiator) throws FileNotFoundException, PermissionDeniedException {
         if(!initiator.hasWritePermission(this)) {
             throw new PermissionDeniedException("User '" + initiator.getUsername()
-                                                + "' can not write to '"+getFullPath()+"'");
+                    + "' can not write to '"+getFullPath()+"'");
         }
         removeFile(file);
     }
@@ -171,7 +170,7 @@ public class Directory extends Directory_Base implements XMLVisitable {
     public File getFileByName(String name, User initiator) throws FileNotFoundException, PermissionDeniedException {
         if(!initiator.hasExecutePermission(this)) {
             throw new PermissionDeniedException("User '" + initiator.getUsername()
-                                                + "' can not read '"+getFullPath()+"'");
+                    + "' can not read '"+getFullPath()+"'");
         }
         return getFileByName(name);
     }
@@ -213,11 +212,11 @@ public class Directory extends Directory_Base implements XMLVisitable {
         Directory parent = getParentDir();
         if(!initiator.hasWritePermission(parent)) {
             throw new PermissionDeniedException("User '" + initiator.getUsername()
-                                                + "' can not write to '"+parent.getFullPath()+"'");
+                    + "' can not write to '"+parent.getFullPath()+"'");
         }
         if(!initiator.hasDeletePermission(this)) {
             throw new PermissionDeniedException("User '" + initiator.getUsername()
-                                                + "' can not delete '"+getFullPath()+"'");
+                    + "' can not delete '"+getFullPath()+"'");
         }
         for (File f : getFileSet()) {
             f.remove(initiator);
@@ -246,7 +245,7 @@ public class Directory extends Directory_Base implements XMLVisitable {
     public Set<File> getFileSet(User initiator) throws PermissionDeniedException {
         if(!initiator.hasReadPermission(this)) {
             throw new PermissionDeniedException("User '" + initiator.getUsername()
-                                                + "' can not list '"+getFullPath()+"'");
+                    + "' can not list '"+getFullPath()+"'");
         }
         return getFileSet();
     }

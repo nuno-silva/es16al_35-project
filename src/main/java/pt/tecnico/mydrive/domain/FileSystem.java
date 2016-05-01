@@ -53,8 +53,8 @@ public class FileSystem extends FileSystem_Base {
         //Create root dir
         Directory homeRoot = new Directory(this, homeDir, "root", permission);
 
-	// Create guest user
-	new GuestUser(this);
+        // Create guest user
+        new GuestUser(this);
     }
 
     /**
@@ -62,8 +62,10 @@ public class FileSystem extends FileSystem_Base {
      * don't exist. Does NOT create the given file.
      *
      * @returns the given file's parent Directory
+     *
+     * @deprecated avoid using this method as it does not take owners and permissions into account
      */
-    @Deprecated /* avoid using this method as it does not take owners and permissions into account */
+    @Deprecated
     public Directory createFileParents(String path) {
         logger.debug("createFileParents path: " + path);
 
@@ -198,7 +200,7 @@ public class FileSystem extends FileSystem_Base {
             logger.trace("getFile: entering " + dir);
             currentDir = currentDir.getFileByName(dir);
         }
-        logger.debug("getFile: " + currentDir.getFullPath());
+        logger.debug("getFileResult: " + currentDir.getFullPath());
         return currentDir;
     }
 
@@ -333,7 +335,6 @@ public class FileSystem extends FileSystem_Base {
             path = "/usr/nopath"; // FIXME: find a more suitable default path
         }
         logger.debug("File path: " + path);
-        createFileParents(path);
 
         e = file.getChild("mask");
         if (e != null) {
@@ -426,14 +427,9 @@ public class FileSystem extends FileSystem_Base {
         FileParams fp = new FileParams();
         for (Element dir : dirs) {
             fp = parseFileParams(dir, fp);
-            Optional<Directory> opt =
-                    Directory.createIfNotExists(this, getRootDir(), fp.NAME, (byte) 0b1111111);
-            if (opt.isPresent()) {
-                logger.debug("Creating directory");
-                Directory newDir = opt.get();
-                createFileParents(fp.PATH);
-                getRootDir().addFileIfNotExists(newDir);
-            }
+            logger.trace("XML_DIR_IMPORT: begin import \"" + fp.NAME + "\" in path \"" + fp.PATH + "\"");
+            createFileParents(fp.PATH + "/" + fp.NAME);
+            Directory.createIfNotExists(this, (Directory) getFile(fp.PATH), fp.NAME, (byte) 0b1111111);
         }
 
     }
@@ -478,8 +474,8 @@ public class FileSystem extends FileSystem_Base {
             try {
                 // FIXME: hardcoded mask
                 addUser(new User(this, username, password, name, (byte) 0b00000000));
-            } catch (InvalidUsernameException e) {
-                e.printStackTrace();
+            } catch (UsernameAlreadyExistsException e) {
+                logger.trace("Username " + username + " already exists" );
             }
 
 
