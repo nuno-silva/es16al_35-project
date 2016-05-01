@@ -20,10 +20,17 @@ public class ListDirectoryService extends MyDriveService {
 
     private long _token;
     private ArrayList<FileDto> _files = null;
+    private String _path;
 
     /** List the content of the current working directory */
     public ListDirectoryService(long token) {
-        _token   = token;
+        _token = token;
+        _path = "";
+    }
+
+    public ListDirectoryService(long token, String path) {
+        _token = token;
+        _path = path;
     }
 
     @Override
@@ -32,10 +39,29 @@ public class ListDirectoryService extends MyDriveService {
         Session s = fs.getSession(_token);
         User    u = s.getUser();
 
-        String workingPath = s.getWorkingPath();
-        File wf = fs.getFile(workingPath);
+        // BEWARE XXX This code doesn't allow listing a single file
+        String workingPath;
+        File wf;
+        if(_path.trim()=="" || _path.trim()=="."){
+          workingPath=s.getWorkingPath();
+          wf = fs.getFile(workingPath);
+        }
+        else if(_path.trim()==".."){
+          workingPath="Parent of "+s.getWorkingPath();
+          wf=fs.getFile(s.getWorkingPath()).getParentDir();
+        }
+        else{
+          workingPath=_path;
+          wf=fs.getFile(workingPath);
+        }
 
-        if(wf.isCdAble()) {
+
+        if(!wf.isCdAble()) {
+            // should never happen, but who knows?
+            throw new IsNotCdAbleException("Working path '"+workingPath+"' is not a Directory!");
+        }
+
+        else {
             Directory workingDir = (Directory)wf;
             _files = new ArrayList<FileDto>();
             // add all Files in workingDir
@@ -63,9 +89,6 @@ public class ListDirectoryService extends MyDriveService {
 
             // sort files
             Collections.sort(_files);
-        } else {
-            // should never happen, but who knows?
-            throw new IsNotCdAbleException("Working path '"+workingPath+"' is not a Directory!");
         }
     }
 
