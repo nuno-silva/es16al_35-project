@@ -92,7 +92,7 @@ public class ListDirectoryService extends MyDriveService {
         }
     }
 
-    protected List<FileDto> result() {
+    public List<FileDto> result() {
         return _files;
     }
 
