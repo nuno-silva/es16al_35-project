@@ -83,3 +83,8 @@ relation UserHasHomeDir{
 	User playsRole user{ multiplicity 0..1; }
 	Directory playsRole home{ multiplicity 1; }
 }
+
+relation SessionHasHomeDir{
+	Session playsRole session{ multiplicity 0..1; }
+	Directory playsRole workDir{ multiplicity 1; }
+}
