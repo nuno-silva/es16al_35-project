@@ -65,12 +65,12 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 		assertEquals( "dot(.) Name incorrect", results.get(0).getName(), "." );
 		assertEquals("dot(.) permissions incorrect", results.get(0).getPermissions(), (byte) 0b111101101);
-		assertNotNull("dot(.) lastMod null", results.get(0).getlastMod());
+		assertNotNull("dot(.) lastMod null", results.get(0).getLastMod());
 		assertEquals("dot(.) fileType incorrect", results.get(0).getType(),FileDto.FileType.DIRECTORY);
 
 		assertEquals( "parent(..) Name incorrect", results.get(1).getName(), ".." );
 		assertEquals("parent(..) permissions incorrect", results.get(1).getPermissions(), (byte) 0b111101101);
-		assertNotNull("parent(..) lastMod null", results.get(1).getlastMod());
+		assertNotNull("parent(..) lastMod null", results.get(1).getLastMod());
 		assertEquals("parent(..) fileType incorrect", results.get(1).getType(),FileDto.FileType.DIRECTORY);
 
 
@@ -88,7 +88,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
         lsSer.execute();
         List<FileDto> results = lsSer.result();
     }
-        
+
     @Test
     public void PopulatedDir() {
         FileSystem fs = FileSystem.getInstance();
@@ -103,22 +103,22 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 		assertEquals( "dot(.) Name incorrect", results.get(0).getName(), "." );
 		assertEquals("dot(.) permissions incorrect", results.get(0).getPermissions(), (byte) 0b10100010);
-		assertNotNull("dot(.) lastMod null", results.get(0).getlastMod());
+		assertNotNull("dot(.) lastMod null", results.get(0).getLastMod());
 		assertEquals("dot(.) fileType incorrect", results.get(0).getType(),FileDto.FileType.DIRECTORY);
 
 		assertEquals( "parent(..) Name incorrect", results.get(1).getName(), ".." );
 		assertEquals("parent(..) permissions incorrect", results.get(1).getPermissions(), (byte) 0b111101101);
-		assertNotNull("parent(..) lastMod null", results.get(1).getlastMod());
+		assertNotNull("parent(..) lastMod null", results.get(1).getLastMod());
 		assertEquals("parent(..) fileType incorrect", results.get(1).getType(),FileDto.FileType.DIRECTORY);
-		
+
 		assertEquals( "Name incorrect", results.get(2).getName(), "MyFile" );
 		assertEquals("permissions incorrect", results.get(2).getPermissions(), (byte) 0b10100010);
-		assertNotNull("lastMod null", results.get(2).getlastMod());
+		assertNotNull("lastMod null", results.get(2).getLastMod());
 		assertEquals("fileType incorrect", results.get(2).getType(),FileDto.FileType.APP);
 
 		assertEquals( "Name incorrect", results.get(3).getName(), "RootFile" );
 		assertEquals("permissions incorrect @ RootFile", results.get(3).getPermissions(), (byte) 0b00000000 );
-		assertNotNull("lastMod null", results.get(3).getlastMod());
+		assertNotNull("lastMod null", results.get(3).getLastMod());
 		assertEquals("fileType incorrect", results.get(3).getType(),FileDto.FileType.PLAINFILE);
     }
 }

@@ -33,7 +33,7 @@ public class List extends MydriveCommand {
           lds.execute();
         }
         for( FileDto f : lds.result() ){
-          shell().println(f.getId()+" "+f.getName()+" "+ f.getPermissions()+" "+f.getlastMod());
+          shell().println(f.getId()+" "+f.getName()+" "+ f.getPermissions()+" "+f.getLastMod());
         }
       }catch (InvalidTokenException e){
         shell().println("You need to login first!");
