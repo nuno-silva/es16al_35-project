@@ -163,16 +163,16 @@ public class FileSystem extends FileSystem_Base {
         }
     }
 
-    public List<String> pathContent(String path) throws UnknownPathException {
+    public List<String> pathContent(String path) throws FileNotFoundException {
         /* FIXME duplicate of fileContent() ? */
         return getFile(path).showContent();
     }
 
-    public List<String> fileContent(String path) throws UnknownPathException {
+    public List<String> fileContent(String path) throws FileNotFoundException {
         return getFile(path).showContent();
     }
 
-    public void removeFile(String path) throws UnknownPathException {
+    public void removeFile(String path) throws FileNotFoundException {
         getFile(path).remove();
     }
 
@@ -186,12 +186,12 @@ public class FileSystem extends FileSystem_Base {
         readMe.setLines(users);
     }
     */
-    public File getFile(String path) throws UnknownPathException {
+    public File getFile(String path) throws FileNotFoundException {
         logger.debug("getFile: " + path);
         File currentDir = getRootDir();
 
         if (!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
-            throw new UnknownPathException(path);
+            throw new FileNotFoundException(path);
 
         path = path.substring(1); // remove '/'
         for (String dir : path.split("/")) {
@@ -202,12 +202,12 @@ public class FileSystem extends FileSystem_Base {
         return currentDir;
     }
 
-    public File getFile(String path, User initiator) throws UnknownPathException, PermissionDeniedException {
+    public File getFile(String path, User initiator) throws FileNotFoundException, PermissionDeniedException {
         logger.debug("getFile: " + path + "User: " + initiator.getUsername());
         File currentDir = getRootDir();
 
         if (!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
-            throw new UnknownPathException(path);
+            throw new FileNotFoundException(path);
 
         path = path.substring(1); // remove '/'
         for (String dir : path.split("/")) {
