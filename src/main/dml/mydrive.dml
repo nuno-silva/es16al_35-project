@@ -78,3 +78,8 @@ relation SessionHasVariables {
 	Session playsRole session { multiplicity 1; }
 	Variable playsRole variable { multiplicity *; }
 }
+
+relation UserHasHomeDir{
+	User playsRole user{ multiplicity 0..1; }
+	Directory playsRole home{ multiplicity 1; }
+}

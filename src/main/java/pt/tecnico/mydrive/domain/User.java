@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
+import java.lang.UnsupportedOperationException;
 import pt.tecnico.mydrive.domain.xml.XMLVisitable;
 import pt.tecnico.mydrive.domain.xml.XMLVisitor;
 import pt.tecnico.mydrive.exception.*;
@@ -199,5 +200,10 @@ public class User extends User_Base implements XMLVisitable, IPermissionable {
     public boolean isExpired(Session s){
       return s.getExpirationDate().isBeforeNow();
     }
+    
+    @Override
+    public void setHome(Directory home)throws UnsupportedOperationException{
+			throw new UnsupportedOperationException("Setting User homeDir");
+	}
 
 }
