@@ -254,6 +254,10 @@ public class Directory extends Directory_Base implements XMLVisitable {
     
     @Override
     public void setUser(User u)throws UnsupportedOperationException{
-		throw new UnsupportedOperationException("Setting user for homeDir");
+		if(super.getUser()==null){
+			super.setUser(u);
+		}
+		else
+			throw new UnsupportedOperationException("Setting user for homeDir which is already home of someone");
 	}
 }

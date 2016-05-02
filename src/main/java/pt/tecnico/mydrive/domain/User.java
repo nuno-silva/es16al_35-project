@@ -76,8 +76,10 @@ public class User extends User_Base implements XMLVisitable, IPermissionable {
 
             File home = fs.getFile("/home");
             if (home.isCdAble()) {
-                home = new Directory(fs, (Directory) home, this, username);
-                setHomePath(home.getFullPath());
+                Directory homeDir = new Directory(fs, (Directory) home, this, username);
+                setHomePath(homeDir.getFullPath());
+                super.setHome(homeDir);
+                homeDir.setUser(this);
             } else {
                 setFs(null); // remove User from FileSystem
                 throw new IsNotCdAbleException("'" + home.getFullPath() + " is not cdAble. Can't create user home.");
