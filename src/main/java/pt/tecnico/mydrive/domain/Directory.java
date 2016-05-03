@@ -47,7 +47,7 @@ public class Directory extends Directory_Base implements XMLVisitable {
      */
     public Directory(FileSystem fs, byte perm) {
         super();
-        init(fs, this, fs.getSuperUser(), "", perm);
+        init(fs, this, null, "", perm);
     }
 
     /**
@@ -251,13 +251,9 @@ public class Directory extends Directory_Base implements XMLVisitable {
         }
         return getFileSet();
     }
-    
+
     @Override
     public void setUser(User u)throws UnsupportedOperationException{
-		if(super.getUser()==null){
-			super.setUser(u);
-		}
-		else
-			throw new UnsupportedOperationException("Setting user for homeDir which is already home of someone");
+        throw new UnsupportedOperationException("Setting user for Directory");
 	}
 }

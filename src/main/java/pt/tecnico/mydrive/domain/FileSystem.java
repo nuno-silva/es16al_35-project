@@ -39,22 +39,22 @@ public class FileSystem extends FileSystem_Base {
     protected void init() {
         setRoot(FenixFramework.getDomainRoot());
         setFileCounter(0);
-        byte permission = (byte) 0b111101101;
-
-        // Create Super User
-        new SuperUser(this, "***");
 
         // Create root directory: "/"
-        Directory rootDir = createRootDirectory();
+        Directory rootDir = new Directory(this, SuperUser.SUPERUSER_MASK);
+        setRootDir(rootDir);
 
         // Create home directory: "/home"
-        Directory homeDir = new Directory(this, rootDir, "home", permission);
+        Directory homeDir = new Directory(this, rootDir, null, "home", SuperUser.SUPERUSER_MASK);
 
-        //Create root dir
-        Directory homeRoot = new Directory(this, homeDir, "root", permission);
+        // Create Super User
+        SuperUser su = new SuperUser(this, "***");
 
-	// Create guest user
-	new GuestUser(this);
+        rootDir.setOwner(su);
+        homeDir.setOwner(su);
+
+        // Create guest user
+        new GuestUser(this);
     }
 
     /**
@@ -98,12 +98,6 @@ public class FileSystem extends FileSystem_Base {
         return dir;
     }
 
-    protected Directory createRootDirectory() {
-        // FIXME: proper rootdir permission
-        Directory rootDir = new Directory(this, (byte) 0b11111010);
-        setRootDir(rootDir);
-        return rootDir;
-    }
 
     /**
      * get the next new file id (but don't store it) - use it when trying to create a new File

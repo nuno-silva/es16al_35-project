@@ -64,12 +64,12 @@ public class ListDirectoryTest extends AbstractServiceTest {
         assertEquals("Too much directories here",results.size(),2);
 
 		assertEquals( "dot(.) Name incorrect", results.get(0).getName(), "." );
-		assertEquals("dot(.) permissions incorrect", results.get(0).getPermissions(), (byte) 0b111101101);
+		assertEquals("dot(.) permissions incorrect", results.get(0).getPermissions(), (byte) 0b11111010);
 		assertNotNull("dot(.) lastMod null", results.get(0).getLastMod());
 		assertEquals("dot(.) fileType incorrect", results.get(0).getType(),FileDto.FileType.DIRECTORY);
 
 		assertEquals( "parent(..) Name incorrect", results.get(1).getName(), ".." );
-		assertEquals("parent(..) permissions incorrect", results.get(1).getPermissions(), (byte) 0b111101101);
+		assertEquals("parent(..) permissions incorrect", results.get(1).getPermissions(), (byte) 0b11111010);
 		assertNotNull("parent(..) lastMod null", results.get(1).getLastMod());
 		assertEquals("parent(..) fileType incorrect", results.get(1).getType(),FileDto.FileType.DIRECTORY);
 
@@ -107,7 +107,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
 		assertEquals("dot(.) fileType incorrect", results.get(0).getType(),FileDto.FileType.DIRECTORY);
 
 		assertEquals( "parent(..) Name incorrect", results.get(1).getName(), ".." );
-		assertEquals("parent(..) permissions incorrect", results.get(1).getPermissions(), (byte) 0b111101101);
+		assertEquals("parent(..) permissions incorrect", results.get(1).getPermissions(), (byte) 0b11111010);
 		assertNotNull("parent(..) lastMod null", results.get(1).getLastMod());
 		assertEquals("parent(..) fileType incorrect", results.get(1).getType(),FileDto.FileType.DIRECTORY);
 

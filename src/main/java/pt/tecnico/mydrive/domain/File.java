@@ -175,7 +175,7 @@ public abstract class File extends File_Base implements XMLVisitable, IPermissio
     @Override
     public void setParentDir(Directory parent) {
         logger.trace("setParentDir name: " + getName());
-        if (parent == null) {
+        if (parent == null) { // root dir
             super.setParentDir(parent);
             return;
         }

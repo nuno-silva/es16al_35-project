@@ -23,7 +23,9 @@ public class Session extends Session_Base {
         long token = generateToken(fs);
         DateTime expirationDate = u.renewExpirationDate();
         fs.removeExpiredTokens();
-        init(fs, u, token, u.getHomePath(), expirationDate);
+        Directory d = u.getHome();
+        if(d==null) throw new RuntimeException("BUG: User's home is NULL");
+        init(fs, u, token, d.getFullPath(), expirationDate);
         logger.debug("new Session: token " + tokenToString(token));
     }
 
