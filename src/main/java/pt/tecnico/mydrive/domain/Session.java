@@ -3,6 +3,7 @@ package pt.tecnico.mydrive.domain;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import pt.tecnico.mydrive.exception.WrongPasswordException;
+import pt.tecnico.mydrive.exception.PermissionDeniedException;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -35,8 +36,8 @@ public class Session extends Session_Base {
 
     protected void init(FileSystem fs, User u, long token, String workingPath, DateTime expirationDate) {
         setWorkingPath(workingPath);
-        setExpirationDate(expirationDate);
-        setToken(token);
+        super.setExpirationDate(expirationDate);
+        super.setToken(token);
         u.addSession(this);
     }
 
@@ -57,7 +58,7 @@ public class Session extends Session_Base {
 
     public void remove() {
         logger.trace("remove: token " + tokenToString(getToken()));
-        setUser(null);
+        super.setUser(null);
         deleteDomainObject();
     }
 
@@ -81,5 +82,27 @@ public class Session extends Session_Base {
             }
         }
         return false;
+    }
+
+    @Override
+    public void setUser(User u) {
+        throw new PermissionDeniedException("change Session's User");
+    }
+
+    @Override
+    public void setToken(long token) {
+        throw new PermissionDeniedException("change Session's token");
+    }
+
+    /* // we need this to expire the session during testing...
+    @Override
+    public void setExpirationDate(DateTime expirationDate) {
+        throw new PermissionDeniedException("change Session's expiration date");
+    }
+    */
+
+    public void renewExpirationDate() {
+        DateTime expirationDate = getUser().renewExpirationDate(); // I'm not sure whether we should do this
+        super.setExpirationDate(expirationDate);
     }
 }
