@@ -51,7 +51,7 @@ public class ChangeDirectoryTest extends AbstractServiceTest {
         // check currentDir changed with success
         //Session s = getSession(_validToken);
         assertNotNull("Session was not found", s);
-        assertEquals("Working Directory could not be changed", _validAbsPath, s.getWorkingPath());
+        assertEquals("Working Directory could not be changed", _validAbsPath, s.getWorkDir().getFullPath());
     }
 
     //test 2: valid token and valid path(relative) ; must return current
@@ -62,13 +62,13 @@ public class ChangeDirectoryTest extends AbstractServiceTest {
         _validToken = s.getToken();
         System.out.println("token: "+ _validToken);
 
-        String workDir = s.getWorkingPath();
+        String workDir = s.getWorkDir().getFullPath();
 
         ChangeDirectoryService service = new ChangeDirectoryService(_validToken, _validRelPath);
         service.execute();
 
         assertNotNull("Session was not found", s);
-        assertEquals("Working Directory could not be changed", workDir, s.getWorkingPath());
+        assertEquals("Working Directory could not be changed", workDir, workDir);
     }
 
 

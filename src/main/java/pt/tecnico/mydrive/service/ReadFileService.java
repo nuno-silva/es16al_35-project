@@ -30,7 +30,7 @@ public class ReadFileService extends MyDriveService {
     	FileSystem fs = getFileSystem();
         Session session = fs.getSession(token);
 
-        Directory d = (Directory) fs.getFile(session.getWorkingPath());
+        Directory d = session.getWorkDir();
         File f = d.getFileByName(fileName);
 
         if (f.isCdAble()) {
@@ -42,7 +42,7 @@ public class ReadFileService extends MyDriveService {
             throw new PermissionDeniedException(activeUser.getUsername() + " has no read permissions for "
                     + f.getFullPath());
         }
-        String fullpathtofile = session.getWorkingPath() + "/" + fileName;
+        String fullpathtofile = d.getFullPath() + "/" + fileName;
 
         PlainFile linkfile = (PlainFile) fs.getFile(fullpathtofile);
         linkfile.getContent();

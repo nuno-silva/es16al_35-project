@@ -1,12 +1,19 @@
 package pt.tecnico.mydrive.domain;
 
-import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import pt.tecnico.mydrive.exception.WrongPasswordException;
-import pt.tecnico.mydrive.exception.PermissionDeniedException;
-
+/*Other stuff*/
 import java.math.BigInteger;
 import java.util.Random;
+import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+
+/*Domain*/
+import pt.tecnico.mydrive.domain.Directory;
+
+/* Exceptions */
+import pt.tecnico.mydrive.exception.WrongPasswordException;
+import pt.tecnico.mydrive.exception.PermissionDeniedException;
+import pt.tecnico.mydrive.exception.IsNotCdAbleException;
+
 
 public class Session extends Session_Base {
     private static final Logger logger = Logger.getLogger(Session.class);
@@ -35,7 +42,9 @@ public class Session extends Session_Base {
     }
 
     protected void init(FileSystem fs, User u, long token, String workingPath, DateTime expirationDate) {
-        setWorkingPath(workingPath);
+        File f = fs.getFile(workingPath);
+        if(!f.isCdAble()) throw new IsNotCdAbleException();
+        super.setWorkDir((Directory)f);
         super.setExpirationDate(expirationDate);
         super.setToken(token);
         u.addSession(this);
@@ -59,6 +68,7 @@ public class Session extends Session_Base {
     public void remove() {
         logger.trace("remove: token " + tokenToString(getToken()));
         super.setUser(null);
+        super.setWorkDir(null);
         deleteDomainObject();
     }
 

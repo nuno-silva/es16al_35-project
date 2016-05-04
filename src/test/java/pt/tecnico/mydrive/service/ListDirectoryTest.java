@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-/* domain things */
+/* domain */
 import pt.tecnico.mydrive.domain.Directory;
 import pt.tecnico.mydrive.domain.File;
 import pt.tecnico.mydrive.domain.App;
@@ -83,7 +83,8 @@ public class ListDirectoryTest extends AbstractServiceTest {
         LoginService login = new LoginService("mrtesty", "123");
         login.execute();
 
-        fs.getSession( login.result() ).setWorkingPath("/home/testyDir");
+        File f = fs.getFile("/home/testyDir");
+        fs.getSession( login.result() ).setWorkDir((Directory)f);
         ListDirectoryService lsSer = new ListDirectoryService( login.result() );
         lsSer.execute();
         List<FileDto> results = lsSer.result();

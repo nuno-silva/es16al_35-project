@@ -2,7 +2,6 @@ package pt.tecnico.mydrive.domain;
 
 class Session {
 	long token; // long is 64 bits in Java (signed or not, doesn't matter)
-	String workingPath; // same reason we used a String for User.homePath
 	DateTime expirationDate;
 }
 

@@ -20,8 +20,8 @@ public class WriteFileService extends MyDriveService {
     protected void dispatch() {
         FileSystem fs = getFileSystem();
         Session s = fs.getSession(token);
-        Directory cwd = (Directory) fs.getFile(s.getWorkingPath());
-        File f = cwd.getFileByName(fileName);
+        Directory d = s.getWorkDir();
+        File f = d.getFileByName(fileName);
         if (f.isCdAble()) {
             throw new WriteDirectoryException("Cannot write in " + f.getFullPath() + " since it's a directory.");
         }

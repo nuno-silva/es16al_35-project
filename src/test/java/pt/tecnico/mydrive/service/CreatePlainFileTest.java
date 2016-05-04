@@ -1,11 +1,11 @@
-
 package pt.tecnico.mydrive.service;
 
+/*Other stuff*/
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
 import org.junit.Test;
 
+/*Domain*/
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.mydrive.domain.PlainFile;
 import pt.tecnico.mydrive.domain.App;
@@ -13,6 +13,9 @@ import pt.tecnico.mydrive.domain.Directory;
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.User;
+import pt.tecnico.mydrive.domain.File;
+
+/*Exceptions*/
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
@@ -82,7 +85,6 @@ public class CreatePlainFileTest extends AbstractServiceTest {
          * 6) PlainFile has correct path
          *
          */
-        // MERDA NO OWNER POR CAUSA DO OPTIONAL!!!!!!!!!!!!
 
         assertNotNull("PlainFile was not created", textFile);
         assertEquals("PlainFile created with wrong name", "Test3", textFile.getName());
@@ -102,7 +104,8 @@ public class CreatePlainFileTest extends AbstractServiceTest {
         FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
         LoginService lser = new LoginService( "root", "***" );
         lser.execute();
-    	fs.getSession(lser.result()).setWorkingPath("/home");
+				File f = fs.getFile("/home");
+    		fs.getSession(lser.result()).setWorkDir((Directory)f);
         CreateFileService service = new CreateAppService("Test2/", lser.result(), "I have a lot of work to do during this week!");
         service.execute();
 
@@ -114,7 +117,8 @@ public class CreatePlainFileTest extends AbstractServiceTest {
         FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
         LoginService lser = new LoginService( "bbranco", "es2016" );
         lser.execute();
-    	fs.getSession(lser.result()).setWorkingPath("/home/jorge");
+				File f = fs.getFile("/home/jorge");
+    	fs.getSession(lser.result()).setWorkDir((Directory)f);
         CreatePlainFileService service = new CreatePlainFileService("TestBernardo", lser.result(), "I have a lot of work to do during this week!");
         service.execute();
 
@@ -129,7 +133,8 @@ public class CreatePlainFileTest extends AbstractServiceTest {
         FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
         LoginService lser = new LoginService( "root", "***" );
         lser.execute();
-    	fs.getSession(lser.result()).setWorkingPath("/home");
+				File f = fs.getFile("/home");
+    	fs.getSession(lser.result()).setWorkDir((Directory)f);
         CreateFileService service = new CreateAppService("Test1", lser.result(), "I have a lot of work to do during this week!");
         service.execute();
     }

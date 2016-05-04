@@ -20,10 +20,7 @@ public class CreateDirectoryService extends CreateFileService {
         super.dispatch();
         FileSystem fs = getFileSystem();
         Session s = fs.getSession(getToken());
-        File f = fs.getFile(s.getWorkingPath());
-        if (!f.isCdAble()) throw new IsNotCdAbleException();
-        Directory d = (Directory) f;
-        new Directory(fs, d, s.getUser(), getFileName());
+        new Directory(fs, s.getWorkDir(), s.getUser(), getFileName());
 
     }
 }

@@ -40,19 +40,22 @@ public class ListDirectoryService extends MyDriveService {
         User    u = s.getUser();
 
         // BEWARE XXX This code doesn't allow listing a single file
-        String workingPath;
+        // FIXME: This needs refactor asap
+        String workingPath="";
         File wf;
         if(_path.trim()=="" || _path.trim()=="."){
-          workingPath=s.getWorkingPath();
+          workingPath=s.getWorkDir().getFullPath();
           wf = fs.getFile(workingPath);
         }
         else if(_path.trim()==".."){
-          workingPath="Parent of "+s.getWorkingPath();
-          wf=fs.getFile(s.getWorkingPath()).getParentDir();
+          Directory d = s.getWorkDir();
+          String workPath=d.getFullPath();
+          workingPath="Parent of "+workPath;
+          wf=d.getParentDir();
         }
         else{
-          workingPath=_path;
-          wf=fs.getFile(workingPath);
+          Directory workingDir = s.getWorkDir();
+          wf=(File)workingDir;
         }
 
 

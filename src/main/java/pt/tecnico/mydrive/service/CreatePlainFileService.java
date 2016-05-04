@@ -32,9 +32,7 @@ public class CreatePlainFileService extends CreateFileService {
         super.dispatch();
         FileSystem fs = getFileSystem();
         Session s = fs.getSession(getToken());
-        File f = fs.getFile(s.getWorkingPath());
-        if (!f.isCdAble()) throw new IsNotCdAbleException();
-        Directory d = (Directory) f;
-        new PlainFile(fs, d, s.getUser(), getFileName(),getContent());
+        Directory workDir= s.getWorkDir();
+        new PlainFile(fs, workDir, s.getUser(), getFileName(),getContent());
     }
 }

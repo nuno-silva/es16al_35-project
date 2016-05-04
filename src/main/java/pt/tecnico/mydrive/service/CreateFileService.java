@@ -1,9 +1,13 @@
 package pt.tecnico.mydrive.service;
 
+/*Domain*/
 import pt.tecnico.mydrive.domain.File;
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.User;
+import pt.tecnico.mydrive.domain.Directory;
+
+/*Exceptions*/
 import pt.tecnico.mydrive.exception.EmptyFileNameException;
 import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
@@ -34,10 +38,9 @@ public abstract class CreateFileService extends MyDriveService {
         /* Retrieve the user through the token received */
         FileSystem fs = getFileSystem();
         Session s = fs.getSession(token);
-        File f = fs.getFile(s.getWorkingPath());
+        Directory d = s.getWorkDir();
         User u = s.getUser();
-        if (!f.isCdAble()) throw new IsNotCdAbleException();
-        if (!f.checkWritePermission(u))
+        if (!d.checkWritePermission(u))
             throw new PermissionDeniedException("creating file.");
     }
 }

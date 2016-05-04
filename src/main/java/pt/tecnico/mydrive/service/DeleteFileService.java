@@ -24,14 +24,11 @@ public class DeleteFileService extends MyDriveService {
     protected void dispatch() throws MydriveException, PermissionDeniedException {
         FileSystem fs = getFileSystem();
         Session session = fs.getSession(token);
-        workingDir = session.getWorkingPath();
+        workingDir = session.getWorkDir().getFullPath();
 
         User activeUser = session.getUser();
 
-        File f = fs.getFile(workingDir);
-
-        if (!f.isCdAble()) throw new IsNotCdAbleException();
-        String fullpathtofile = session.getWorkingPath() + "/" + this.fileName;
+        String fullpathtofile = workingDir + "/" + this.fileName;
         File file = fs.getFile(fullpathtofile);
 
         file.remove(activeUser);

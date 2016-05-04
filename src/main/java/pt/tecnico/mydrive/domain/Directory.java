@@ -256,4 +256,9 @@ public class Directory extends Directory_Base implements XMLVisitable {
     public void setUser(User u)throws UnsupportedOperationException{
         throw new UnsupportedOperationException("Setting user for Directory");
 	}
+
+  @Override
+  public void setSession(Session s)throws UnsupportedOperationException{
+    throw new UnsupportedOperationException("Setting session for Directory!");
+  }
 }
