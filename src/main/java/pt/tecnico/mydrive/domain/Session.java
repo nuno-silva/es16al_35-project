@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.Random;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import java.util.Optional;
 
 /*Domain*/
 import pt.tecnico.mydrive.domain.Directory;
@@ -92,6 +93,17 @@ public class Session extends Session_Base {
             }
         }
         return false;
+    }
+
+    // If you want to avoid this create a Variable Dto
+    public String getVariableValue(String name){
+      if(!hasVariable(name)) return null;
+      for(Variable v : getVariableSet()){
+        if(v.getName().equals(name)){
+          return v.getValue();
+        }
+      }
+      return null;
     }
 
     @Override
