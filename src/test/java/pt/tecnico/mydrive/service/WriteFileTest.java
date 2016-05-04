@@ -20,7 +20,7 @@ public class WriteFileTest extends AbstractServiceTest {
     protected static final Logger log = LogManager.getRootLogger();
     private static final long invalidToken = 1232455424;
     private static final String valid_username = "ilovees";
-    private static final String valid_password = "1234!sssss";
+    private static final String valid_password = "1234!";
     private static final String valid_dirname  = "lalalalalala";
     private static final String good_plain_file_name = "IAmAPlainFile";
     private static final String invalid_plain_file_name = "IAmsdfgsdf3wb5345bAPlainFile";
@@ -108,3 +108,4 @@ public class WriteFileTest extends AbstractServiceTest {
     }
 
 }
+

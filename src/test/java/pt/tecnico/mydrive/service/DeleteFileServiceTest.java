@@ -35,7 +35,7 @@ public final class DeleteFileServiceTest extends AbstractServiceTest {
     protected void populate() {
         fs = FileSystem.getInstance();
         // anyone can do anything with his files
-        theGame = new User(fs, "TheGame", "Dr.Dresssss", "The Protegé Of The D.R.E.", (byte)0b11111111);
+        theGame = new User(fs, "TheGame", "Dr.Dre", "The Protegé Of The D.R.E.", (byte)0b11111111);
 
         Directory gameHome = (Directory) fs.getFile(theGame.getHomePath());
         new PlainFile(fs, gameHome, theGame, FILE_PERM_REMOVE, theGame.getByteMask(), "Dr.Dre, Dr.Dre, Dr.Dre, Compton");
@@ -73,7 +73,7 @@ public final class DeleteFileServiceTest extends AbstractServiceTest {
         new PlainFile(fs, red, theGame, "Dr.Dre_Outro", (byte)0b11101110, "Dr.Dre is leaving ;(");
 
         // Let's login a user
-        Session s = new Session(fs, theGame, "Dr.Dresssss");
+        Session s = new Session(fs, theGame, "Dr.Dre");
         token = s.getToken();
     }
 

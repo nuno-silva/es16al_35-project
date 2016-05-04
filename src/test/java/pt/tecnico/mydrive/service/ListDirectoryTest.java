@@ -38,7 +38,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
         if (f.isCdAble()) {
             d = (Directory) f;
         } else throw new IsNotCdAbleException();
-        User u = new User( fs, "mrtesty", "123ssssss", "Monsiour Testy", (byte) 0b10100010);
+        User u = new User( fs, "mrtesty", "123", "Monsiour Testy", (byte) 0b10100010);
         Directory dir = new Directory(fs, d, "testyDir", (byte) 0b11100000);
         dir = new Directory(fs, d, "Sluty Dir", (byte) 0b00001111);
         f = fs.getFile("/home/mrtesty");
@@ -82,7 +82,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
     public void wrongPermissions() {
         FileSystem fs = FileSystem.getInstance();
         //* LOGIN */
-        LoginService login = new LoginService("mrtesty", "123ssssss");
+        LoginService login = new LoginService("mrtesty", "123");
         login.execute();
 
         File f = fs.getFile("/home/testyDir");
@@ -96,7 +96,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
     public void PopulatedDir() {
         FileSystem fs = FileSystem.getInstance();
         //* LOGIN */
-        LoginService login = new LoginService("mrtesty", "123ssssss");
+        LoginService login = new LoginService("mrtesty", "123");
         login.execute();
 
         ListDirectoryService lsSer = new ListDirectoryService( login.result() );

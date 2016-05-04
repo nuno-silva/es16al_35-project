@@ -22,7 +22,7 @@ import pt.tecnico.mydrive.service.*;;
 public class ChangeDirectoryTest extends AbstractServiceTest {
 
 	String _username = "user";
-	String _password = "passsssssss";
+	String _password = "pass";
 
 	long _validToken;
     long _invalidToken = 0;
@@ -133,9 +133,9 @@ public class ChangeDirectoryTest extends AbstractServiceTest {
     public void permissionDenied() {
 
     	FileSystem fs = FileSystem.getInstance();
-        User u = new User(fs, "ola", "adeussssss", "Nomee", (byte) 0x00);
+        User u = new User(fs, "ola", "adeus", "Nomee", (byte) 0x00);
 
-    	Session s = new Session(fs, fs.getUser("ola"), "adeussssss");
+    	Session s = new Session(fs, fs.getUser("ola"), "adeus");
         _validToken = s.getToken();
         System.out.println("token: "+ _validToken);
 

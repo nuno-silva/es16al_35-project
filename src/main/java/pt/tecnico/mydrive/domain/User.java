@@ -65,7 +65,7 @@ public class User extends User_Base implements XMLVisitable, IPermissionable {
         logger.trace("User init " + username);
         if (checkUsername(username)) {
             setUsername(username);
-            assertPassword(password);
+            super.setPassword(password);
             setName(name);
             setMask(mask);
 
@@ -207,23 +207,4 @@ public class User extends User_Base implements XMLVisitable, IPermissionable {
 			throw new UnsupportedOperationException("Setting User homeDir");
 	}
 
-  @Override
-  public void setPassword(String password){
-    throw new UnsupportedOperationException("Setting unchecked password");
-  }
-
-  protected void setUncheckedPassword(String password){
-    super.setPassword(password);
-  }
-
-  public void assertPassword(String password){
-    if(password.length()<8)
-      throw new TooShortPasswordException();
-    else
-      setUncheckedPassword(password);
-  }
-
-  public boolean isSetPassword(){
-    return (getPassword()==null) ? false : true;
-  }
 }
