@@ -1,9 +1,13 @@
 package pt.tecnico.mydrive.domain;
 
+/*Other stuff*/
 import org.joda.time.DateTime;
+
+/*Exceptions*/
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.UsernameAlreadyExistsException;
+import java.lang.UnsupportedOperationException;
 
 /* Super User class for root user */
 
@@ -52,4 +56,11 @@ public class SuperUser extends SuperUser_Base {
       DateTime expirationDate = new DateTime().plusMinutes(10);
       return expirationDate;
     }
+
+		@Override
+		public void assertPassword(String password){
+			if(super.isSetPassword()) throw new UnsupportedOperationException("Redefining Root password");
+			else super.setUncheckedPassword(password);
+		}
+
 }

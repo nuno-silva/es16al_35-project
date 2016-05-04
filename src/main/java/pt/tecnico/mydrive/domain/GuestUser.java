@@ -1,6 +1,10 @@
 package pt.tecnico.mydrive.domain;
 
+/*Exceptions*/
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
+import java.lang.UnsupportedOperationException;
+
+/*Other stuff*/
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,4 +44,9 @@ public class GuestUser extends GuestUser_Base {
     return (f.getOwner().equals(this)) ? f.ownerCanDelete() : false;
   }
 
+  @Override
+  public void assertPassword(String password){
+    if(super.isSetPassword()) throw new UnsupportedOperationException("Redefining Guest password");
+    else super.setUncheckedPassword(password);
+  }
 }

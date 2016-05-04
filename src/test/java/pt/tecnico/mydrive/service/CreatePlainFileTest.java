@@ -30,8 +30,8 @@ public class CreatePlainFileTest extends AbstractServiceTest {
         FileSystem fs = FileSystem.getInstance();
         Directory f = (Directory) fs.getFile("/home");
         new App(fs, f, fs.getSuperUser(), "Test1", "I have a lot of work to do during this week!");
-        new User(fs, "bbranco", "es2016", "Bernardo", DEFAULT_MASK);
-        new User(fs, "jorge", "es2016", "jorgeheleno", DEFAULT_MASK);
+        new User(fs, "bbranco", "es2016ssssss", "Bernardo", DEFAULT_MASK);
+        new User(fs, "jorge", "es2016ssssss", "jorgeheleno", DEFAULT_MASK);
 	}
 
     @Test
@@ -68,7 +68,7 @@ public class CreatePlainFileTest extends AbstractServiceTest {
     public void successUser() {
 
     	FileSystem fs = FileSystem.getInstance();
-    	LoginService lser = new LoginService( "bbranco", "es2016" );
+    	LoginService lser = new LoginService( "bbranco", "es2016ssssss" );
     	lser.execute();
     	CreatePlainFileService service = new CreatePlainFileService("Test3", lser.result(), "Contains more stuff...");
     	service.execute();
@@ -115,7 +115,7 @@ public class CreatePlainFileTest extends AbstractServiceTest {
     @Test (expected = PermissionDeniedException.class)
     public void createPlainFileinOtherUserDir() {
         FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
-        LoginService lser = new LoginService( "bbranco", "es2016" );
+        LoginService lser = new LoginService( "bbranco", "es2016ssssss" );
         lser.execute();
 				File f = fs.getFile("/home/jorge");
     	fs.getSession(lser.result()).setWorkDir((Directory)f);
