@@ -26,6 +26,7 @@ public class LoginService extends MyDriveService {
     }
 
     public long result() {
+        assertExecuted();
         return token;
     }
 }

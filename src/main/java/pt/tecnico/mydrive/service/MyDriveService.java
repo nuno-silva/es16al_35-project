@@ -15,6 +15,7 @@ import java.util.Optional;
  * Abstract base class from which all of the services inherit.
  */
 public abstract class MyDriveService {
+    private boolean _executed = false;
     protected final static Logger logger = LogManager.getRootLogger();
 
     protected static FileSystem getFileSystem() {
@@ -38,7 +39,16 @@ public abstract class MyDriveService {
     @Atomic
     public final void execute() throws MydriveException {
         dispatch();
+        // protect agains people trying to get the service's result without executing it!
+        // could have saved a lot of time on sprint-2...
+        _executed = true;
     }
 
     protected abstract void dispatch() throws MydriveException;
+
+    protected void assertExecuted() {
+        if(!_executed) {
+            throw new RuntimeException("Service was NOT executed!");
+        }
+    }
 }

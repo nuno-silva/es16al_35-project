@@ -96,6 +96,7 @@ public class ListDirectoryService extends MyDriveService {
     }
 
     public List<FileDto> result() {
+        assertExecuted();
         return _files;
     }
 
