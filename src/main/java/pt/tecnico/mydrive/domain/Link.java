@@ -2,10 +2,10 @@ package pt.tecnico.mydrive.domain;
 
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
-import pt.tecnico.mydrive.domain.xml.XMLVisitable;
-import pt.tecnico.mydrive.domain.xml.XMLVisitor;
+import pt.tecnico.mydrive.domain.xml.Visitable;
+import pt.tecnico.mydrive.domain.xml.Visitor;
 
-public class Link extends Link_Base implements XMLVisitable {
+public class Link extends Link_Base implements Visitable {
     private static final Logger logger = Logger.getLogger(Link.class);
     public static final String LINE_SEPARATOR = "\n";
     public static final String XML_TAG = "link";
@@ -76,7 +76,7 @@ public class Link extends Link_Base implements XMLVisitable {
     }
 
     @Override
-    public Element accept(XMLVisitor visitor) {
+    public Element accept(Visitor visitor) {
         return visitor.visit(this);
     }
 }

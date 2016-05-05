@@ -2,13 +2,13 @@ package pt.tecnico.mydrive.domain;
 
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
-import pt.tecnico.mydrive.domain.xml.XMLVisitable;
-import pt.tecnico.mydrive.domain.xml.XMLVisitor;
+import pt.tecnico.mydrive.domain.xml.Visitable;
+import pt.tecnico.mydrive.domain.xml.Visitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 
 import java.util.Optional;
 
-public class App extends App_Base implements XMLVisitable {
+public class App extends App_Base implements Visitable {
     public static final String XML_TAG = "app";
     private static final Logger logger = Logger.getLogger(App.class);
 
@@ -72,7 +72,7 @@ public class App extends App_Base implements XMLVisitable {
     }
 
     @Override
-    public Element accept(XMLVisitor visitor) {
+    public Element accept(Visitor visitor) {
         return visitor.visit(this);
     }
 }

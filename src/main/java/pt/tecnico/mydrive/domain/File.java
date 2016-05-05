@@ -3,15 +3,15 @@ package pt.tecnico.mydrive.domain;
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
-import pt.tecnico.mydrive.domain.xml.XMLVisitable;
-import pt.tecnico.mydrive.domain.xml.XMLVisitor;
+import pt.tecnico.mydrive.domain.xml.Visitable;
+import pt.tecnico.mydrive.domain.xml.Visitor;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.FileNameTooLongException;
 
 import java.util.List;
 
-public abstract class File extends File_Base implements XMLVisitable, IPermissionable {
+public abstract class File extends File_Base implements Visitable, IPermissionable {
     public static final String XML_TAG = "file";
     private static final Logger logger = Logger.getLogger(File.class);
     private static final int MAX_PATH = 1024;
@@ -183,7 +183,7 @@ public abstract class File extends File_Base implements XMLVisitable, IPermissio
     }
 
     @Override
-    public Element accept(XMLVisitor visitor) {
+    public Element accept(Visitor visitor) {
         return visitor.visit(this);
     }
 

@@ -5,13 +5,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 import java.lang.UnsupportedOperationException;
-import pt.tecnico.mydrive.domain.xml.XMLVisitable;
-import pt.tecnico.mydrive.domain.xml.XMLVisitor;
+import pt.tecnico.mydrive.domain.xml.Visitable;
+import pt.tecnico.mydrive.domain.xml.Visitor;
 import pt.tecnico.mydrive.exception.*;
 
 import java.util.Set;
 
-public class User extends User_Base implements XMLVisitable, IPermissionable {
+public class User extends User_Base implements Visitable, IPermissionable {
     public static final String XML_TAG = "user";
     private static final byte DEFAULT_MASK = (byte) 0b11110000;
 
@@ -126,7 +126,7 @@ public class User extends User_Base implements XMLVisitable, IPermissionable {
     }
 
     @Override
-    public Element accept(XMLVisitor visitor) {
+    public Element accept(Visitor visitor) {
         return visitor.visit(this);
     }
 
