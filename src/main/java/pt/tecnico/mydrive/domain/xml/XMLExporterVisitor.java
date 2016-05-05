@@ -115,6 +115,8 @@ public class XMLExporterVisitor implements XMLVisitor {
 
         fileElement.addContent(new Element("path").setText(path));
 
+        fileElement.addContent(new Element("owner").setText(file.getOwner().getUsername()));
+
         return fileElement;
 
     }
