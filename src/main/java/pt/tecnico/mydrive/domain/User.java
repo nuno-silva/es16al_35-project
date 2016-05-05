@@ -65,7 +65,7 @@ public class User extends User_Base implements Visitable, IPermissionable {
         logger.trace("User init " + username);
         if (checkUsername(username)) {
             setUsername(username);
-            super.setPassword(password);
+            assertPasswordRestrictions(password);
             setName(name);
             setMask(mask);
 
@@ -211,12 +211,16 @@ public class User extends User_Base implements Visitable, IPermissionable {
     super.setPassword(password);
   }
 
-/*  @Override
-  public void setPassword(String password){
-    if( password.length() < 8 )
-      throw new TooShortPasswordException();
-    else
+  public void assertPasswordRestrictions(String password){
+    if( checkPaswordRestrictions( password ) )
       super.setPassword(password);
-  }*/
+  }
 
+  public boolean checkPaswordRestrictions( String password ){
+    //Check restriction and for each pass the respective message to the exception
+    if( password.length() < 8 )
+      throw new PasswordRestrictionException("Password must have more than 8 characters!");
+    else
+      return true;
+  }
 }

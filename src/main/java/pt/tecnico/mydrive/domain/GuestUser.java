@@ -40,4 +40,9 @@ public class GuestUser extends GuestUser_Base {
     return (f.getOwner().equals(this)) ? f.ownerCanDelete() : false;
   }
 
+  @Override
+  public boolean checkPaswordRestrictions( String password ){
+    return true;
+  }
+
 }

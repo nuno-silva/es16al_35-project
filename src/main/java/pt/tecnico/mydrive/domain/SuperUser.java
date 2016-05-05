@@ -52,4 +52,9 @@ public class SuperUser extends SuperUser_Base {
       DateTime expirationDate = new DateTime().plusMinutes(10);
       return expirationDate;
     }
+
+		@Override
+		public boolean checkPaswordRestrictions( String password ){
+			return true;
+		}
 }
