@@ -207,4 +207,16 @@ public class User extends User_Base implements XMLVisitable, IPermissionable {
 			throw new UnsupportedOperationException("Setting User homeDir");
 	}
 
+  protected void setUncheckedPassword(String password){
+    super.setPassword(password);
+  }
+
+/*  @Override
+  public void setPassword(String password){
+    if( password.length() < 8 )
+      throw new TooShortPasswordException();
+    else
+      super.setPassword(password);
+  }*/
+
 }

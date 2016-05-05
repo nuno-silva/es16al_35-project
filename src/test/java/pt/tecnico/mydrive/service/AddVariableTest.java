@@ -6,7 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
-import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 /*Domain*/
 import pt.tecnico.mydrive.domain.User;
@@ -54,6 +55,30 @@ public class AddVariableTest extends AbstractServiceTest {
 			assertEquals("Variable was not revalued",":D :D :D :D :D :D :D :D :D",fs.getSession(token1).getVariable("PS1"));
 		}
 
+		@Test
+		public void successSameNameDifferentSession(){
+			FileSystem fs = FileSystem.getInstance();
+			AddVariableService avs = new AddVariableService(token1, "PS1", "/afs/.ist.utl.pt/users/4/3/ist178134");
+			avs.execute();
+			avs = new AddVariableService(token2, "PS1", "/afs/.ist.utl.pt/users/4/3/ist178134");
+			avs.execute();
+			assertEquals("Variable with wrong value session1","/afs/.ist.utl.pt/users/4/3/ist178134",fs.getSession(token1).getVariable("PS1"));
+			assertEquals("Variable with wrong value session2","/afs/.ist.utl.pt/users/4/3/ist178134",fs.getSession(token2).getVariable("PS1"));
+		}
+
+		@Test (expected=VariableNotFoundException.class)
+		public void failInexistentVariable(){
+			FileSystem fs = FileSystem.getInstance();
+			assertEquals("Variable with wrong value session1","/afs/.ist.utl.pt/users/4/3/ist178134",fs.getSession(token1).getVariable("PS1"));
+		}
+
+		@Test (expected=VariableNotFoundException.class)
+		public void failInexistentVariableInSpecificSession(){
+			FileSystem fs = FileSystem.getInstance();
+			AddVariableService avs = new AddVariableService(token1, "PS1", "/afs/.ist.utl.pt/users/4/3/ist178134");
+			avs.execute();
+			assertEquals("Variable with wrong value session1","/afs/.ist.utl.pt/users/4/3/ist178134",fs.getSession(token2).getVariable("PS1"));
+		}
 
 
 }
