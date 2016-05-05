@@ -34,11 +34,13 @@ public class AddVariableTest extends AbstractServiceTest {
 
     @Test
     public void successAddVariable() {
-			FileSystem fs = FileSystem.getInstance();
-      AddVariableService avs = new AddVariableService(token1, "PS1", "/afs/.ist.utl.pt/users/4/3/ist178134");
-			avs.execute();
-			assertTrue("No variable was found",fs.getSession(token1).hasVariable("PS1"));
-			assertFalse("Variable found in other session!",fs.getSession(token2).hasVariable("PS1"));
+		String name = "PS1";
+		String value = "/afs/.ist.utl.pt/users/4/3/ist178134";
+		FileSystem fs = FileSystem.getInstance();
+		AddVariableService avs = new AddVariableService(token1, name, value);
+		avs.execute();
+		assertEquals("variable not added", value, fs.getSession(token1).getVariable(name));
+		assertFalse("Variable found in another session!", fs.getSession(token2).hasVariable(name));
     }
 
 		@Test
@@ -49,9 +51,9 @@ public class AddVariableTest extends AbstractServiceTest {
 			avs = new AddVariableService(token1, "PS1", ":D :D :D :D :D :D :D :D :D");
 			avs.execute();
 			assertTrue("No variable was found",fs.getSession(token1).hasVariable("PS1"));
-			assertEquals("Variable was not revalued",":D :D :D :D :D :D :D :D :D",fs.getSession(token1).getVariableValue("PS1"));
+			assertEquals("Variable was not revalued",":D :D :D :D :D :D :D :D :D",fs.getSession(token1).getVariable("PS1"));
 		}
-		
+
 
 
 }

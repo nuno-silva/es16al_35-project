@@ -14,6 +14,7 @@ import pt.tecnico.mydrive.domain.Directory;
 import pt.tecnico.mydrive.exception.WrongPasswordException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.IsNotCdAbleException;
+import pt.tecnico.mydrive.exception.VariableNotFoundException;
 
 
 public class Session extends Session_Base {
@@ -85,23 +86,21 @@ public class Session extends Session_Base {
     }
 
     public boolean hasVariable(String name) {
-        for(Variable v : getVariableSet()) {
-            if(v.getName().equals(name)) {
-                return true;
-            }
+        try {
+            getVariable(name);
+            return true;
+        } catch (VariableNotFoundException e) {
+            return false;
         }
-        return false;
     }
 
-    // If you want to avoid this create a Variable Dto
-    public String getVariableValue(String name){
-      if(!hasVariable(name)) return null;
-      for(Variable v : getVariableSet()){
-        if(v.getName().equals(name)){
-          return v.getValue();
+    public String getVariable(String name) {
+        for(Variable v : getVariableSet()) {
+                if(v.getName().equals(name)){
+                return v.getValue();
+            }
         }
-      }
-      return null;
+        throw new VariableNotFoundException(name);
     }
 
     @Override
