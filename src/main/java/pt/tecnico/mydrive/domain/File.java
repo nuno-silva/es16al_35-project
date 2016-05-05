@@ -7,12 +7,14 @@ import pt.tecnico.mydrive.domain.xml.XMLVisitable;
 import pt.tecnico.mydrive.domain.xml.XMLVisitor;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
+import pt.tecnico.mydrive.exception.FileNameTooLongException;
 
 import java.util.List;
 
 public abstract class File extends File_Base implements XMLVisitable, IPermissionable {
     public static final String XML_TAG = "file";
     private static final Logger logger = Logger.getLogger(File.class);
+    private static final int MAX_PATH = 1024;
 
     protected File() {
         super();
@@ -45,9 +47,15 @@ public abstract class File extends File_Base implements XMLVisitable, IPermissio
     protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm) {
         logger.trace("init name: " + name);
         setName(name);
+        setParentDir(parent); // must be called after setName!
+        String path = getFullPath();
+        if(path.length() > MAX_PATH) {
+            // undo what we did. Note that we needed the parent to be set in order for getFullPath to work
+            remove();
+            throw new FileNameTooLongException(path, MAX_PATH);
+        }
         setPermissions(perm);
         setOwner(owner);
-        setParentDir(parent); // must be called after setName!
         setLastMod(new DateTime());
         setId(fs.commitNewFileId()); // commitNewFileId must be called only when we're sure the File was successfully created
     }
@@ -167,7 +175,7 @@ public abstract class File extends File_Base implements XMLVisitable, IPermissio
     @Override
     public void setParentDir(Directory parent) {
         logger.trace("setParentDir name: " + getName());
-        if (parent == null) {
+        if (parent == null) { // root dir
             super.setParentDir(parent);
             return;
         }

@@ -35,7 +35,7 @@ public class FileDto implements Comparable<FileDto> {
         return permissions;
     }
 
-    public DateTime getlastMod() {
+    public DateTime getLastMod() {
         return lastMod;
     }
 

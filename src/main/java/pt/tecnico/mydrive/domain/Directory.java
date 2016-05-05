@@ -8,6 +8,7 @@ import pt.tecnico.mydrive.domain.xml.XMLVisitor;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
+import java.lang.UnsupportedOperationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class Directory extends Directory_Base implements XMLVisitable {
      */
     public Directory(FileSystem fs, byte perm) {
         super();
-        init(fs, this, fs.getSuperUser(), "", perm);
+        init(fs, this, null, "", perm);
     }
 
     /**
@@ -252,4 +253,14 @@ public class Directory extends Directory_Base implements XMLVisitable {
         }
         return getFileSet();
     }
+
+    @Override
+    public void setUser(User u)throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("Setting user for Directory");
+	}
+
+  @Override
+  public void setSession(Session s)throws UnsupportedOperationException{
+    throw new UnsupportedOperationException("Setting session for Directory!");
+  }
 }

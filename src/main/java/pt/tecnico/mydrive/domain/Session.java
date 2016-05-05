@@ -1,11 +1,21 @@
 package pt.tecnico.mydrive.domain;
 
-import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import pt.tecnico.mydrive.exception.WrongPasswordException;
-
+/*Other stuff*/
 import java.math.BigInteger;
 import java.util.Random;
+import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import java.util.Optional;
+
+/*Domain*/
+import pt.tecnico.mydrive.domain.Directory;
+
+/* Exceptions */
+import pt.tecnico.mydrive.exception.WrongPasswordException;
+import pt.tecnico.mydrive.exception.PermissionDeniedException;
+import pt.tecnico.mydrive.exception.IsNotCdAbleException;
+import pt.tecnico.mydrive.exception.VariableNotFoundException;
+
 
 public class Session extends Session_Base {
     private static final Logger logger = Logger.getLogger(Session.class);
@@ -23,7 +33,9 @@ public class Session extends Session_Base {
         long token = generateToken(fs);
         DateTime expirationDate = u.renewExpirationDate();
         fs.removeExpiredTokens();
-        init(fs, u, token, u.getHomePath(), expirationDate);
+        Directory d = u.getHome();
+        if(d==null) throw new RuntimeException("BUG: User's home is NULL");
+        init(fs, u, token, d, expirationDate);
         logger.debug("new Session: token " + tokenToString(token));
     }
 
@@ -31,10 +43,10 @@ public class Session extends Session_Base {
         return Long.toHexString(token);
     }
 
-    protected void init(FileSystem fs, User u, long token, String workingPath, DateTime expirationDate) {
-        setWorkingPath(workingPath);
-        setExpirationDate(expirationDate);
-        setToken(token);
+    protected void init(FileSystem fs, User u, long token, Directory wd, DateTime expirationDate) {
+        super.setWorkDir(wd);
+        super.setExpirationDate(expirationDate);
+        super.setToken(token);
         u.addSession(this);
     }
 
@@ -55,7 +67,8 @@ public class Session extends Session_Base {
 
     public void remove() {
         logger.trace("remove: token " + tokenToString(getToken()));
-        setUser(null);
+        super.setUser(null);
+        super.setWorkDir(null);
         deleteDomainObject();
     }
 
@@ -73,11 +86,43 @@ public class Session extends Session_Base {
     }
 
     public boolean hasVariable(String name) {
+        try {
+            getVariable(name);
+            return true;
+        } catch (VariableNotFoundException e) {
+            return false;
+        }
+    }
+
+    public String getVariable(String name) {
         for(Variable v : getVariableSet()) {
-            if(v.getName().equals(name)) {
-                return true;
+                if(v.getName().equals(name)){
+                return v.getValue();
             }
         }
-        return false;
+        throw new VariableNotFoundException(name);
+    }
+
+    @Override
+    public void setUser(User u) {
+        throw new PermissionDeniedException("change Session's User");
+    }
+
+    @Override
+    public void setToken(long token) {
+        throw new PermissionDeniedException("change Session's token");
+    }
+
+    @Override
+    public void setExpirationDate(DateTime expirationDate) {
+        if(expirationDate.isAfter(getExpirationDate())) {
+            throw new PermissionDeniedException("change Session's expiration date");
+        }
+        super.setExpirationDate(expirationDate);
+    }
+
+    public void renewExpirationDate() {
+        DateTime expirationDate = getUser().renewExpirationDate(); // I'm not sure whether we should do this
+        super.setExpirationDate(expirationDate);
     }
 }

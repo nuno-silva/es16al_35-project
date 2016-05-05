@@ -39,19 +39,19 @@ public class FileSystem extends FileSystem_Base {
     protected void init() {
         setRoot(FenixFramework.getDomainRoot());
         setFileCounter(0);
-        byte permission = (byte) 0b111101101;
-
-        // Create Super User
-        new SuperUser(this, "***");
 
         // Create root directory: "/"
-        Directory rootDir = createRootDirectory();
+        Directory rootDir = new Directory(this, SuperUser.SUPERUSER_MASK);
+        setRootDir(rootDir);
 
         // Create home directory: "/home"
-        Directory homeDir = new Directory(this, rootDir, "home", permission);
+        Directory homeDir = new Directory(this, rootDir, null, "home", SuperUser.SUPERUSER_MASK);
 
-        //Create root dir
-        Directory homeRoot = new Directory(this, homeDir, "root", permission);
+        // Create Super User
+        SuperUser su = new SuperUser(this, "***");
+
+        rootDir.setOwner(su);
+        homeDir.setOwner(su);
 
         // Create guest user
         new GuestUser(this);
@@ -100,12 +100,6 @@ public class FileSystem extends FileSystem_Base {
         return dir;
     }
 
-    protected Directory createRootDirectory() {
-        // FIXME: proper rootdir permission
-        Directory rootDir = new Directory(this, (byte) 0b11111010);
-        setRootDir(rootDir);
-        return rootDir;
-    }
 
     /**
      * get the next new file id (but don't store it) - use it when trying to create a new File
@@ -165,16 +159,16 @@ public class FileSystem extends FileSystem_Base {
         }
     }
 
-    public List<String> pathContent(String path) throws UnknownPathException {
+    public List<String> pathContent(String path) throws FileNotFoundException {
         /* FIXME duplicate of fileContent() ? */
         return getFile(path).showContent();
     }
 
-    public List<String> fileContent(String path) throws UnknownPathException {
+    public List<String> fileContent(String path) throws FileNotFoundException {
         return getFile(path).showContent();
     }
 
-    public void removeFile(String path) throws UnknownPathException {
+    public void removeFile(String path) throws FileNotFoundException {
         getFile(path).remove();
     }
 
@@ -188,12 +182,12 @@ public class FileSystem extends FileSystem_Base {
         readMe.setLines(users);
     }
     */
-    public File getFile(String path) throws UnknownPathException {
+    public File getFile(String path) throws FileNotFoundException {
         logger.debug("getFile: " + path);
         File currentDir = getRootDir();
 
         if (!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
-            throw new UnknownPathException(path);
+            throw new FileNotFoundException(path);
 
         path = path.substring(1); // remove '/'
         for (String dir : path.split("/")) {
@@ -204,12 +198,12 @@ public class FileSystem extends FileSystem_Base {
         return currentDir;
     }
 
-    public File getFile(String path, User initiator) throws UnknownPathException, PermissionDeniedException {
+    public File getFile(String path, User initiator) throws FileNotFoundException, PermissionDeniedException {
         logger.debug("getFile: " + path + "User: " + initiator.getUsername());
         File currentDir = getRootDir();
 
         if (!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
-            throw new UnknownPathException(path);
+            throw new FileNotFoundException(path);
 
         path = path.substring(1); // remove '/'
         for (String dir : path.split("/")) {

@@ -1,8 +1,6 @@
 package pt.tecnico.mydrive.service;
 
 import pt.tecnico.mydrive.domain.*;
-import pt.tecnico.mydrive.exception.EmptyFileNameException;
-import pt.tecnico.mydrive.exception.MydriveException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.WriteDirectoryException;
 
@@ -19,11 +17,11 @@ public class WriteFileService extends MyDriveService {
     }
 
     @Override
-    protected void dispatch() throws MydriveException {
+    protected void dispatch() {
         FileSystem fs = getFileSystem();
         Session s = fs.getSession(token);
-        Directory cwd = (Directory) fs.getFile(s.getWorkingPath());
-        File f = cwd.getFileByName(fileName);
+        Directory d = s.getWorkDir();
+        File f = d.getFileByName(fileName);
         if (f.isCdAble()) {
             throw new WriteDirectoryException("Cannot write in " + f.getFullPath() + " since it's a directory.");
         }

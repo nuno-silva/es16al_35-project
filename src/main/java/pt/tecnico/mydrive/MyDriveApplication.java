@@ -12,6 +12,8 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.mydrive.domain.Directory;
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.PlainFile;
+import pt.tecnico.mydrive.domain.User;
+import pt.tecnico.mydrive.domain.Session;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,6 +71,8 @@ public class MyDriveApplication {
         //TODO: propagate exception
         Document doc = fs.xmlExport();
         XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+        User u = new User(fs,"mrtest","pass");
+        Session s = new Session(fs,u,"pass");
         try {
             out.output(doc, System.out);
         } catch (IOException e) {

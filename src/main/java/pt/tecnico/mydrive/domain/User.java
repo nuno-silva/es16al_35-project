@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
+import java.lang.UnsupportedOperationException;
 import pt.tecnico.mydrive.domain.xml.XMLVisitable;
 import pt.tecnico.mydrive.domain.xml.XMLVisitor;
 import pt.tecnico.mydrive.exception.*;
@@ -60,11 +61,11 @@ public class User extends User_Base implements XMLVisitable, IPermissionable {
         if (username == null || username.length() <= 3) throw new InvalidUsernameException(username);
     }
 
-    public void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException, UsernameAlreadyExistsException {
+    protected void init(FileSystem fs, String username, String password, String name, byte mask) throws InvalidUsernameException, UsernameAlreadyExistsException {
         logger.trace("User init " + username);
         if (checkUsername(username)) {
             setUsername(username);
-            setPassword(password);
+            super.setPassword(password);
             setName(name);
             setMask(mask);
 
@@ -75,8 +76,9 @@ public class User extends User_Base implements XMLVisitable, IPermissionable {
 
             File home = fs.getFile("/home");
             if (home.isCdAble()) {
-                home = new Directory(fs, (Directory) home, this, username);
-                setHomePath(home.getFullPath());
+                Directory homeD = new Directory(fs, (Directory) home, this, username);
+                super.setHome(homeD);
+                super.setHomePath(homeD.getFullPath());
             } else {
                 setFs(null); // remove User from FileSystem
                 throw new IsNotCdAbleException("'" + home.getFullPath() + " is not cdAble. Can't create user home.");
@@ -199,5 +201,22 @@ public class User extends User_Base implements XMLVisitable, IPermissionable {
     public boolean isExpired(Session s){
       return s.getExpirationDate().isBeforeNow();
     }
+
+    @Override
+    public void setHome(Directory home)throws UnsupportedOperationException{
+			throw new UnsupportedOperationException("Setting User homeDir");
+	}
+
+  protected void setUncheckedPassword(String password){
+    super.setPassword(password);
+  }
+
+/*  @Override
+  public void setPassword(String password){
+    if( password.length() < 8 )
+      throw new TooShortPasswordException();
+    else
+      super.setPassword(password);
+  }*/
 
 }

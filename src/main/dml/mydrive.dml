@@ -2,7 +2,6 @@ package pt.tecnico.mydrive.domain;
 
 class Session {
 	long token; // long is 64 bits in Java (signed or not, doesn't matter)
-	String workingPath; // same reason we used a String for User.homePath
 	DateTime expirationDate;
 }
 
@@ -77,4 +76,14 @@ relation UserHasSessions {
 relation SessionHasVariables {
 	Session playsRole session { multiplicity 1; }
 	Variable playsRole variable { multiplicity *; }
+}
+
+relation UserHasHomeDir{
+	User playsRole user{ multiplicity 0..1; }
+	Directory playsRole home{ multiplicity 1; }
+}
+
+relation SessionHasWorkDir {
+	Session playsRole session { multiplicity 0..1; }
+	Directory playsRole workDir { multiplicity 1; }
 }

@@ -16,7 +16,7 @@ public class ReadFileTest extends AbstractServiceTest {
     protected void populate() {
 
         FileSystem fs = FileSystem.getInstance();
-        User user = new User(fs, "mike", "MIKE", "Ronald McDonald", (byte) 0xff);
+        User user = new User(fs, "mike", "MIKEssssss", "Ronald McDonald", (byte) 0xff);
         File home = fs.getFile(user.getHomePath());
         new PlainFile(fs, (Directory) home, user, "TestPlainFile", (byte) 0xff, "Just a test string.");
         new Link(fs, (Directory) home, user, "TestLink", (byte) 0xff, "/home");
@@ -33,7 +33,7 @@ public class ReadFileTest extends AbstractServiceTest {
         User user = fs.getUser("mike");
 
         //Login
-        Session session = new Session(fs, user, "MIKE");
+        Session session = new Session(fs, user, "MIKEssssss");
         token = session.getToken();
 
         //Call ReadFileService
@@ -55,7 +55,7 @@ public class ReadFileTest extends AbstractServiceTest {
         User user = fs.getUser("mike");
 
         //Login
-        Session session = new Session(fs, user, "MIKE");
+        Session session = new Session(fs, user, "MIKEssssss");
         token = session.getToken();
 
         //Call ReadFileService
@@ -77,7 +77,7 @@ public class ReadFileTest extends AbstractServiceTest {
         User user = fs.getUser("mike");
 
         //Login
-        Session session = new Session(fs, user, "MIKE");
+        Session session = new Session(fs, user, "MIKEssssss");
         token = session.getToken();
 
         //Call ReadFileService
@@ -100,7 +100,7 @@ public class ReadFileTest extends AbstractServiceTest {
         User user = fs.getUser("mike");
 
         //Login
-        Session session = new Session(fs, user, "MIKE");
+        Session session = new Session(fs, user, "MIKEssssss");
         token = session.getToken();
 
         //Call ReadFileService
@@ -122,7 +122,7 @@ public class ReadFileTest extends AbstractServiceTest {
         User user = fs.getUser("mike");
 
         //Login
-        Session session = new Session(fs, user, "MIKE");
+        Session session = new Session(fs, user, "MIKEssssss");
         token = session.getToken();
 
         //Call ReadFileService
@@ -144,7 +144,7 @@ public class ReadFileTest extends AbstractServiceTest {
         User user = fs.getUser("mike");
 
         //Login
-        Session session = new Session(fs, user, "MIKE");
+        Session session = new Session(fs, user, "MIKEssssss");
         token = session.getToken();
 
         //Call ReadFileService
@@ -156,7 +156,7 @@ public class ReadFileTest extends AbstractServiceTest {
 
         assertNotEquals("bla bla", content);
     }
-    
+
     @Test (expected = EmptyFileNameException.class)
     public void failInvalidFileName() {
         final String fileName = "";
@@ -166,14 +166,14 @@ public class ReadFileTest extends AbstractServiceTest {
         User user = fs.getUser("mike");
 
         //Login
-        Session session = new Session(fs, user, "MIKE");
+        Session session = new Session(fs, user, "MIKEssssss");
         token = session.getToken();
 
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
         service.dispatch();
     }
-    
+
     @Test (expected = InvalidTokenException.class)
     public void failInvalidToken() {
         final String fileName = "Test";
@@ -181,11 +181,11 @@ public class ReadFileTest extends AbstractServiceTest {
 
         FileSystem fs = FileSystem.getInstance();
         User user = fs.getUser("mike");
-        
+
         //Login
-        Session session = new Session(fs, user, "MIKE");
+        Session session = new Session(fs, user, "MIKEssssss");
         token = session.getToken();
-        
+
         DateTime expirationDate = new DateTime().minusHours(5);
         session.setExpirationDate(expirationDate);
         System.out.println(session.getExpirationDate());
@@ -201,19 +201,19 @@ public class ReadFileTest extends AbstractServiceTest {
 
         FileSystem fs = FileSystem.getInstance();
         User user = fs.getUser("mike");
-        
+
         //Login
-        Session session = new Session(fs, user, "MIKE");
+        Session session = new Session(fs, user, "MIKEssssss");
         token = session.getToken();
-        
+
         Directory d = fs.createFileParents("/home/mike/Test");
         new Directory(fs, d, fileName);
-        
+
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
         service.dispatch();
     }
-    
+
     @Test (expected = PermissionDeniedException.class)
     public void failPermissionDenied() {
         final String fileName = "Test";
@@ -223,12 +223,12 @@ public class ReadFileTest extends AbstractServiceTest {
         User user = fs.getUser("mike");
 
         //Login
-        Session session = new Session(fs, user, "MIKE");
+        Session session = new Session(fs, user, "MIKEssssss");
         token = session.getToken();
 
         File home = fs.getFile(user.getHomePath());
         new PlainFile(fs, (Directory) home, user, fileName, (byte) 0x00, "Just a test string.");
-        
+
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
         service.dispatch();
@@ -238,19 +238,19 @@ public class ReadFileTest extends AbstractServiceTest {
 
         assertNotEquals("bla bla", content);
     }
-    
+
     @Test (expected=FileNotFoundException.class)
     public void fileNotFoundException() {
     	final String fileName = "Test";
     	long token;
-    	
+
     	FileSystem fs = FileSystem.getInstance();
     	User user = fs.getUser("mike");
-    	
+
     	//Login
-    	Session session = new Session(fs, user, "MIKE");
+    	Session session = new Session(fs, user, "MIKEssssss");
     	token = session.getToken();
-    	
+
     	//Call ReadFileService
     	ReadFileService service = new ReadFileService(token, fileName);
     	service.dispatch();

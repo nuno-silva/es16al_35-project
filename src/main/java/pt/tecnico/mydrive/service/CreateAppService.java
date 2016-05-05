@@ -20,9 +20,7 @@ public class CreateAppService extends CreatePlainFileService {
         super.dispatchAux();
         FileSystem fs = getFileSystem();
         Session s = fs.getSession(getToken());
-        File f = fs.getFile(s.getWorkingPath());
-        if (!f.isCdAble()) throw new IsNotCdAbleException();
-        Directory d = (Directory) f;
-        new App(fs, d, s.getUser(), getFileName(), getContent());
+        Directory workDir = s.getWorkDir();
+        new App(fs, workDir, s.getUser(), getFileName(), getContent());
     }
 }
