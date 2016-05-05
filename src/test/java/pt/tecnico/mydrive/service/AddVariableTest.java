@@ -49,10 +49,9 @@ public class AddVariableTest extends AbstractServiceTest {
 			FileSystem fs = FileSystem.getInstance();
       AddVariableService avs = new AddVariableService(token1, "PS1", "/afs/.ist.utl.pt/users/4/3/ist178134");
 			avs.execute();
-			avs = new AddVariableService(token1, "PS1", ":D :D :D :D :D :D :D :D :D");
-			avs.execute();
-			assertTrue("No variable was found",fs.getSession(token1).hasVariable("PS1"));
-			assertEquals("Variable was not revalued",":D :D :D :D :D :D :D :D :D",fs.getSession(token1).getVariable("PS1"));
+			AddVariableService avs2 = new AddVariableService(token1, "PS1", ":D :D :D :D :D :D :D :D :D");
+			avs2.execute();
+			assertEquals("Variable was not revalued",":D :D :D :D :D :D :D :D :D",avs2.result().get("PS1"));
 		}
 
 		@Test
@@ -60,10 +59,10 @@ public class AddVariableTest extends AbstractServiceTest {
 			FileSystem fs = FileSystem.getInstance();
 			AddVariableService avs = new AddVariableService(token1, "PS1", "/afs/.ist.utl.pt/users/4/3/ist178134");
 			avs.execute();
-			avs = new AddVariableService(token2, "PS1", "/afs/.ist.utl.pt/users/4/3/ist178134");
-			avs.execute();
-			assertEquals("Variable with wrong value session1","/afs/.ist.utl.pt/users/4/3/ist178134",fs.getSession(token1).getVariable("PS1"));
-			assertEquals("Variable with wrong value session2","/afs/.ist.utl.pt/users/4/3/ist178134",fs.getSession(token2).getVariable("PS1"));
+			AddVariableService avs2 = new AddVariableService(token2, "PS1", "/afs/.ist.utl.pt/users/4/3/ist178134");
+			avs2.execute();
+			assertEquals("Variable with wrong value session1","/afs/.ist.utl.pt/users/4/3/ist178134",avs.result().get("PS1"));
+			assertEquals("Variable with wrong value session2","/afs/.ist.utl.pt/users/4/3/ist178134",avs2.result().get("PS1"));
 		}
 
 		@Test (expected=VariableNotFoundException.class)
@@ -79,6 +78,5 @@ public class AddVariableTest extends AbstractServiceTest {
 			avs.execute();
 			assertEquals("Variable with wrong value session1","/afs/.ist.utl.pt/users/4/3/ist178134",fs.getSession(token2).getVariable("PS1"));
 		}
-
 
 }
