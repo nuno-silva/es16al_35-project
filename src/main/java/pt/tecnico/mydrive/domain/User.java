@@ -216,7 +216,7 @@ public class User extends User_Base implements Visitable, IPermissionable {
       super.setPassword(password);
   }
 
-  public boolean checkPaswordRestrictions( String password ){
+  protected boolean checkPaswordRestrictions( String password ){
     //Check restriction and for each pass the respective message to the exception
     if( password.length() < 8 )
       throw new PasswordRestrictionException("Password must have more than 8 characters!");

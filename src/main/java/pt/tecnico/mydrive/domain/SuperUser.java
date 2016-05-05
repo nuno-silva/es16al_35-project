@@ -54,7 +54,7 @@ public class SuperUser extends SuperUser_Base {
     }
 
 		@Override
-		public boolean checkPaswordRestrictions( String password ){
+		protected boolean checkPaswordRestrictions( String password ){
 			return true;
 		}
 }

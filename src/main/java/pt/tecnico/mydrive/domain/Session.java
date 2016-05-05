@@ -20,16 +20,12 @@ import pt.tecnico.mydrive.exception.VariableNotFoundException;
 public class Session extends Session_Base {
     private static final Logger logger = Logger.getLogger(Session.class);
 
-    protected Session() {
-        super();
-    }
-
     public Session(FileSystem fs, User u, String password) {
         super();
         if (!u.checkPassword(password)) {
             throw new WrongPasswordException(u.getUsername());
         }
-
+        u.assertPasswordRestrictions( password );
         long token = generateToken(fs);
         DateTime expirationDate = u.renewExpirationDate();
         fs.removeExpiredTokens();
