@@ -114,12 +114,13 @@ public class Session extends Session_Base {
         throw new PermissionDeniedException("change Session's token");
     }
 
-    /* // we need this to expire the session during testing...
     @Override
     public void setExpirationDate(DateTime expirationDate) {
-        throw new PermissionDeniedException("change Session's expiration date");
+        if(expirationDate.isAfter(getExpirationDate())) {
+            throw new PermissionDeniedException("change Session's expiration date");
+        }
+        super.setExpirationDate(expirationDate);
     }
-    */
 
     public void renewExpirationDate() {
         DateTime expirationDate = getUser().renewExpirationDate(); // I'm not sure whether we should do this
