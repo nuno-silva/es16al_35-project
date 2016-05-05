@@ -4,10 +4,6 @@ import pt.tecnico.mydrive.exception.DuplicateVariableException;
 
 public class Variable extends Variable_Base {
 
-    protected Variable() {
-        super();
-    }
-
     public Variable(Session s, String name, String value) {
         init(s, name, value);
     }
