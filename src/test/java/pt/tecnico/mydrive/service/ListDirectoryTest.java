@@ -41,6 +41,8 @@ public class ListDirectoryTest extends AbstractServiceTest {
         User u = new User( fs, "mrtesty", "123ssssss", "Monsiour Testy", (byte) 0b10100010);
         Directory dir = new Directory(fs, d, "testyDir", (byte) 0b11100000);
         dir = new Directory(fs, d, "Sluty Dir", (byte) 0b00001111);
+        dir = new Directory(fs, d, "Unlistable Dir", (byte) 0b11110111);
+        dir = new Directory(fs, d, "Listable Dir", (byte) 0b11111111);
         f = fs.getFile("/home/mrtesty");
         if (f.isCdAble()) {
             d = (Directory) f;
@@ -124,9 +126,47 @@ public class ListDirectoryTest extends AbstractServiceTest {
 		assertNotNull("lastMod null", results.get(4).getLastMod());
 		assertEquals("fileType incorrect", results.get(4).getType(),FileDto.FileType.PLAINFILE);
 
-    assertEquals( "Name incorrect at this shit", results.get(3).getName(), "MyLink" );
+    assertEquals( "Name incorrect ", results.get(3).getName(), "MyLink" );
     assertEquals("permissions incorrect", results.get(3).getPermissions(), (byte) 0b10100010);
     assertNotNull("lastMod null", results.get(3).getLastMod());
     assertEquals("fileType incorrect", results.get(3).getType(),FileDto.FileType.LINK);
+    }
+
+    @Test ( expected = PermissionDeniedException.class )
+    public void failListingOtherUserDir(){
+      FileSystem fs = FileSystem.getInstance();
+      /* LOGIN */
+      LoginService login = new LoginService("mrtesty", "123ssssss");
+      login.execute();
+      File f = fs.getFile("/home/Unlistable Dir");
+      fs.getSession( login.result() ).setWorkDir((Directory)f);
+      ListDirectoryService lsSer = new ListDirectoryService( login.result() );
+      lsSer.execute();
+    }
+    
+    @Test
+    public void successWithOtherUserDir(){
+      FileSystem fs = FileSystem.getInstance();
+      /* LOGIN */
+      LoginService login = new LoginService("mrtesty", "123ssssss");
+      login.execute();
+      File f = fs.getFile("/home/Listable Dir");
+      fs.getSession( login.result() ).setWorkDir((Directory)f);
+      ListDirectoryService lsSer = new ListDirectoryService( login.result() );
+      lsSer.execute();
+
+      List<FileDto> results = lsSer.result();
+      /* Asserts */
+      assertEquals("Too much files here",results.size(),2);
+
+      assertEquals( "dot(.) Name incorrect", results.get(0).getName(), "." );
+      assertEquals("dot(.) permissions incorrect", results.get(0).getPermissions(), (byte) 0b11111111);
+      assertNotNull("dot(.) lastMod null", results.get(0).getLastMod());
+      assertEquals("dot(.) fileType incorrect", results.get(0).getType(),FileDto.FileType.DIRECTORY);
+
+      assertEquals( "parent(..) Name incorrect", results.get(1).getName(), ".." );
+      assertEquals("parent(..) permissions incorrect", results.get(1).getPermissions(), (byte) 0b11111010);
+      assertNotNull("parent(..) lastMod null", results.get(1).getLastMod());
+      assertEquals("parent(..) fileType incorrect", results.get(1).getType(),FileDto.FileType.DIRECTORY);
     }
 }
