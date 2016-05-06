@@ -20,6 +20,7 @@ import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
+import pt.tecnico.mydrive.exception.EmptyFileNameException;
 
 
 public class CreatePlainFileTest extends AbstractServiceTest {
@@ -41,6 +42,8 @@ public class CreatePlainFileTest extends AbstractServiceTest {
     	LoginService lser = new LoginService( "root", "***" );
     	lser.execute();
     	CreatePlainFileService service = new CreatePlainFileService("PlainFileTest", lser.result(), "Contains stuff...");
+    	service.execute();
+			service = new CreatePlainFileService("PlainFileTest2", lser.result());
     	service.execute();
 
         PlainFile textFile = (PlainFile) fs.getFile("/home/root/PlainFileTest");
@@ -138,5 +141,16 @@ public class CreatePlainFileTest extends AbstractServiceTest {
         CreateFileService service = new CreateAppService("Test1", lser.result(), "I have a lot of work to do during this week!");
         service.execute();
     }
+
+		@Test (expected = EmptyFileNameException.class)
+		public void failEmptyFileName() {
+				FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+				LoginService lser = new LoginService( "root", "***" );
+				lser.execute();
+				File f = fs.getFile("/home");
+				fs.getSession(lser.result()).setWorkDir((Directory)f);
+				CreateFileService service = new CreateAppService("", lser.result(), "I have a lot of work to do during this week!");
+				service.execute();
+		}
 
 }

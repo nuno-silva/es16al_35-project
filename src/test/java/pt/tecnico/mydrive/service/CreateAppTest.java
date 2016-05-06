@@ -25,6 +25,8 @@ public class CreateAppTest extends AbstractServiceTest {
         lser.execute();
         CreateFileService service = new CreateAppService("ApplicationTest", lser.result(), "Do stuff...");
         service.execute();
+        service = new CreateAppService("ApplicationTest2", lser.result());
+        service.execute();
 
         File work = fs.getFile("/home/root/ApplicationTest");
         /*
