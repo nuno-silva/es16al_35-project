@@ -11,6 +11,19 @@ import pt.tecnico.mydrive.domain.*;
 public class XMLVisitor implements Visitor {
     private static XMLVisitor instance = null;
 
+    public static final String CONTENT_TAG = "content";
+    public static final String POINTER_TAG = "pointer";
+    public static final String USERNAME_TAG = "username";
+    public static final String PASSWORD_TAG = "password";
+    public static final String NAME_TAG = "name";
+    public static final String HOME_TAG = "home";
+    public static final String MASK_TAG = "mask";
+    public static final String PATH_TAG = "path";
+    public static final String LASTMOD_TAG = "lastMod";
+    public static final String OWNER_TAG = "owner";
+    public static final String ID_ATTR = "id";
+
+
     private XMLVisitor() { /* empty on purpose */ }
 
     // TODO: not reflection safe
@@ -36,7 +49,7 @@ public class XMLVisitor implements Visitor {
         fileElem.setName(PlainFile.XML_TAG);
 
         if (content != null && content != "") {
-            fileElem.addContent(new Element("content").setText(content));
+            fileElem.addContent(new Element(XMLVisitor.CONTENT_TAG).setText(content));
         }
 
         return fileElem;
@@ -49,7 +62,7 @@ public class XMLVisitor implements Visitor {
         Element linkElem = visit((File) link);
         linkElem.setName(Link.XML_TAG);
         if (pointer != null && pointer != "") {
-            linkElem.addContent(new Element("pointer").setText(pointer));
+            linkElem.addContent(new Element(XMLVisitor.POINTER_TAG).setText(pointer));
         }
         return linkElem;
     }
@@ -64,19 +77,19 @@ public class XMLVisitor implements Visitor {
 
         Element userElement = new Element(User.XML_TAG);
 
-        userElement.setAttribute(new Attribute("username", user.getUsername()));
+        userElement.setAttribute(new Attribute(XMLVisitor.USERNAME_TAG, user.getUsername()));
 
         if (password != null && password != "") {
-            userElement.addContent(new Element("password").setText(user.getPassword()));
+            userElement.addContent(new Element(XMLVisitor.PASSWORD_TAG).setText(user.getPassword()));
         }
         if (name != null && name != "") {
             userElement.addContent(new Element("name").setText(user.getName()));
         }
         if (home != null && home != "") {
-            userElement.addContent(new Element("home").setText(user.getHomePath()));
+            userElement.addContent(new Element(XMLVisitor.HOME_TAG).setText(user.getHomePath()));
         }
         if (mask != null && mask != "") {
-            userElement.addContent(new Element("mask").setText(mask));
+            userElement.addContent(new Element(XMLVisitor.MASK_TAG).setText(mask));
         }
         return userElement;
     }
@@ -98,7 +111,7 @@ public class XMLVisitor implements Visitor {
         mask = MaskHelper.getStringMask(file.getPermissions());
         lastMod = file.getLastMod();
         Element fileElement = new Element(File.XML_TAG); // temp placeholder
-        fileElement.setAttribute(new Attribute("id", String.valueOf(file.getId())));
+        fileElement.setAttribute(new Attribute(XMLVisitor.ID_ATTR, String.valueOf(file.getId())));
         String path = (file.getFullPath() == "") ? "/" : file.getFullPath();
 
         if (name != null && name != "") {
@@ -106,16 +119,16 @@ public class XMLVisitor implements Visitor {
         }
 
         if (mask != null && mask != "") {
-            fileElement.addContent(new Element("mask").setText(mask));
+            fileElement.addContent(new Element(XMLVisitor.MASK_TAG).setText(mask));
         }
 
         if (lastMod != null) {
-            fileElement.addContent(new Element("lastMod").setText(lastMod.toString()));
+            fileElement.addContent(new Element(XMLVisitor.LASTMOD_TAG).setText(lastMod.toString()));
         }
 
-        fileElement.addContent(new Element("path").setText(path));
+        fileElement.addContent(new Element(XMLVisitor.PATH_TAG).setText(path));
 
-        fileElement.addContent(new Element("owner").setText(file.getOwner().getUsername()));
+        fileElement.addContent(new Element(XMLVisitor.OWNER_TAG).setText(file.getOwner().getUsername()));
 
         return fileElement;
 

@@ -294,10 +294,10 @@ public class FileSystem extends FileSystem_Base {
         // This allows some code reuse
         Element e;
         String id, name, mask, lastMod, path;
-        id = file.getAttribute("id").getValue();
+        id = file.getAttribute(XMLVisitor.ID_ATTR).getValue();
         logger.debug("File ID: " + id);
 
-        e = file.getChild("name"); // must-have
+        e = file.getChild(XMLVisitor.NAME_TAG); // must-have
         if (e == null) {
             // root dir
             name = "";
@@ -306,7 +306,7 @@ public class FileSystem extends FileSystem_Base {
         }
         logger.debug("File name: " + name);
 
-        e = file.getChild("path");
+        e = file.getChild(XMLVisitor.PATH_TAG);
         if (e != null) {
             path = e.getText();
         } else {
@@ -314,7 +314,7 @@ public class FileSystem extends FileSystem_Base {
         }
         logger.debug("File path: " + path);
 
-        e = file.getChild("mask");
+        e = file.getChild(XMLVisitor.MASK_TAG);
         if (e != null) {
             mask = e.getText();
         } else {
@@ -322,13 +322,15 @@ public class FileSystem extends FileSystem_Base {
         }
         logger.debug("File mask: " + mask);
 
-        e = file.getChild("lastMod");
+        e = file.getChild(XMLVisitor.LASTMOD_TAG);
         if (e != null) {
             lastMod = e.getText();
         } else {
             lastMod = new DateTime().toString(); // FIXME: find a more suitable default lastMod
         }
         logger.debug("Last mod: " + lastMod);
+
+        e = file.getChild(XMLVisitor.OWNER_TAG);
         return fp.parse(id, name, mask, lastMod, path);
     }
 
@@ -348,7 +350,7 @@ public class FileSystem extends FileSystem_Base {
         Element elem;
         for (Element contentFile : contentFiles) {
             fp = parseFileParams(contentFile, fp);
-            elem = contentFile.getChild("content");
+            elem = contentFile.getChild(XMLVisitor.CONTENT_TAG);
             if (elem != null) {
                 content = elem.getText();
             } else {
@@ -388,7 +390,7 @@ public class FileSystem extends FileSystem_Base {
         Element elem = null;
         for (Element link : links) {
             fp = parseFileParams(link, fp);
-            elem = link.getChild("pointer");
+            elem = link.getChild(XMLVisitor.POINTER_TAG);
             if (elem != null) {
                 pointer = elem.getText();
             } else {
@@ -417,22 +419,22 @@ public class FileSystem extends FileSystem_Base {
         String username, password, name, home, mask;
         Element elem;
         for (Element u : users) {
-            username = u.getAttribute("username").getValue(); // TODO: this assumes that it's actually there
-            elem = u.getChild("password");
+            username = u.getAttribute(XMLVisitor.USERNAME_TAG).getValue(); // TODO: this assumes that it's actually there
+            elem = u.getChild(XMLVisitor.PASSWORD_TAG);
             if (elem != null) {
                 password = elem.getText();
             } else {
                 password = "toor";
             }
 
-            elem = u.getChild("name");
+            elem = u.getChild(XMLVisitor.NAME_TAG);
             if (elem != null) {
                 name = elem.getText();
             } else {
                 name = "Noname";
             }
 
-            elem = u.getChild("home");
+            elem = u.getChild(XMLVisitor.HOME_TAG);
             if (elem != null) {
                 home = elem.getText();
             } else {
@@ -441,7 +443,7 @@ public class FileSystem extends FileSystem_Base {
             // TODO: make sure this works
             createFileParents(home);
 
-            elem = u.getChild("mask");
+            elem = u.getChild(XMLVisitor.MASK_TAG);
             if (elem != null) {
                 mask = elem.getText();
             } else {
