@@ -20,30 +20,6 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
         super();
     }
 
-    //all params
-    public File(FileSystem fs, Directory parent, User owner, String name, byte perm) {
-        super();
-        init(fs, parent, owner, name, perm);
-    }
-
-    //all but permissions
-    public File(FileSystem fs, Directory parent, User owner, String name) {
-        super();
-        init(fs, parent, owner, name, owner.getMask());
-    }
-
-    //all but owner
-    public File(FileSystem fs, Directory parent, String name, byte perm) {
-        super();
-        init(fs, parent, fs.getSuperUser(), name, perm);
-    }
-
-    //all but permissions and owner
-    public File(FileSystem fs, Directory parent, String name) {
-        super();
-        init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask());
-    }
-
     protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm) {
         logger.trace("init name: " + name);
         setName(name);
