@@ -198,22 +198,6 @@ public class FileSystem extends FileSystem_Base {
         return currentDir;
     }
 
-    public File getFile(String path, User initiator) throws FileNotFoundException, PermissionDeniedException {
-        logger.debug("getFile: " + path + "User: " + initiator.getUsername());
-        File currentDir = getRootDir();
-
-        if (!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
-            throw new FileNotFoundException(path);
-
-        path = path.substring(1); // remove '/'
-        for (String dir : path.split("/")) {
-            logger.trace("getFile: entering " + dir);
-            currentDir = currentDir.getFileByName(dir, initiator);
-        }
-        logger.debug("getFile: " + currentDir.getFullPath());
-        return currentDir;
-    }
-
     public Document xmlExport() {
         Document doc = new Document(new Element("mydrive"));
         Element e;
