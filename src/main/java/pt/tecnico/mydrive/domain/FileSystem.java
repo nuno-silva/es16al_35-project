@@ -127,8 +127,8 @@ public class FileSystem extends FileSystem_Base {
      * @return {@link java.util.Optional} with either the newly created directory or with the already existing directory
      * This Optional will contain the specified directory either way, it can never contain null.
      */
-    public Optional<Directory> createDirectoryIfNotExists(Directory parent, String name, byte permission) {
-        Optional<Directory> opt = Directory.createIfNotExists(this, parent, name, permission);
+    public Optional<Directory> createDirectoryIfNotExists(Directory parent, User owner, String name, byte permission) {
+        Optional<Directory> opt = Directory.createIfNotExists(this, parent, owner, name, permission);
         if (!opt.isPresent()) {
             // Assuming that getFile() will succeed, since createIfNotExists() reported that the directory
             // already exists. This will result in an exception if something goes wrong with getFile(). If we were
@@ -293,7 +293,7 @@ public class FileSystem extends FileSystem_Base {
     private FileParams parseFileParams(Element file, FileParams fp) {
         // This allows some code reuse
         Element e;
-        String id, name, mask, lastMod, path;
+        String id, name, mask, lastMod, path, owner;
         id = file.getAttribute(XMLVisitor.ID_ATTR).getValue();
         logger.debug("File ID: " + id);
 
@@ -331,7 +331,12 @@ public class FileSystem extends FileSystem_Base {
         logger.debug("Last mod: " + lastMod);
 
         e = file.getChild(XMLVisitor.OWNER_TAG);
-        return fp.parse(id, name, mask, lastMod, path);
+        if (e != null) {
+            owner = e.getText();
+        } else {
+            owner = SuperUser.USERNAME;
+        }
+        return fp.parse(id, name, mask, lastMod, path, owner);
     }
 
     private void xmlImportApps(List<Element> apps) {
@@ -364,10 +369,10 @@ public class FileSystem extends FileSystem_Base {
 
             // if it's an App, all the App's constructor, otherwise use PlainFile's
             if (isApp) {
-                opt = App.createIfNotExists(this, parent, fp.NAME,
+                opt = App.createIfNotExists(this, parent, getUser(fp.OWNER), fp.NAME,
                         (byte) 0b11111010, content);
             } else {
-                opt = PlainFile.createIfNotExists(this, parent, fp.NAME,
+                opt = PlainFile.createIfNotExists(this, parent, getUser(fp.OWNER), fp.NAME,
                         (byte) 0b11111010, content);
             }
             if (opt.isPresent()) {
@@ -386,8 +391,8 @@ public class FileSystem extends FileSystem_Base {
 
     private void xmlImportLinks(List<Element> links) {
         FileParams fp = new FileParams();
-        String pointer = null;
-        Element elem = null;
+        String pointer;
+        Element elem;
         for (Element link : links) {
             fp = parseFileParams(link, fp);
             elem = link.getChild(XMLVisitor.POINTER_TAG);
@@ -398,8 +403,8 @@ public class FileSystem extends FileSystem_Base {
             }
             File newLink = new Link(this, createFileParents(fp.PATH), fp.NAME,
                     (byte) 0b00000001, pointer);
+            newLink.setOwner(getUser(fp.OWNER));
             getRootDir().addFile(newLink); // needed now?
-            createFileParents(fp.PATH);
         }
     }
 
@@ -409,7 +414,7 @@ public class FileSystem extends FileSystem_Base {
             fp = parseFileParams(dir, fp);
             logger.trace("XML_DIR_IMPORT: begin import \"" + fp.NAME + "\" in path \"" + fp.PATH + "\"");
             createFileParents(fp.PATH + "/" + fp.NAME);
-            Directory.createIfNotExists(this, (Directory) getFile(fp.PATH), fp.NAME, (byte) 0b1111111);
+            Directory.createIfNotExists(this, (Directory) getFile(fp.PATH), getUser(fp.OWNER), fp.NAME, (byte) 0b1111111);
         }
 
     }
@@ -457,10 +462,7 @@ public class FileSystem extends FileSystem_Base {
             } catch (UsernameAlreadyExistsException e) {
                 logger.trace("Username " + username + " already exists" );
             }
-
-
-        }
-
+        }   
     }
 
     @Override
@@ -550,17 +552,18 @@ public class FileSystem extends FileSystem_Base {
      */
     private class FileParams {
         // Android-ish
-        public String ID, NAME, MASK, LASTMOD, PATH;
+        public String ID, NAME, MASK, LASTMOD, PATH, OWNER;
 
         public FileParams() {
         }
 
-        public FileParams parse(String id, String name, String mask, String lastMod, String path) {
+        public FileParams parse(String id, String name, String mask, String lastMod, String path, String owner) {
             ID = id;
             NAME = name;
             MASK = mask;
             LASTMOD = lastMod;
             PATH = path;
+            OWNER = owner;
 
             return this;
         }

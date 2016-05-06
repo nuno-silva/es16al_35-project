@@ -68,10 +68,16 @@ public class PlainFile extends PlainFile_Base implements Visitable {
         init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), "");
     }
 
-    public static Optional<? extends PlainFile> createIfNotExists(FileSystem fs, Directory parent, String name, byte perm, String content) {
+    public static Optional<? extends PlainFile> createIfNotExists(FileSystem fs, Directory parent, User owner,
+                                                                  String name, byte perm, String content) {
         Optional<PlainFile> opt = Optional.empty();
+        if (owner == null) {
+            logger.debug("createIfNotExists(): provided user is null, setting SuperUser as owner");
+            owner = fs.getSuperUser();
+        }
         try {
             PlainFile pf = new PlainFile(fs, parent, name, perm, content);
+            pf.setOwner(owner);
             opt = Optional.of(pf);
         } catch (FilenameAlreadyExistsException _) {
             logger.debug("PlainFile with name *[" + name + "]* already exists!");

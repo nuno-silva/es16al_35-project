@@ -52,13 +52,20 @@ public class Directory extends Directory_Base implements Visitable {
 
     /**
      * Creates the directory if one with the same name and parent does not already exist.
+     * If no ower is provided, {@link SuperUser} is set to be the owner.
      *
      * @return {@link Optional} containing the {@link Directory} if it was created or one with such a name was found
      * or an empty Option, in case a {@link File} with such path and name exists, but it's not a Directory.
      */
-    protected static Optional<Directory> createIfNotExists(FileSystem fs, Directory parent, String name, byte perm) {
+    protected static Optional<Directory> createIfNotExists(FileSystem fs, Directory parent,
+                                                           User owner, String name, byte perm) {
         try {
             Directory dir = new Directory(fs, parent, name, perm);
+            if (owner == null) {
+                logger.debug("createIfNotExists(): provided user is null, setting SuperUser as owner");
+                owner = fs.getSuperUser();
+            }
+            dir.setOwner(owner);
             return Optional.of(dir);
         } catch (FilenameAlreadyExistsException _) {
             logger.debug("File(possibly a directory) with name *[" + name + "]* already exists!");
@@ -73,12 +80,12 @@ public class Directory extends Directory_Base implements Visitable {
         }
     }
 
-    public static Directory fromPath(String path, FileSystem fs) {
+    public static Directory fromPath(String path, User owner, FileSystem fs) {
         logger.debug("Directory.fromPath: " + path);
         Directory newDir = fs.createFileParents(path);
         logger.debug("Directory.fromPath: newDir path: " + newDir.getFullPath());
         String[] parts = path.split("/");
-        Optional<Directory> opt = fs.createDirectoryIfNotExists(newDir, parts[parts.length - 1], (byte) 0b00000000);
+        Optional<Directory> opt = fs.createDirectoryIfNotExists(newDir, owner, parts[parts.length - 1], (byte) 0b00000000);
         return opt.get(); // NOTE: the Optional is guaranteed to have a Directory (read javadoc for more info)
     }
 

@@ -60,10 +60,16 @@ public class App extends App_Base implements Visitable {
         init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), "");
     }
 
-    public static Optional<? extends PlainFile> createIfNotExists(FileSystem fs, Directory parent, String name, byte perm, String content) {
+    public static Optional<? extends PlainFile> createIfNotExists(FileSystem fs, Directory parent, User owner,
+                                                                  String name, byte perm, String content) {
         Optional<App> opt = Optional.empty();
+        if (owner == null) {
+            logger.debug("createIfNotExists(): provided user is null, setting SuperUser as owner");
+            owner = fs.getSuperUser();
+        }
         try {
             App app = new App(fs, parent, name, perm, content);
+            app.setOwner(owner);
             opt = Optional.of(app);
         } catch (FilenameAlreadyExistsException _) {
             logger.debug("App with name *[" + name + "]* already exists!");
