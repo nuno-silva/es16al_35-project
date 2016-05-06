@@ -31,8 +31,10 @@ public class CreateLinkTest extends AbstractServiceTest {
     	lser.execute();
     	CreateLinkService service = new CreateLinkService("TestLink", lser.result(), "/home/root/hello");
     	service.execute();
+			service = new CreateLinkService("TestLink2", lser.result());
+			service.execute();
 
-        Link linkFile = (Link) fs.getFile("/home/bbranco/TestLink");
+      Link linkFile = (Link) fs.getFile("/home/bbranco/TestLink");
 
         /*
          * Tests:
@@ -45,11 +47,11 @@ public class CreateLinkTest extends AbstractServiceTest {
          *
          */
 
-        assertNotNull("Link was not created", linkFile);
-        assertEquals("Link created with wrong name", "TestLink", linkFile.getName());
-        assertEquals("Link created with wrong owner", fs.getUser("bbranco"), linkFile.getOwner());
-        assertEquals("Link created with wrong permissions", linkFile.getByteMask(), DEFAULT_MASK);
-        assertEquals("Link created with wrong content", "/home/root/hello", linkFile.getContent());
+      assertNotNull("Link was not created", linkFile);
+      assertEquals("Link created with wrong name", "TestLink", linkFile.getName());
+      assertEquals("Link created with wrong owner", fs.getUser("bbranco"), linkFile.getOwner());
+      assertEquals("Link created with wrong permissions", linkFile.getByteMask(), DEFAULT_MASK);
+      assertEquals("Link created with wrong content", "/home/root/hello", linkFile.getContent());
 
     }
 
