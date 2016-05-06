@@ -143,7 +143,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
       ListDirectoryService lsSer = new ListDirectoryService( login.result() );
       lsSer.execute();
     }
-    
+
     @Test
     public void successWithOtherUserDir(){
       FileSystem fs = FileSystem.getInstance();
