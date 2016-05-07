@@ -13,6 +13,7 @@ import java.util.Set;
 
 public class User extends User_Base implements Visitable, IPermissionable {
     public static final String XML_TAG = "user";
+    public static final String DEFAULT_MASK_STR = "11110000";
     private static final byte DEFAULT_MASK = (byte) 0b11110000;
 
     private static final Logger logger = LogManager.getLogger();

@@ -1,7 +1,5 @@
 package pt.tecnico.mydrive.domain;
 
-import pt.tecnico.mydrive.presentation.Sys;
-
 /**
  * Static helper class containing mask helper methods.
  */

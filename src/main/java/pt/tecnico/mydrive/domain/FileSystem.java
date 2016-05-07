@@ -452,13 +452,12 @@ public class FileSystem extends FileSystem_Base {
             if (elem != null) {
                 mask = elem.getText();
             } else {
-                // TODO: fix mask default
-                mask = "11111111";
+                mask = User.DEFAULT_MASK_STR;
             }
 
             try {
                 // FIXME: hardcoded mask
-                addUser(new User(this, username, password, name, (byte) 0b00000000));
+                addUser(new User(this, username, password, name, MaskHelper.getByteMask(mask)));
             } catch (UsernameAlreadyExistsException e) {
                 logger.trace("Username " + username + " already exists" );
             }
