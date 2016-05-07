@@ -1,5 +1,6 @@
 package pt.tecnico.mydrive.domain;
 
+import antlr.MakeGrammar;
 import org.apache.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -318,7 +319,7 @@ public class FileSystem extends FileSystem_Base {
         if (e != null) {
             mask = e.getText();
         } else {
-            mask = "11111111"; // FIXME: find a more suitable default mask
+            mask = File.DEFAULT_MASK_STR;
         }
         logger.debug("File mask: " + mask);
 
@@ -326,7 +327,7 @@ public class FileSystem extends FileSystem_Base {
         if (e != null) {
             lastMod = e.getText();
         } else {
-            lastMod = new DateTime().toString(); // FIXME: find a more suitable default lastMod
+            lastMod = new DateTime().toString();
         }
         logger.debug("Last mod: " + lastMod);
 
@@ -370,10 +371,10 @@ public class FileSystem extends FileSystem_Base {
             // if it's an App, all the App's constructor, otherwise use PlainFile's
             if (isApp) {
                 opt = App.createIfNotExists(this, parent, getUser(fp.OWNER), fp.NAME,
-                        (byte) 0b11111010, content);
+                        MaskHelper.getByteMask(fp.MASK), content);
             } else {
                 opt = PlainFile.createIfNotExists(this, parent, getUser(fp.OWNER), fp.NAME,
-                        (byte) 0b11111010, content);
+                        MaskHelper.getByteMask(fp.MASK), content);
             }
             if (opt.isPresent()) {
                 newPlainFile = opt.get();
@@ -402,7 +403,7 @@ public class FileSystem extends FileSystem_Base {
                 pointer = "";
             }
             File newLink = new Link(this, createFileParents(fp.PATH), fp.NAME,
-                    (byte) 0b00000001, pointer);
+                    MaskHelper.getByteMask(fp.MASK), pointer);
             newLink.setOwner(getUser(fp.OWNER));
             getRootDir().addFile(newLink); // needed now?
         }
@@ -414,7 +415,8 @@ public class FileSystem extends FileSystem_Base {
             fp = parseFileParams(dir, fp);
             logger.trace("XML_DIR_IMPORT: begin import \"" + fp.NAME + "\" in path \"" + fp.PATH + "\"");
             createFileParents(fp.PATH + "/" + fp.NAME);
-            Directory.createIfNotExists(this, (Directory) getFile(fp.PATH), getUser(fp.OWNER), fp.NAME, (byte) 0b1111111);
+            Directory.createIfNotExists(this, (Directory) getFile(fp.PATH), getUser(fp.OWNER), fp.NAME,
+                    MaskHelper.getByteMask(fp.MASK));
         }
 
     }

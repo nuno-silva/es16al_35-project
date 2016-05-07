@@ -13,6 +13,7 @@ import java.util.List;
 
 public abstract class File extends File_Base implements Visitable, IPermissionable {
     public static final String XML_TAG = "file";
+    public static final String DEFAULT_MASK_STR = "11110000";
     private static final Logger logger = Logger.getLogger(File.class);
     private static final int MAX_PATH = 1024;
 
