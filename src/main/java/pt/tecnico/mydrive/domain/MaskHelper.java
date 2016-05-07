@@ -1,5 +1,7 @@
 package pt.tecnico.mydrive.domain;
 
+import pt.tecnico.mydrive.presentation.Sys;
+
 /**
  * Static helper class containing mask helper methods.
  */
@@ -18,6 +20,9 @@ public class MaskHelper {
     private static final String HR_MASK_DELETE = "d";
     private static final String HR_MASK_NONE = "-";
     private static final String DEFAULT_HR_MASK = HR_MASK_NONE + HR_MASK_NONE + HR_MASK_NONE + HR_MASK_NONE;
+
+    private static final int MIN_VALUE = 0;
+    private static final int MAX_VALUE = 255;
 
     private MaskHelper() {
     } // prevent instantiation
@@ -80,5 +85,14 @@ public class MaskHelper {
 
     public static byte andMasks(byte mask1, byte mask2) {
         return (byte) (mask1 & mask2);
+    }
+
+    public static byte getByteMask(String mask) throws NumberFormatException {
+        if (mask.length() > 8) {
+            throw new NumberFormatException( "Value out of range. Value:\"" + mask + " Mask can't have more" +
+                    "that 8 characters \" Radix:2");
+        }
+        int i = Integer.parseInt(mask, 2);
+        return (byte)i;
     }
 }
