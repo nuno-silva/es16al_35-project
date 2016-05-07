@@ -9,6 +9,8 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.mydrive.exception.*;
@@ -21,6 +23,7 @@ import java.util.*;
 public class FileSystem extends FileSystem_Base {
 
     private final static Logger logger = Logger.getLogger(FileSystem.class);
+    private final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
     protected FileSystem() {
         super();
@@ -250,7 +253,7 @@ public class FileSystem extends FileSystem_Base {
         }
 
         for (User u : getUserSet()) {
-            if (u.getUsername() == username) {
+            if (u.getUsername().equals(username)) {
                 opt = Optional.of(u);
                 return opt;
             }
@@ -378,7 +381,7 @@ public class FileSystem extends FileSystem_Base {
             }
             if (opt.isPresent()) {
                 newPlainFile = opt.get();
-                newPlainFile.setLastMod(new DateTime()); // FIXME: placeholder lastMod
+                opt.get().setLastMod(jodaDateFromString(fp.LASTMOD));
                 getRootDir().addFileIfNotExists(newPlainFile);
                 //createFileParents(fp.PATH);
             }
@@ -402,10 +405,15 @@ public class FileSystem extends FileSystem_Base {
             } else {
                 pointer = "";
             }
-            File newLink = new Link(this, createFileParents(fp.PATH), fp.NAME,
+            Optional<Link> opt = Link.createIfNotExists(this, createFileParents(fp.PATH), getUser(fp.OWNER), fp.NAME,
                     MaskHelper.getByteMask(fp.MASK), pointer);
-            newLink.setOwner(getUser(fp.OWNER));
-            getRootDir().addFile(newLink); // needed now?
+            if (opt.isPresent()) {
+                Link l = opt.get();
+                l.setContent(pointer);
+                l.setLastMod(jodaDateFromString(fp.LASTMOD));
+                getRootDir().addFileIfNotExists(l);
+            }
+
         }
     }
 
@@ -415,10 +423,19 @@ public class FileSystem extends FileSystem_Base {
             fp = parseFileParams(dir, fp);
             logger.trace("XML_DIR_IMPORT: begin import \"" + fp.NAME + "\" in path \"" + fp.PATH + "\"");
             createFileParents(fp.PATH + "/" + fp.NAME);
-            Directory.createIfNotExists(this, (Directory) getFile(fp.PATH), getUser(fp.OWNER), fp.NAME,
+            Optional<Directory> newDir = Directory.createIfNotExists(this, (Directory) getFile(fp.PATH), getUser(fp.OWNER), fp.NAME,
                     MaskHelper.getByteMask(fp.MASK));
+
+            if (newDir.isPresent()) {
+                newDir.get().setLastMod(jodaDateFromString(fp.LASTMOD));
+            }
         }
 
+    }
+
+    private DateTime jodaDateFromString(String date) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern(DATETIME_FORMAT);
+        return formatter.parseDateTime(date);
     }
 
     private void xmlImportUsers(List<Element> users) {
@@ -427,6 +444,12 @@ public class FileSystem extends FileSystem_Base {
         Element elem;
         for (Element u : users) {
             username = u.getAttribute(XMLVisitor.USERNAME_TAG).getValue(); // TODO: this assumes that it's actually there
+
+            // quick and dirty hack: SuperUser and GuestUser are created when the FileSystem is initialized
+            if (username.equals(GuestUser.USERNAME) || username.equals(SuperUser.USERNAME)) {
+                continue;
+            }
+
             elem = u.getChild(XMLVisitor.PASSWORD_TAG);
             if (elem != null) {
                 password = elem.getText();

@@ -4,6 +4,9 @@ import org.apache.log4j.Logger;
 import org.jdom2.Element;
 import pt.tecnico.mydrive.domain.xml.Visitable;
 import pt.tecnico.mydrive.domain.xml.Visitor;
+import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
+
+import java.util.Optional;
 
 public class Link extends Link_Base implements Visitable {
     private static final Logger logger = Logger.getLogger(Link.class);
@@ -78,5 +81,22 @@ public class Link extends Link_Base implements Visitable {
     @Override
     public Element accept(Visitor visitor) {
         return visitor.visit(this);
+    }
+
+    public static Optional<Link> createIfNotExists(FileSystem fs, Directory parent, User owner,
+                                                                  String name, byte perm, String content) {
+        Optional<Link> opt = Optional.empty();
+        if (owner == null) {
+            logger.debug("createIfNotExists(): provided user is null, setting SuperUser as owner");
+            owner = fs.getSuperUser();
+        }
+        try {
+            Link l = new Link(fs, parent, name, perm, content);
+            l.setOwner(owner);
+            opt = Optional.of(l);
+        } catch (FilenameAlreadyExistsException _) {
+            logger.debug("Link with name *[" + name + "]* already exists!");
+        }
+        return opt;
     }
 }
