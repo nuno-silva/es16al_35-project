@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class FilenameAlreadyExistsException extends MydriveException {
+public class FilenameAlreadyExistsException extends MyDriveException {
     private String _filename;
     private String _path;
 

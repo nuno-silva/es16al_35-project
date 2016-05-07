@@ -6,7 +6,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.InvalidUsernameException;
-import pt.tecnico.mydrive.exception.MydriveException;
+import pt.tecnico.mydrive.exception.MyDriveException;
 import pt.tecnico.mydrive.exception.UserNotFoundException;
 
 import java.util.Optional;
@@ -37,14 +37,14 @@ public abstract class MyDriveService {
     }
 
     @Atomic
-    public final void execute() throws MydriveException {
+    public final void execute() throws MyDriveException {
         dispatch();
         // protect agains people trying to get the service's result without executing it!
         // could have saved a lot of time on sprint-2...
         _executed = true;
     }
 
-    protected abstract void dispatch() throws MydriveException;
+    protected abstract void dispatch() throws MyDriveException;
 
     protected void assertExecuted() {
         if(!_executed) {

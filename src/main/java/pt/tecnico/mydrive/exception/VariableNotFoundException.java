@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class VariableNotFoundException extends MydriveException {
+public class VariableNotFoundException extends MyDriveException {
 
     private String _name;
 

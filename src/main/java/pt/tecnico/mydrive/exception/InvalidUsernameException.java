@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class InvalidUsernameException extends MydriveException {
+public class InvalidUsernameException extends MyDriveException {
 
     private String _username;
     private String _reason;

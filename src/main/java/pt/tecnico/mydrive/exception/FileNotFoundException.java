@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class FileNotFoundException extends MydriveException {
+public class FileNotFoundException extends MyDriveException {
     private String _filename;
 
     public FileNotFoundException(String filename) {

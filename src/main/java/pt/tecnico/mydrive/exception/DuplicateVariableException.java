@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class DuplicateVariableException extends MydriveException {
+public class DuplicateVariableException extends MyDriveException {
     private String _name;
 
     public DuplicateVariableException(String name) {

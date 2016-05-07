@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class IsNotCdAbleException extends MydriveException {
+public class IsNotCdAbleException extends MyDriveException {
     private String _msg;
 
     public IsNotCdAbleException() {

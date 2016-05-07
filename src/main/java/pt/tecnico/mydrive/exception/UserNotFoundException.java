@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class UserNotFoundException extends MydriveException {
+public class UserNotFoundException extends MyDriveException {
 
     private String _username;
 

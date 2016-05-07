@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class UsernameAlreadyExistsException extends MydriveException {
+public class UsernameAlreadyExistsException extends MyDriveException {
 
     private String _username;
 

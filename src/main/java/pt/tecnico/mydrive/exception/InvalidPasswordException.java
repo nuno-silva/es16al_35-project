@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class InvalidPasswordException extends MydriveException {
+public class InvalidPasswordException extends MyDriveException {
     private String _reason;
 
     public InvalidPasswordException(String reason) {

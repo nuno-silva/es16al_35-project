@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mydrive>
+    <user username="mrtest"
+        <password>passwordatleast8chars</password>
+        <name>mrtest</name>
+        <home>/home/mrtest</home>
+        <mask>11110000</mask>
+    </user>
+    <user username="nobody">
+        <name>Guest</name>
+        <home>/home/nobody</home>
+        <mask>11111010</mask>
+    /user>
+    <user username="root">
+        <password>stilldreday</password>
+        <name>Super User</name>
+        <home>/home/root</home>
+        <mask>11111010</mask>
+    </user>
+    <dir id="1">
+        <mask>11111010</mask>
+        <lastMod>2016-05-07T17:57:08.129+01:00</lastMod>
+        <path>/</path>
+        <owner>root</owner>
+    </dir>
+    <dir id="6">
+        <name>usr</name>
+        <mask>11111010</mask>
+        <lastMod>2016-05-07T17:57:08.145+01:00</lastMod>
+        <path>/usr</path>
+        <owner>root</owner>
+    </dir>
+    <dir id="2">
+        <name>home</name>
+        <mask>11111010</mask>
+        <lastMod>2016-05-07T17:57:08.130+01:00</lastMod>
+        <path>/home</path>
+        <owner>root</owner>
+    </dir>
+    <dir id="7">
+        <name>local</name>
+        <mask>11111010</mask>
+        <lastMod>2016-05-07T17:57:08.146+01:00</lastMod>
+        <path>/usr/local</path>
+        <owner>root</owner>
+    </dir>
+    <dir id="9">
+        <name>mrtest</name>
+        <mask>11110000</mask>
+        <lastMod>2016-05-07T17:57:08.180+01:00</lastMod>
+        <path>/home/mrtest</path>
+        <owner>mrtest</owner>
+    </dir>
+    <dir id="4">
+        <name>nobody</name>
+        <mask>11111010</mask>
+        <lastMod>2016-05-07T17:57:08.138+01:00</lastMod>
+        <path>/home/nobody</path>
+        <owner>nobody</owner>
+    </dir>
+    <dir id="3">
+        <name>root</name>
+        <mask>11111010</mask>
+        <lastMod>2016-05-07T17:57:08.131+01:00</lastMod>
+        <path>/home/root</path>
+        <owner>root</owner>
+    </dir>
+
+    <!-- Directory inside an existing directory -->
+    <dir id="10">
+        <name>testDir</name>
+        <mask>10010101</mask>
+        <lastMod>2016-05-07T17:57:08.131+01:00</lastMod>
+        <path>/home/root</path>
+        <owner>nobody</owner>
+    </dir>
+
+    <!-- Directory that previously did not exist -->
+    <dir id="11">
+        <name>exist</name>
+        <mask>10010101</mask>
+        <lastMod>2016-05-07T17:57:08.131+01:00</lastMod>
+        <path>/did/not</path>
+        <owner>root</owner>
+    </dir>
+
+    <!-- PlainFile that previously did not exist -->
+    <plain id="12">
+        <name>exist
+        <content>Dr.Dre</content>
+        <mask>10010101</mask>
+        <lastMod>2016-05-07T17:57:08.131+01:00</lastMod>
+        <path>/did/not/exist/testFile</path>
+        <owner>root</owner>
+    </plain>
+</mydrive>

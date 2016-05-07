@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class WriteDirectoryException extends MydriveException {
+public class WriteDirectoryException extends MyDriveException {
     public WriteDirectoryException() {
         super();
     }

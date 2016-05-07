@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class WrongPasswordException extends MydriveException {
+public class WrongPasswordException extends MyDriveException {
     private final String _username;
 
     public WrongPasswordException(String username) {

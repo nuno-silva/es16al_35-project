@@ -2,7 +2,7 @@ package pt.tecnico.mydrive.exception;
 
 import pt.tecnico.mydrive.domain.Session;
 
-public class InvalidTokenException extends MydriveException {
+public class InvalidTokenException extends MyDriveException {
 
     private final long _token;
     private final String _msg;

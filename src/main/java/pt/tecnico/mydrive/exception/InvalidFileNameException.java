@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class InvalidFileNameException extends MydriveException {
+public class InvalidFileNameException extends MyDriveException {
     private String _filename;
 
     public InvalidFileNameException(String filename) {

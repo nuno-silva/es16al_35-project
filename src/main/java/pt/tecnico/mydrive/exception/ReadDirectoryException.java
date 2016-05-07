@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class ReadDirectoryException extends MydriveException {
+public class ReadDirectoryException extends MyDriveException {
 	
     public ReadDirectoryException() {
         super();

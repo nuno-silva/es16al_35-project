@@ -10,7 +10,6 @@ import pt.tecnico.mydrive.domain.File;
 /*Exceptions*/
 import pt.tecnico.mydrive.exception.EmptyPathException;
 import pt.tecnico.mydrive.exception.InvalidTokenException;
-import pt.tecnico.mydrive.exception.MydriveException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 

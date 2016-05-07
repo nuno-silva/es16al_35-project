@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class PermissionDeniedException extends MydriveException {
+public class PermissionDeniedException extends MyDriveException {
 
     private String operation;
 

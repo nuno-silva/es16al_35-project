@@ -1,6 +1,6 @@
 package pt.tecnico.mydrive.exception;
 
-public class EmptyPathException extends MydriveException {
+public class EmptyPathException extends MyDriveException {
     private static final String DEFAULT_MSG = "Empty file name not allowed!";
 
     public EmptyPathException() {
