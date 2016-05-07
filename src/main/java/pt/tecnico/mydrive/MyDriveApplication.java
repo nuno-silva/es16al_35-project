@@ -27,7 +27,7 @@ public class MyDriveApplication {
 
     public static void main(String[] args) {
         setup();
-        try {
+        try{
             for (String f : args) {
                 xmlScan(f);
             }
@@ -71,8 +71,8 @@ public class MyDriveApplication {
         //TODO: propagate exception
         Document doc = fs.xmlExport();
         XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-        User u = new User(fs,"mrtest","pass");
-        Session s = new Session(fs,u,"pass");
+        User u = new User(fs,"mrtest","passwordatleast8chars");
+        Session s = new Session(fs,u,"passwordatleast8chars");
         try {
             out.output(doc, System.out);
         } catch (IOException e) {
