@@ -12,7 +12,7 @@ import pt.tecnico.mydrive.domain.Link;
 import pt.tecnico.mydrive.domain.PlainFile;
 import pt.tecnico.mydrive.domain.User;
 
-public class CreateLinkTest extends AbstractServiceTest {
+public class CreateLinkServiceTest extends AbstractServiceTest {
 	private static final byte DEFAULT_MASK = (byte) 0b11110000;
 
 	@Override

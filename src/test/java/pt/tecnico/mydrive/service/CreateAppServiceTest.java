@@ -8,7 +8,7 @@ import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class CreateAppTest extends AbstractServiceTest {
+public class CreateAppServiceTest extends AbstractServiceTest {
 
     @Override
     protected void populate() {

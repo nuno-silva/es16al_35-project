@@ -11,7 +11,7 @@ import pt.tecnico.mydrive.exception.InvalidTokenException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.ReadDirectoryException;
 
-public class ReadFileTest extends AbstractServiceTest {
+public class ReadFileServiceTest extends AbstractServiceTest {
 
     protected void populate() {
 

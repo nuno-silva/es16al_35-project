@@ -17,7 +17,7 @@ import pt.tecnico.mydrive.domain.FileSystem;
 /*Exceptions*/
 import pt.tecnico.mydrive.exception.*;
 
-public class AddVariableTest extends AbstractServiceTest {
+public class AddVariableServiceTest extends AbstractServiceTest {
 
 	private long token1;
 	private long token2;

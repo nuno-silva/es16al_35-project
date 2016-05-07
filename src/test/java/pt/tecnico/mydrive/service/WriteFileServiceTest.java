@@ -16,7 +16,7 @@ import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-public class WriteFileTest extends AbstractServiceTest {
+public class WriteFileServiceTest extends AbstractServiceTest {
     protected static final Logger log = LogManager.getRootLogger();
     private static final long invalidToken = 1232455424;
     private static final String valid_username = "ilovees";

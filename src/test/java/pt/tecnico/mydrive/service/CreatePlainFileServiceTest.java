@@ -23,7 +23,7 @@ import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.EmptyFileNameException;
 
 
-public class CreatePlainFileTest extends AbstractServiceTest {
+public class CreatePlainFileServiceTest extends AbstractServiceTest {
 	private static final byte DEFAULT_MASK = (byte) 0b11110000;
 
 	@Override

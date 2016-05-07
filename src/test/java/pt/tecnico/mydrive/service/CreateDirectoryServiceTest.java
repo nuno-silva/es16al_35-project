@@ -12,7 +12,7 @@ import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 
-public class CreateDirectoryTest extends AbstractServiceTest {
+public class CreateDirectoryServiceTest extends AbstractServiceTest {
 	private static final byte DEFAULT_MASK = (byte) 0b11110000;
 
 	@Override

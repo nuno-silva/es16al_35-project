@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertFalse;
 
-public class LoginTest extends AbstractServiceTest {
+public class LoginServiceTest extends AbstractServiceTest {
     protected static final Logger log = LogManager.getRootLogger();
 
     private final String inexistent_username = "ajfbajfiabipfbwep";

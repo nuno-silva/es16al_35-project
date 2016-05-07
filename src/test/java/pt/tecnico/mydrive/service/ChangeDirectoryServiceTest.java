@@ -19,7 +19,7 @@ import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.service.*;;
 
-public class ChangeDirectoryTest extends AbstractServiceTest {
+public class ChangeDirectoryServiceTest extends AbstractServiceTest {
 
 	String _username = "user";
 	String _password = "passsssssss";

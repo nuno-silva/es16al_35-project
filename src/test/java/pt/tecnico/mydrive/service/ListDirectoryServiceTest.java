@@ -27,7 +27,7 @@ import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 
-public class ListDirectoryTest extends AbstractServiceTest {
+public class ListDirectoryServiceTest extends AbstractServiceTest {
 
 
     protected void populate() {
