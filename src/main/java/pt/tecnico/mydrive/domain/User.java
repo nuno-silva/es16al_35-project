@@ -66,14 +66,21 @@ public class User extends User_Base implements Visitable, IPermissionable {
         logger.trace("User init " + username);
         if (checkUsername(username)) {
             setUsername(username);
-            assertPasswordRestrictions(password);
+
+            if (username.equals(GuestUser.USERNAME)) {
+                // Guest user has VIP treatment
+                setUncheckedPassword(password);
+            } else {
+                assertPasswordRestrictions(password);
+            }
+
             setName(name);
             setMask(mask);
 
             if (username.length() >= 3)
                 fs.addUser(this);
             else
-                throw new InvalidUsernameException(username, "usernames must be at least 3 characters long");
+                throw new InvalidUsernameException(username, "username must be at least 3 characters long");
 
             File home = fs.getFile("/home");
             if (home.isCdAble()) {
@@ -213,14 +220,14 @@ public class User extends User_Base implements Visitable, IPermissionable {
   }
 
   public void assertPasswordRestrictions(String password){
-    if( checkPaswordRestrictions( password ) )
+    if(checkPaswordRestrictions(password))
       super.setPassword(password);
   }
 
-  protected boolean checkPaswordRestrictions( String password ){
+  protected boolean checkPaswordRestrictions(String password){
     //Check restriction and for each pass the respective message to the exception
     if( password.length() < 8 )
-      throw new PasswordRestrictionException("Password must have more than 8 characters!");
+      throw new PasswordRestrictionException("Username: " + getUsername() + " Password must have more than 8 characters!");
     else
       return true;
   }

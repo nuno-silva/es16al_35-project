@@ -7,10 +7,11 @@ import org.apache.logging.log4j.Logger;
 public class GuestUser extends GuestUser_Base {
 
   private static final Logger logger = LogManager.getLogger();
+  public static final String USERNAME = "nobody";
 
   public GuestUser(FileSystem fs) {
       super();
-      init(fs, "nobody", "", "Guest", (byte) 0b11111010);
+      init(fs, USERNAME, "", "Guest", (byte) 0b11111010);
   }
 
   @Override
@@ -29,7 +30,6 @@ public class GuestUser extends GuestUser_Base {
   }
 
   // Permission checking methods
-
   @Override
   public boolean hasWritePermission(File f) {
     return (f.getOwner().equals(this)) ? f.ownerCanWrite() : false;
@@ -41,7 +41,7 @@ public class GuestUser extends GuestUser_Base {
   }
 
   @Override
-  protected boolean checkPaswordRestrictions( String password ){
+  protected boolean checkPaswordRestrictions(String password){
     return true;
   }
 
