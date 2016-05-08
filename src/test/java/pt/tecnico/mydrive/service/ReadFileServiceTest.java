@@ -19,8 +19,9 @@ public class ReadFileServiceTest extends AbstractServiceTest {
         User user = new User(fs, "mike", "MIKEssssss", "Ronald McDonald", (byte) 0xff);
         File home = fs.getFile(user.getHomePath());
         new PlainFile(fs, (Directory) home, user, "TestPlainFile", (byte) 0xff, "Just a test string.");
-        new Link(fs, (Directory) home, user, "TestLink", (byte) 0xff, "/home");
+        new Link(fs, (Directory) home, user, "TestLink", (byte) 0xff, "/home/mike/TestPlainFile");
         new App(fs, (Directory) home, user, "TestApp", (byte) 0xff, "pt.tecnico.mydrive.service.populate");
+    	new Link(fs, user.getHome(), user, "TestLinkToLink", (byte) 0xff, "/home/mike/TestLink");
     }
 
     @Test
@@ -65,7 +66,7 @@ public class ReadFileServiceTest extends AbstractServiceTest {
         Link file = (Link) fs.getFile("/home/mike/" + fileName);
         String content = file.getContent();
 
-        assertEquals("/home", content);
+        assertEquals("/home/mike/TestPlainFile", content);
     }
 
     @Test
@@ -254,5 +255,27 @@ public class ReadFileServiceTest extends AbstractServiceTest {
     	//Call ReadFileService
     	ReadFileService service = new ReadFileService(token, fileName);
     	service.dispatch();
+    }
+    
+    @Test
+    public void linkPointsToLink() {
+        final String fileName = "TestLinkToLink";
+        long token;
+
+        FileSystem fs = FileSystem.getInstance();
+        User user = fs.getUser("mike");
+
+        //Login
+        Session session = new Session(fs, user, "MIKEssssss");
+        token = session.getToken();
+
+        //Call ReadFileService
+        ReadFileService service = new ReadFileService(token, fileName);
+        service.dispatch();
+        
+        Link file = (Link) fs.getFile("/home/mike/" + fileName);
+        String content = file.getContent();
+
+        assertEquals("/home/mike/TestLink", content);
     }
 }
