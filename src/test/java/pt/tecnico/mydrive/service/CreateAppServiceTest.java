@@ -1,9 +1,11 @@
 package pt.tecnico.mydrive.service;
 
 import org.junit.Test;
+import org.junit.Ignore;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.mydrive.domain.*;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
+import pt.tecnico.mydrive.exception.MyDriveException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -14,7 +16,7 @@ public class CreateAppServiceTest extends AbstractServiceTest {
     protected void populate() {
         FileSystem fs = FileSystem.getInstance();
         Directory f = (Directory) fs.getFile("/home");  // FIXME : nao gosto do cast!
-        new App(fs, f, fs.getSuperUser(), "Work", "I have to work a lot during this week!");
+        new App(fs, f, fs.getSuperUser(), "Work", "pt.tecnico.mydrive.exception.MyDriveException.class");
     }
 
     @Test
@@ -23,7 +25,7 @@ public class CreateAppServiceTest extends AbstractServiceTest {
         FileSystem fs = FileSystem.getInstance();
         LoginService lser = new LoginService( "root", "***" );
         lser.execute();
-        CreateFileService service = new CreateAppService("ApplicationTest", lser.result(), "Do stuff...");
+        CreateFileService service = new CreateAppService("ApplicationTest", lser.result(), "pt.tecnico.mydrive.exception.MyDriveException.class");
         service.execute();
         service = new CreateAppService("ApplicationTest2", lser.result());
         service.execute();
@@ -42,22 +44,39 @@ public class CreateAppServiceTest extends AbstractServiceTest {
         assertNotNull("App was not created", work);
         assertEquals("App created with wrong name", "ApplicationTest", work.getName());
         assertEquals("App created with wrong owner", fs.getSuperUser(), work.getOwner());
-        assertEquals("App created with wrong content", "Do stuff...", ((App) work).getContent()); // ha outra maneira de fazer isto sem cast?
+        assertEquals("App created with wrong content", "pt.tecnico.mydrive.exception.MyDriveException.class", ((App) work).getContent()); // ha outra maneira de fazer isto sem cast?
 
     }
 
     @Test (expected = FilenameAlreadyExistsException.class)
     public void unauthorizedAppCreation() {
-        FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+    	FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
         LoginService lser = new LoginService( "root", "***" );
         lser.execute();
     	/*
     	 * Tests:
     	 * App with existing name cannot be created in same directory - maybe this could on the CreateFileTest
     	 */
-       File f = fs.getFile("/home");
-    	 fs.getSession(lser.result()).setWorkDir((Directory)f);
-        CreateFileService service = new CreateAppService("Work", lser.result(), "Do stuff...");
+        File f = fs.getFile("/home");
+        fs.getSession(lser.result()).setWorkDir((Directory)f);
+        CreateFileService service = new CreateAppService("Work", lser.result(), "pt.tecnico.mydrive.domain.App.class");
         service.execute();
+    }
+    
+   // change expected Exception
+   @Ignore @Test (expected = MyDriveException.class)
+   public void appCreationFail() {
+	   	FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+	   	LoginService lser = new LoginService( "root", "***" );
+	   	lser.execute();
+	   	/*
+	   	 * Tests:
+	   	 * Creating App with incorrect content - Not a java fully qualified name
+	   	 */
+	   	File f = fs.getFile("/home");
+	   	fs.getSession(lser.result()).setWorkDir((Directory)f);
+	   	CreateFileService service = new CreateAppService("TestApp", lser.result(), "Do stuff...");
+	   	service.execute();
+    	
     }
 }
