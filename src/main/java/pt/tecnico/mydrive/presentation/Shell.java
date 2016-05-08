@@ -23,12 +23,6 @@ public abstract class Shell {
         System.exit(0);
       }
     };
-    new Command(this, "do", "execute a file") {
-      void execute(String[] args) {
-	try { Sys.output(out); Sys.main(args);
-	} catch (Exception e) { throw new RuntimeException(""+e); }
-      }
-    };
 
     new Command(this, "login", "logs in a user") {
       void execute(String[] args) {
