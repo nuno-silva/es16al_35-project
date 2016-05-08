@@ -21,6 +21,7 @@ import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.EmptyFileNameException;
+import pt.tecnico.mydrive.exception.EmptyPathException;
 
 
 public class CreatePlainFileServiceTest extends AbstractServiceTest {
@@ -142,15 +143,38 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
         service.execute();
     }
 
-		@Test (expected = EmptyFileNameException.class)
-		public void failEmptyFileName() {
-				FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
-				LoginService lser = new LoginService( "root", "***" );
-				lser.execute();
-				File f = fs.getFile("/home");
-				fs.getSession(lser.result()).setWorkDir((Directory)f);
-				CreateFileService service = new CreateAppService("", lser.result(), "I have a lot of work to do during this week!");
-				service.execute();
-		}
+	@Test (expected = EmptyFileNameException.class)
+	public void failEmptyFileName() {
+		FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+		LoginService lser = new LoginService( "root", "***" );
+		lser.execute();
+		File f = fs.getFile("/home");
+		fs.getSession(lser.result()).setWorkDir((Directory)f);
+		CreateFileService service = new CreateAppService("", lser.result(), "I have a lot of work to do during this week!");
+		service.execute();
+	}
+    //test 5: valid token and name bigger than 1024
+    @Test (expected=InvalidFileNameException.class)
+    public void bigName() {
+
+        FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+        LoginService lser = new LoginService( "root", "***" );
+        lser.execute();
+		File f = fs.getFile("/home");
+    	fs.getSession(lser.result()).setWorkDir((Directory)f);
+        String filename = createBigName();
+        CreatePlainFileService service = new CreatePlainFileService(filename, lser.result(), "I have a lot of work to do during this week!");
+        service.execute();
+
+    }
+
+
+    private String createBigName(){
+    	String res = "";
+    	for (int i=0 ; i<1050 ; i++)
+    		res = res + 'a';
+    	return res;
+    }
+
 
 }
