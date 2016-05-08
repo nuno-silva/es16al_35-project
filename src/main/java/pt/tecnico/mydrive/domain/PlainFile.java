@@ -5,6 +5,8 @@ import org.jdom2.Element;
 import pt.tecnico.mydrive.domain.xml.Visitable;
 import pt.tecnico.mydrive.domain.xml.Visitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
+import pt.tecnico.mydrive.exception.PermissionDeniedException;
+import pt.tecnico.mydrive.exception.WriteDirectoryException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -88,7 +90,7 @@ public class PlainFile extends PlainFile_Base implements Visitable {
     protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm, String content) {
         logger.trace("init name: " + name);
         super.init(fs, parent, owner, name, perm);
-        setContent(content);
+        super.setContent(content);
     }
 
     @Override
@@ -118,7 +120,30 @@ public class PlainFile extends PlainFile_Base implements Visitable {
         for (String line : lines) {
             content += line + LINE_SEPARATOR;
         }
-        setContent(content);
+        super.setContent(content);
+    }
+
+    @Override
+    public void setContent(String content) {
+        throw new PermissionDeniedException("Cannot set contents of a file directly.");
+    }
+
+    /**
+     * Sets content of a file if the user has permission to do so.
+     *
+     * @param content
+     * @param initiator
+     */
+    public void setContent(String content, User initiator) {
+
+        assertIsWritable();
+
+        if (!initiator.hasWritePermission(this)) {
+            throw new PermissionDeniedException(initiator.getUsername() + " has no write permissions for "
+                    + getFullPath());
+        }
+
+        super.setContent(content);
     }
 
     /**
