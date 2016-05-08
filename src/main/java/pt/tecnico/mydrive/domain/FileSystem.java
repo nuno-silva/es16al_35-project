@@ -104,6 +104,51 @@ public class FileSystem extends FileSystem_Base {
         return dir;
     }
 
+    /**
+     * Gets file by path, taking into account the User's permissions
+     * @param path
+     * @param initiator
+     * @return
+     */
+    public File getFileByPath(String path, User initiator) {
+        String parts[] = path.split("/");
+        if (parts.length == 0) {
+            // root dir requested
+            return getRootDir();
+        }
+
+        // Make sure the User has permissions to read the contents of the directory
+        if (!initiator.hasExecutePermission(getRootDir())) {
+            throw new PermissionDeniedException("User '" + initiator.getUsername()
+                    + "' can not read '" + getRootDir().getFullPath() + "'");
+        }
+
+        File f = null;
+        String dirPath="/";
+        String part;
+
+        // we only need to go through parts.length - 1 since the last element in the path is the File we want to get
+        for (int i = 0; i < parts.length - 1; i++) {
+            part = parts[i];
+            dirPath += part;
+
+            f = getFile(dirPath);
+            if(!f.isCdAble()) {
+                throw new IsNotCdAbleException(dirPath + " is not a directory");
+            }
+
+            if (!initiator.hasExecutePermission(f)) {
+                throw new PermissionDeniedException("User '" + initiator.getUsername()
+                        + "' can not read '" + f.getFullPath() + "'");
+            }
+
+            dirPath += "/";
+        }
+        // Instead of using fs.getFile() we can use the directory, which will be more efficient
+        Directory d = (Directory)f; // we now it's a directory due to the last iteration of the loop above
+        // this double-check is not necessary, but it's not a good idea to use the unchecked version throughout the codebase
+        return d.getFileByName(parts[parts.length - 1], initiator);
+    }
 
     /**
      * get the next new file id (but don't store it) - use it when trying to create a new File

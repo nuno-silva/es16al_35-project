@@ -11,6 +11,7 @@ import pt.tecnico.mydrive.exception.FileNameTooLongException;
 import pt.tecnico.mydrive.exception.WriteDirectoryException;
 
 import java.util.List;
+import java.util.Optional;
 
 public abstract class File extends File_Base implements Visitable, IPermissionable {
     public static final String XML_TAG = "file";
