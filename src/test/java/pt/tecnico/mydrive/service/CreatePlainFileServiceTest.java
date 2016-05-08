@@ -11,6 +11,7 @@ import pt.tecnico.mydrive.domain.PlainFile;
 import pt.tecnico.mydrive.domain.App;
 import pt.tecnico.mydrive.domain.Directory;
 import pt.tecnico.mydrive.domain.FileSystem;
+import pt.tecnico.mydrive.domain.Link;
 import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.domain.File;
@@ -18,9 +19,11 @@ import pt.tecnico.mydrive.domain.File;
 /*Exceptions*/
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
+import pt.tecnico.mydrive.exception.MyDriveException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.EmptyFileNameException;
+import pt.tecnico.mydrive.exception.EmptyPathException;
 
 
 public class CreatePlainFileServiceTest extends AbstractServiceTest {
@@ -30,9 +33,11 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
 	protected void populate() {
         FileSystem fs = FileSystem.getInstance();
         Directory f = (Directory) fs.getFile("/home");
+        //new Link(fs, f, fs.getSuperUser(), "Test1", "I have a lot of work to do during this week!");
         new App(fs, f, fs.getSuperUser(), "Test1", "I have a lot of work to do during this week!");
         new User(fs, "bbranco", "es2016ssssss", "Bernardo", DEFAULT_MASK);
         new User(fs, "jorge", "es2016ssssss", "jorgeheleno", DEFAULT_MASK);
+        new Link(fs, f, fs.getSuperUser(), "LinkTest1", "/home/LinkTest2");
 	}
 
     @Test
@@ -142,15 +147,54 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
         service.execute();
     }
 
-		@Test (expected = EmptyFileNameException.class)
-		public void failEmptyFileName() {
-				FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
-				LoginService lser = new LoginService( "root", "***" );
-				lser.execute();
-				File f = fs.getFile("/home");
-				fs.getSession(lser.result()).setWorkDir((Directory)f);
-				CreateFileService service = new CreateAppService("", lser.result(), "I have a lot of work to do during this week!");
-				service.execute();
-		}
+	@Test (expected = EmptyFileNameException.class)
+	public void failEmptyFileName() {
+		FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+		LoginService lser = new LoginService( "root", "***" );
+		lser.execute();
+		File f = fs.getFile("/home");
+		fs.getSession(lser.result()).setWorkDir((Directory)f);
+		CreateFileService service = new CreateAppService("", lser.result(), "I have a lot of work to do during this week!");
+		service.execute();
+	}
+    //valid token and name bigger than 1024
+    @Test (expected=InvalidFileNameException.class)
+    public void bigName() {
+
+        FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+        LoginService lser = new LoginService( "root", "***" );
+        lser.execute();
+		File f = fs.getFile("/home");
+    	fs.getSession(lser.result()).setWorkDir((Directory)f);
+        String filename = createBigName();
+        CreatePlainFileService service = new CreatePlainFileService(filename, lser.result(), "I have a lot of work to do during this week!");
+        service.execute();
+
+    }
+    
+    /* Create Link with loop: 
+     * 
+     * Exception will not be MyDriveException but instead LoopCreatedException for example
+     * 
+     */
+
+	// @Test (expected = MyDriveException.class)
+	public void createLinkLoopTest() {
+		FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
+		LoginService lser = new LoginService( "root", "***" );
+		lser.execute();
+		File f = fs.getFile("/home");
+		fs.getSession(lser.result()).setWorkDir((Directory) f);
+		CreateFileService service = new CreateLinkService("LinkTest2", lser.result(), "/home/LinkTest1");
+		service.execute();
+	}
+    
+    private String createBigName(){
+    	String res = "";
+    	for (int i=0 ; i<1050 ; i++)
+    		res = res + 'a';
+    	return res;
+    }
+
 
 }
