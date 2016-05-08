@@ -17,6 +17,7 @@ public class ChangeDirectoryService extends MyDriveService {
 
     private long token;
     private String path;
+    private String newPath;
 
     public ChangeDirectoryService(long token, String path) {
         this.token = token;
@@ -31,26 +32,27 @@ public class ChangeDirectoryService extends MyDriveService {
 
         FileSystem fs = getFileSystem();
         Session session = fs.getSession(token);
-        if (session.isExpired()){
-            throw new InvalidTokenException(token);
+
+	    if (path.charAt(0) == '/' ) {//path is absolute
+            File f = fs.getFile(path);
+            session.setWorkDir((Directory)f);
+            newPath = path;
+	    }
+	    else { //relative
+	    	Directory workDir = session.getWorkDir();
+        	File f = fs.getFile(workDir.getFullPath() + "/" + path);
+        	session.setWorkDir((Directory)f);
+        	
         }
-
-        if (path.charAt(0) == '/' ) {//path is absolute
-                File f = fs.getFile(path);
-                if(!f.isCdAble()) throw new IsNotCdAbleException();
-                session.setWorkDir((Directory)f);
-            }
-            else { //relative
-              Directory workDir = session.getWorkDir();
-              File f = fs.getFile(workDir.getFullPath() + "/" + path);
-              if(!f.isCdAble()) throw new IsNotCdAbleException();
-              session.setWorkDir((Directory)f);
-            }
-
-
+	
         User activeUser = session.getUser();
         if (!activeUser.getStringPermissions().equals(session.getWorkDir().getStringPermissions()))
             throw new PermissionDeniedException(activeUser.getUsername() + " has no read permissions for "
                     + session.getWorkDir().getFullPath());
+    }
+    
+    public String result() {
+    	assertExecuted();
+    	return newPath;
     }
 }
