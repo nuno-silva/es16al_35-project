@@ -22,17 +22,10 @@ public class WriteFileService extends MyDriveService {
         Session s = fs.getSession(token);
         Directory d = s.getWorkDir();
         File f = d.getFileByName(fileName);
-        if (f.isCdAble()) {
-            throw new WriteDirectoryException("Cannot write in " + f.getFullPath() + " since it's a directory.");
-        }
-
+        f.assertIsWritable(); // make sure that it's a not a directory
         User activeUser = s.getUser();
-        if (!activeUser.hasWritePermission(f)) {
-            throw new PermissionDeniedException(activeUser.getUsername() + " has no write permissions for "
-                    + f.getFullPath());
-        }
 
         PlainFile pf = (PlainFile)f;
-        pf.setContent(content);
+        pf.setContent(content, activeUser);
     }
 }

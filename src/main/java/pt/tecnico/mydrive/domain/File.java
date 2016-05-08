@@ -8,6 +8,7 @@ import pt.tecnico.mydrive.domain.xml.Visitor;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.FileNameTooLongException;
+import pt.tecnico.mydrive.exception.WriteDirectoryException;
 
 import java.util.List;
 
@@ -131,6 +132,12 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
 
     public File getFileByName(String name, User initiator) {
         throw new UnsupportedOperationException();
+    }
+
+    public void assertIsWritable() {
+        if (isCdAble()) {
+            throw new WriteDirectoryException("Cannot write in " + getFullPath() + " since it's a directory.");
+        }
     }
 
     public abstract List<String> showContent();

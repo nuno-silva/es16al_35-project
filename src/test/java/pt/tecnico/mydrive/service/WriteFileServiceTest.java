@@ -78,6 +78,7 @@ public class WriteFileServiceTest extends AbstractServiceTest {
         service.execute();
     }
 
+    @Test
     public void successWithDifferentOwner() {
         String filename = "a file owner by another user";
         byte perm = home.getPermissions();
@@ -105,6 +106,11 @@ public class WriteFileServiceTest extends AbstractServiceTest {
 
         WriteFileService service = new WriteFileService(valid_token, good_plain_file_name, good_plain_file_content);
         service.execute();
+    }
+
+    @Test(expected = PermissionDeniedException.class)
+    public void directSetContentFail() {
+        good_plain_file.setContent("Dr.Dre");
     }
 
 }

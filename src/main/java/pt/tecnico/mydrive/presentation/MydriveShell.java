@@ -18,7 +18,7 @@ public class MydriveShell extends Shell {
     //new CreateContact(this);
     //new RemovePerson(this);
     //new RemoveContact(this);
-    new List(this);
+    new ListCommand(this);
     //new Import(this);
     //new Export(this);
   }

@@ -2,7 +2,6 @@ package pt.tecnico.mydrive.presentation;
 
 /*Exceptions*/
 import pt.tecnico.mydrive.exception.InvalidTokenException;
-import java.lang.UnsupportedOperationException;
 
 /* Services */
 import pt.tecnico.mydrive.service.ListDirectoryService;
@@ -12,9 +11,9 @@ import pt.tecnico.mydrive.service.dto.FileDto;
 
 
 
-public class List extends MydriveCommand {
+public class ListCommand extends MyDriveCommand {
 
-    public List(Shell sh) { super(sh, "list", "List a directory"); }
+    public ListCommand(Shell sh) { super(sh, "list", "ListCommand a directory"); }
     public void execute(String[] args) {
       ListDirectoryService lds;
       /* Check if argument length is at least the size of the obligatory */

@@ -27,7 +27,7 @@ public class MyDriveApplication {
 
     public static void main(String[] args) {
         setup();
-        try{
+        /*try {
             for (String f : args) {
                 xmlScan(f);
             }
@@ -35,7 +35,7 @@ public class MyDriveApplication {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         FenixFramework.shutdown();
     }
@@ -82,6 +82,11 @@ public class MyDriveApplication {
         fs.removeFile("/home/README");
         // Print content of "/home":
         printContent("Content of directory /home: ", fs.fileContent("/home"));
+        /*try {
+            fs.xmlExportToFile("exported.xml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 
     public static void printContent(String description, List<String> content) {
