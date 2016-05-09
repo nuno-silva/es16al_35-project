@@ -67,12 +67,9 @@ public class User extends User_Base implements Visitable, IPermissionable {
         if (checkUsername(username)) {
             setUsername(username);
 
-            if (username.equals(GuestUser.USERNAME)) {
-                // Guest user has VIP treatment
-                setUncheckedPassword(password);
-            } else {
-                assertPasswordRestrictions(password);
-            }
+            // can't call setPassword direcly because GuestUser overrites it
+            assertPasswordRestrictions(password);
+            super.setPassword(password);
 
             setName(name);
             setMask(mask);
@@ -215,20 +212,15 @@ public class User extends User_Base implements Visitable, IPermissionable {
 			throw new UnsupportedOperationException("Setting User homeDir");
 	}
 
-  protected void setUncheckedPassword(String password){
-    super.setPassword(password);
-  }
+    public void assertPasswordRestrictions(String password) {
+        if(password.length() < 8) {
+            throw new PasswordRestrictionException("Username: " + getUsername() + " Password must have more than 8 characters!");
+        }
+    }
 
-  public void assertPasswordRestrictions(String password){
-    if(checkPaswordRestrictions(password))
-      super.setPassword(password);
-  }
-
-  protected boolean checkPaswordRestrictions(String password){
-    //Check restriction and for each pass the respective message to the exception
-    if( password.length() < 8 )
-      throw new PasswordRestrictionException("Username: " + getUsername() + " Password must have more than 8 characters!");
-    else
-      return true;
-  }
+    @Override
+    public void setPassword(String password) {
+        assertPasswordRestrictions(password);
+        super.setPassword(password);
+    }
 }
