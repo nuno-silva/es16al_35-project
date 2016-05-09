@@ -20,6 +20,10 @@ public class Directory extends Directory_Base implements Visitable {
     public static final String XML_TAG = "dir";
     private static final Logger logger = Logger.getLogger(Directory.class);
 
+	protected Directory(){
+		super();
+	}
+
     //all params
     public Directory(FileSystem fs, Directory parent, User owner, String name, byte perm) {
         super();
