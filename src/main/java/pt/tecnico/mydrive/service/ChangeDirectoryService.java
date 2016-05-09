@@ -46,7 +46,7 @@ public class ChangeDirectoryService extends MyDriveService {
 	    }
 	    else { //relative
 	    	Directory workDir = session.getWorkDir();
-	    	newPath = workDir.getFullPath() + "/" + path
+	    	newPath = workDir.getFullPath() + "/" + path;
         	File f = fs.getFile(newPath);
         	session.setWorkDir((Directory)f);
 	
