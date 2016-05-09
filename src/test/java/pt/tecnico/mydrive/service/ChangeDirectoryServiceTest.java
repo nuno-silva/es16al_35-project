@@ -1,10 +1,14 @@
 package pt.tecnico.mydrive.service;
 
+/* Asserts */
 import static org.junit.Assert.*;
 
+/* Other stuff */
 import org.joda.time.DateTime;
 import org.junit.Test;
-import pt.ist.fenixframework.FenixFramework;
+import org.junit.Ignore;
+
+/* Domain */
 import pt.tecnico.mydrive.domain.App;
 import pt.tecnico.mydrive.domain.Directory;
 import pt.tecnico.mydrive.domain.File;
@@ -13,11 +17,21 @@ import pt.tecnico.mydrive.domain.Link;
 import pt.tecnico.mydrive.domain.PlainFile;
 import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.User;
+import pt.ist.fenixframework.FenixFramework;
+
+/* Exceptions */
 import pt.tecnico.mydrive.exception.EmptyPathException;
 import pt.tecnico.mydrive.exception.InvalidTokenException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
-import pt.tecnico.mydrive.service.*;;
+
+/* Services */
+import pt.tecnico.mydrive.service.*;
+
+/* Mocks */
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.integration.junit4.JMockit;
 
 public class ChangeDirectoryServiceTest extends AbstractServiceTest {
 
@@ -28,11 +42,13 @@ public class ChangeDirectoryServiceTest extends AbstractServiceTest {
     long _invalidToken = 0;
     final String _validAbsPath = "/home/user";
     final String _validRelPath = ".";
+    final String _linkPath="/home/$USER";
 
     protected void populate() {
 
     	FileSystem fs = FileSystem.getInstance();
     	User u = new User(fs, _username, _password, "Nome", (byte) 0xff);
+
 
     }
 
@@ -140,6 +156,28 @@ public class ChangeDirectoryServiceTest extends AbstractServiceTest {
         System.out.println("token: "+ _validToken);
 
         ChangeDirectoryService service = new ChangeDirectoryService(_validToken, "/home/user");
+        service.execute();
+    }
+
+    @Ignore
+    @Test
+    public void linkWithEnvVars() {
+
+    	FileSystem fs = FileSystem.getInstance();
+        User u = new User(fs, "ola", "adeussssss", "Nomee", (byte) 0x00);
+
+    	Session s = new Session(fs, fs.getUser("ola"), "adeussssss");
+        _validToken = s.getToken();
+        AddVariableService avs = new AddVariableService( _validToken, "USER", "ola" );
+        avs.execute();
+        Directory d = u.getHome();
+        Link l = new Link( fs, d, u, "env_link", "/home/$USER" );
+        ChangeDirectoryService service = new ChangeDirectoryService( _validToken, "/home/ola/env_link" );
+
+        new MockUp<Link>() {
+            @Mock
+            File getPointedFile(User u) { return fs.getFile("/home/ola"); }
+        };
         service.execute();
     }
 
