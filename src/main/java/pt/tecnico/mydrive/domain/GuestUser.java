@@ -41,8 +41,7 @@ public class GuestUser extends GuestUser_Base {
   }
 
   @Override
-  protected boolean checkPaswordRestrictions(String password){
-    return true;
+  public void assertPasswordRestrictions(String password) {
   }
 
 }

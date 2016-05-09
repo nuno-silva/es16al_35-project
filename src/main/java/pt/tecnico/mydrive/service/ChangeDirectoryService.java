@@ -21,9 +21,15 @@ public class ChangeDirectoryService extends MyDriveService {
 
     public ChangeDirectoryService(long token, String path) {
         this.token = token;
-        this.path = path;
+        this.path = path;   
     }
 
+    public ChangeDirectoryService(long token) {
+        this.token = token;
+        //this.path = path;
+    }
+    
+    
     @Override
     protected void dispatch() {
         if (path.trim() == "") {
@@ -34,15 +40,16 @@ public class ChangeDirectoryService extends MyDriveService {
         Session session = fs.getSession(token);
 
 	    if (path.charAt(0) == '/' ) {//path is absolute
-            File f = fs.getFile(path);
-            session.setWorkDir((Directory)f);
-            newPath = path;
+		File f = fs.getFile(path);
+		session.setWorkDir((Directory)f);
+		newPath = path;
 	    }
 	    else { //relative
 	    	Directory workDir = session.getWorkDir();
-        	File f = fs.getFile(workDir.getFullPath() + "/" + path);
+	    	newPath = workDir.getFullPath() + "/" + path;
+        	File f = fs.getFile(newPath);
         	session.setWorkDir((Directory)f);
-        	
+	
         }
 	
         User activeUser = session.getUser();

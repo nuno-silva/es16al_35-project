@@ -12,6 +12,10 @@ public class AddVariableService extends MyDriveService {
     private long _token;
     private Map<String, String> _vars;
 
+    public AddVariableService(long token) {
+        this(token, null, null);
+    }
+
     public AddVariableService(long token, String name, String value) {
         _name=name;
         _value=value;
@@ -22,7 +26,11 @@ public class AddVariableService extends MyDriveService {
     protected void dispatch() {
         FileSystem fs = FileSystem.getInstance();
         Session s = fs.getSession(_token);
-        new Variable(s, _name, _value);
+
+        // not the best approach, I know, but I don't want to create another service
+        if(_name != null && _value != null) {
+            new Variable(s, _name, _value);
+        }
 
         _vars = new HashMap<String, String>();
 

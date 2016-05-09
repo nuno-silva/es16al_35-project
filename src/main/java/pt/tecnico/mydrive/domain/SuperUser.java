@@ -54,8 +54,7 @@ public class SuperUser extends SuperUser_Base {
       return expirationDate;
     }
 
-		@Override
-		protected boolean checkPaswordRestrictions( String password ){
-			return true;
-		}
+    @Override
+    public void assertPasswordRestrictions(String password) {
+    }
 }
