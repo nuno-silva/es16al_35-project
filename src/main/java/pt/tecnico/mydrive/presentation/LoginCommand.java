@@ -18,6 +18,6 @@ public class LoginCommand extends Command{
 	          ls = new LoginService(args[0], "");
         ls.execute();
         MydriveShell mds = (MydriveShell) shell();
-        mds.setToken(ls.result());
+        mds.setUser(args[0], ls.result());
 	}
 }

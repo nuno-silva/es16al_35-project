@@ -10,12 +10,14 @@ public class KeyCommand extends MyDriveCommand {
     
 	void execute(String[] args) {
 		try {
+			MydriveShell mds = (MydriveShell) shell();
 			if(args.length == 0) {
-				MydriveShell mds = (MydriveShell) shell();
-		        mds.print("Token: "+ String.valueOf(mds.getToken())); //FIXME: Am I supposed to do this?
-		        //get username through token without domain
+				String lastUser = mds.getLastUser();
+		        shell().println("Token: "+ mds.getTokenFromUsername(lastUser) + " from User: "+ lastUser); 
 			} else if(args.length == 1) {
-				//set user as new current user
+				mds.setLastLogin(args[0]);
+				String lastUser = mds.getLastUser();
+				shell().println("Token: "+ mds.getTokenFromUsername(lastUser));
 			} else {
 				throw new RuntimeException("USAGE: " + name() + " token [<username>]");
 			}
