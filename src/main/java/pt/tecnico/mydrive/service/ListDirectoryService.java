@@ -15,6 +15,7 @@ import pt.tecnico.mydrive.domain.PlainFile;
 import pt.tecnico.mydrive.domain.App;
 import pt.tecnico.mydrive.domain.Link;
 import pt.tecnico.mydrive.domain.Directory;
+import pt.tecnico.mydrive.domain.SpecialDirectory;
 
 public class ListDirectoryService extends MyDriveService {
 
@@ -105,6 +106,7 @@ public class ListDirectoryService extends MyDriveService {
         // should I use the XML_TAG instead?
         switch(f.getClass().getName()) {
             case "pt.tecnico.mydrive.domain.Directory":
+            case "pt.tecnico.mydrive.domain.SpecialDirectory":
                 return FileDto.FileType.DIRECTORY;
             case "pt.tecnico.mydrive.domain.PlainFile":
                 return FileDto.FileType.PLAINFILE;

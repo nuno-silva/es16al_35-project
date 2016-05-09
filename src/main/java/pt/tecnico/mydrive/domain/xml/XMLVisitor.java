@@ -35,6 +35,11 @@ public class XMLVisitor implements Visitor {
     }
 
     @Override
+    public Element visit(SpecialDirectory directory) {
+        return null;
+    }
+
+    @Override
     public Element visit(Directory directory) {
         Element dirElement = visit((File) directory);
         dirElement.setName(Directory.XML_TAG);

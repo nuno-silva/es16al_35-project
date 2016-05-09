@@ -4,6 +4,7 @@ import org.jdom2.Element;
 import pt.tecnico.mydrive.domain.*;
 
 public interface Visitor {
+    Element visit(SpecialDirectory directory);
     Element visit(Directory directory);
 
     Element visit(PlainFile plainFile);

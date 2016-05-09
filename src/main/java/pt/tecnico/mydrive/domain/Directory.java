@@ -48,13 +48,6 @@ public class Directory extends Directory_Base implements Visitable {
         init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask());
     }
 
-    /**
-     * constructor for root directory
-     */
-    public Directory(FileSystem fs, byte perm) {
-        super();
-        init(fs, this, null, "", perm);
-    }
 
     /**
      * Creates the directory if one with the same name and parent does not already exist.
@@ -105,7 +98,7 @@ public class Directory extends Directory_Base implements Visitable {
 	throw new ReadDirectoryException("Cannot read " + this.getFullPath() + " since it's a directory.");
 
     }
-    
+
     @Override
     public String getFullPath() {
         if (getParentDir() == this) { // we're the root dir

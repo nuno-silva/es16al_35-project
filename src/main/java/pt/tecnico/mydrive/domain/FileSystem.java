@@ -45,11 +45,11 @@ public class FileSystem extends FileSystem_Base {
         setFileCounter(0);
 
         // Create root directory: "/"
-        Directory rootDir = new Directory(this, SuperUser.SUPERUSER_MASK);
+        Directory rootDir = new SpecialDirectory(this, SuperUser.SUPERUSER_MASK);
         setRootDir(rootDir);
 
         // Create home directory: "/home"
-        Directory homeDir = new Directory(this, rootDir, null, "home", SuperUser.SUPERUSER_MASK);
+        Directory homeDir = new SpecialDirectory(this, rootDir, null, "home", SuperUser.SUPERUSER_MASK);
 
         // Create Super User
         SuperUser su = new SuperUser(this, "***");
@@ -486,7 +486,7 @@ public class FileSystem extends FileSystem_Base {
             } catch (UsernameAlreadyExistsException e) {
                 logger.trace("Username " + username + " already exists" );
             }
-        }   
+        }
     }
 
     @Override
