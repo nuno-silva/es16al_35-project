@@ -26,12 +26,14 @@ public class LogoutServiceTest extends AbstractServiceTest {
 	protected void populate() {
     FileSystem fs = FileSystem.getInstance();
     LoginService lgs1 = new LoginService("root","***");
+    lgs1.execute();
     tokenR = lgs1.result();
     LoginService lgs2 = new LoginService("nobody","");
+    lgs2.execute();
     tokenG = lgs2.result();
   }
 
-    @Ignore("Waiting for service") @Test
+    @Test
     public void successWithRoot() {
       FileSystem fs = FileSystem.getInstance();
       LogoutService logout1 = new LogoutService(tokenR);
@@ -39,7 +41,7 @@ public class LogoutServiceTest extends AbstractServiceTest {
       assertFalse("Session still exists!!",fs.hasSession(tokenR));
     }
 
-    @Ignore("Waiting for service")  @Test
+    @Test
     public void successWithGuest() {
       FileSystem fs = FileSystem.getInstance();
       LogoutService logout1 = new LogoutService(tokenG);
@@ -47,7 +49,7 @@ public class LogoutServiceTest extends AbstractServiceTest {
       assertFalse("Session still exists!!",fs.hasSession(tokenG));
     }
 
-    @Ignore("Waiting for service") @Test
+    @Test
     public void successWithNormalUser() {
       FileSystem fs = FileSystem.getInstance();
       LogoutService logout1 = new LogoutService(tokenG);
@@ -55,10 +57,11 @@ public class LogoutServiceTest extends AbstractServiceTest {
       assertFalse("Session still exists!!",fs.hasSession(tokenG));
     }
 
-    @Ignore("Waiting for service")  @Test( expected = InvalidTokenException.class)
+    @Test( expected = InvalidTokenException.class)
     public void failWithInexistentToken() {
       FileSystem fs = FileSystem.getInstance();
       LogoutService logout1 = new LogoutService(tokenR);
+      logout1.execute();
       logout1.execute();
     }
 }
