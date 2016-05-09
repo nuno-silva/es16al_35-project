@@ -157,7 +157,15 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
 		CreateFileService service = new CreateAppService("", lser.result(), "I have a lot of work to do during this week!");
 		service.execute();
 	}
-    //valid token and name bigger than 1024
+	
+	
+	
+     /* Create File with invalid path size: 
+     * 
+     * valid token and name bigger than 1024
+     * 
+     */
+     
     @Test (expected=InvalidFileNameException.class)
     public void bigName() {
 
