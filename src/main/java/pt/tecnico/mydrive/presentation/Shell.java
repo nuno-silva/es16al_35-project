@@ -71,6 +71,13 @@ public abstract class Shell {
   } catch (Exception e) { throw new RuntimeException(""+e); }
       }
     };
+    
+    new Command(this, "token", "switch between active sessions") {
+        void execute(String[] args) {
+    try { Sys.output(out); Sys.main(args);
+    } catch (Exception e) { throw new RuntimeException(""+e); }
+        }
+      };
 
     new Command(this, "help", "this command help") {
       void execute(String[] args) {

@@ -20,6 +20,7 @@ public class MydriveShell extends Shell {
     //new RemovePerson(this);
     //new RemoveContact(this);
     new ListCommand(this);
+    new KeyCommand(this);
     //new Import(this);
     //new Export(this);
   }
