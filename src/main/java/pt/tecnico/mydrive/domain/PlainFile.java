@@ -98,8 +98,13 @@ public class PlainFile extends PlainFile_Base implements Visitable {
         return false;
     }
 
-
-    public String readFileContent() {
+    @Override
+    public String getContent(User initiator) throws PermissionDeniedException {
+        if (!initiator.hasReadPermission(this)) {
+            throw new PermissionDeniedException(initiator.getUsername() + " has no read permissions for "
+                    + this.getFullPath());
+        }
+	
         return getContent();
     }
 

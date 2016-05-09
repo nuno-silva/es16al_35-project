@@ -8,6 +8,8 @@ import pt.tecnico.mydrive.domain.xml.Visitor;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
+import pt.tecnico.mydrive.exception.ReadDirectoryException;
+
 import java.lang.UnsupportedOperationException;
 
 import java.util.ArrayList;
@@ -94,6 +96,12 @@ public class Directory extends Directory_Base implements Visitable {
         return true;
     }
 
+    @Override
+    public String getContent(User initiator) throws ReadDirectoryException {
+	throw new ReadDirectoryException("Cannot read " + this.getFullPath() + " since it's a directory.");
+
+    }
+    
     @Override
     public String getFullPath() {
         if (getParentDir() == this) { // we're the root dir

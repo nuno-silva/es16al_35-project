@@ -200,4 +200,7 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
     public String getANDedStringPermissions(IPermissionable other) {
         return MaskHelper.getStringPermissions(getANDedByteMask(other));
     }
+    
+    public abstract String getContent(User initiator);
+
 }

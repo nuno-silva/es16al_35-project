@@ -23,11 +23,12 @@ public class MydriveShell extends Shell {
   public MydriveShell() {
     super("MyDrive");
     /* Add commands from here below */
-    //new LoginCommand(this);
+    new LoginCommand(this);
     //new CreatePerson(this);
     //new CreateContact(this);
     //new RemovePerson(this);
     //new RemoveContact(this);
+    new ChangeWorkingDirectoryCommand(this);
     new EnvironmentCommand(this);
     new ListCommand(this);
     new KeyCommand(this);
