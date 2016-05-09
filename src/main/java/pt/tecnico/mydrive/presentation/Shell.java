@@ -23,61 +23,6 @@ public abstract class Shell {
         System.exit(0);
       }
     };
-    new Command(this, "do", "execute a file") {
-      void execute(String[] args) {
-	try { Sys.output(out); Sys.main(args);
-	} catch (Exception e) { throw new RuntimeException(""+e); }
-      }
-    };
-
-    new Command(this, "login", "logs in a user") {
-      void execute(String[] args) {
-  try { Sys.output(out); Sys.main(args);
-  } catch (Exception e) { throw new RuntimeException(""+e); }
-      }
-    };
-
-    new Command(this, "cwd", "changes current working directory") {
-      void execute(String[] args) {
-  try { Sys.output(out); Sys.main(args);
-  } catch (Exception e) { throw new RuntimeException(""+e); }
-      }
-    };
-
-    new Command(this, "list", "lists the information of the documents in the existing directory") {
-      void execute(String[] args) {
-  try { Sys.output(out); Sys.main(args);
-  } catch (Exception e) { throw new RuntimeException(""+e); }
-      }
-    };
-
-    new Command(this, "write", "writes text to a file") {
-      void execute(String[] args) {
-  try { Sys.output(out); Sys.main(args);
-  } catch (Exception e) { throw new RuntimeException(""+e); }
-      }
-    };
-
-    new Command(this, "env", "creates or alters environment variable") {
-      void execute(String[] args) {
-  try { Sys.output(out); Sys.main(args);
-  } catch (Exception e) { throw new RuntimeException(""+e); }
-      }
-    };
-
-    new Command(this, "key", "changes user") {
-      void execute(String[] args) {
-  try { Sys.output(out); Sys.main(args);
-  } catch (Exception e) { throw new RuntimeException(""+e); }
-      }
-    };
-    
-    new Command(this, "token", "switch between active sessions") {
-        void execute(String[] args) {
-    try { Sys.output(out); Sys.main(args);
-    } catch (Exception e) { throw new RuntimeException(""+e); }
-        }
-      };
 
     new Command(this, "help", "this command help") {
       void execute(String[] args) {
