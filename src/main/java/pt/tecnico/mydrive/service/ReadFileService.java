@@ -7,13 +7,13 @@ import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.Session;
 import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.exception.EmptyFileNameException;
-import pt.tecnico.mydrive.exception.ReadDirectoryException;
 
 
 public class ReadFileService extends MyDriveService {
 
     private String fileName;
     private long token;
+    private String content;   
 
     public ReadFileService(long token, String fileName) {
         this.token = token;
@@ -33,6 +33,11 @@ public class ReadFileService extends MyDriveService {
 
         Directory d = session.getWorkDir();
         File f = d.getFile(fileName, activeUser);
-        f.getContent(activeUser);
+        content = f.getContent(activeUser);
+    }
+    
+    public String result() {
+    	assertExecuted();
+    	return content;
     }
 }

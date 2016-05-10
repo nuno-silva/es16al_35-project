@@ -39,12 +39,9 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
-        service.dispatch();
+        service.execute();
 
-        PlainFile file = (PlainFile) fs.getFile("/home/mike/" + fileName);
-        String content = file.getContent();
-
-        assertEquals("Just a test string.", content);
+        assertEquals("Just a test string.", service.result());
     }
 
     @Test
@@ -61,12 +58,28 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
-        service.dispatch();
+        service.execute();
 
-        Link file = (Link) fs.getFile("/home/mike/" + fileName);
-        String content = file.getContent();
+        assertEquals("Just a test string.", service.result());
+    }
+    
+    @Test
+    public void linkPointsToLink() {
+        final String fileName = "TestLinkToLink";
+        long token;
 
-        assertEquals("/home/mike/TestPlainFile", content);
+        FileSystem fs = FileSystem.getInstance();
+        User user = fs.getUser("mike");
+
+        //Login
+        Session session = new Session(fs, user, "MIKEssssss");
+        token = session.getToken();
+
+        //Call ReadFileService
+        ReadFileService service = new ReadFileService(token, fileName);
+        service.execute();
+
+        assertEquals("Just a test string.", service.result());
     }
 
     @Test
@@ -83,12 +96,9 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
-        service.dispatch();
+        service.execute();
 
-        PlainFile file = (PlainFile) fs.getFile("/home/mike/" + fileName);
-        String content = file.getContent();
-
-        assertEquals("pt.tecnico.mydrive.service.populate", content);
+        assertEquals("pt.tecnico.mydrive.service.populate", service.result());
     }
 
     @Test
@@ -106,12 +116,9 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
-        service.dispatch();
+        service.execute();
 
-        PlainFile file = (PlainFile) fs.getFile("/home/mike/" + fileName);
-        String content = file.getContent();
-
-        assertNotEquals("bla bla", content);
+        assertNotEquals("bla bla", service.result());
     }
 
     @Test
@@ -128,12 +135,9 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
-        service.dispatch();
+        service.execute();
 
-        Link file = (Link) fs.getFile("/home/mike/" + fileName);
-        String content = file.getContent();
-
-        assertNotEquals("bla bla", content);
+        assertNotEquals("bla bla", service.result());
     }
 
     @Test
@@ -150,12 +154,9 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
-        service.dispatch();
+        service.execute();
 
-        PlainFile file = (PlainFile) fs.getFile("/home/mike/" + fileName);
-        String content = file.getContent();
-
-        assertNotEquals("bla bla", content);
+        assertNotEquals("bla bla", service.result());
     }
 
     @Test (expected = EmptyFileNameException.class)
@@ -172,7 +173,7 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
-        service.dispatch();
+        service.execute();
     }
 
     @Test (expected = InvalidTokenException.class)
@@ -192,7 +193,7 @@ public class ReadFileServiceTest extends AbstractServiceTest {
         System.out.println(session.getExpirationDate());
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
-        service.dispatch();
+        service.execute();
     }
 
     @Test (expected = ReadDirectoryException.class)
@@ -212,7 +213,7 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
-        service.dispatch();
+        service.execute();
     }
 
     @Test (expected = PermissionDeniedException.class)
@@ -232,12 +233,9 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);
-        service.dispatch();
+        service.execute();
 
-        PlainFile file = (PlainFile) fs.getFile("/home/mike/" + fileName);
-        String content = file.getContent();
-
-        assertNotEquals("bla bla", content);
+        assertNotEquals("bla bla", service.result());
     }
 
     @Test (expected=FileNotFoundException.class)
@@ -254,28 +252,6 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
     	//Call ReadFileService
     	ReadFileService service = new ReadFileService(token, fileName);
-    	service.dispatch();
-    }
-    
-    @Test
-    public void linkPointsToLink() {
-        final String fileName = "TestLinkToLink";
-        long token;
-
-        FileSystem fs = FileSystem.getInstance();
-        User user = fs.getUser("mike");
-
-        //Login
-        Session session = new Session(fs, user, "MIKEssssss");
-        token = session.getToken();
-
-        //Call ReadFileService
-        ReadFileService service = new ReadFileService(token, fileName);
-        service.dispatch();
-        
-        Link file = (Link) fs.getFile("/home/mike/" + fileName);
-        String content = file.getContent();
-
-        assertEquals("/home/mike/TestLink", content);
+    	service.execute();
     }
 }
