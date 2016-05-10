@@ -44,19 +44,23 @@ public class ListDirectoryService extends MyDriveService {
         // FIXME: This needs refactor asap
         String workingPath="";
         File wf;
-        if(_path.trim()=="" || _path.trim()=="."){
+        if(_path.equals("") || _path.equals(".")){
           workingPath=s.getWorkDir().getFullPath();
           wf = fs.getFile(workingPath);
         }
-        else if(_path.trim()==".."){
+        else if(_path.equals("..")){
           Directory d = s.getWorkDir();
           String workPath=d.getFullPath();
           workingPath="Parent of "+workPath;
           wf=d.getParentDir();
         }
+        else if( _path.startsWith("/")){
+          wf= fs.getFile(_path);
+          workingPath = _path;
+        }
         else{
           Directory workingDir = s.getWorkDir();
-          wf=(File)workingDir;
+          wf = workingDir.getFileByName(_path);
         }
 
 
