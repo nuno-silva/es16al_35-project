@@ -203,6 +203,7 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
     }
 
     public abstract File getFile(String path, User initiator, Set<File> visited);
+    public abstract Set<File> getFileSet(User initiator);
     public abstract void addFile(File file, User initiator);
     public abstract String getContent(User initiator);
     public abstract void setContent(String content, User initiator);

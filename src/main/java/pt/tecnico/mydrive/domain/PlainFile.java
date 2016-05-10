@@ -156,6 +156,11 @@ public class PlainFile extends PlainFile_Base implements Visitable {
     }
 
     @Override
+    public Set<File> getFileSet(User initiator) {
+        throw new IsNotCdAbleException(getFullPath() + " isn't CdAble'");
+    }
+
+    @Override
     public void addFile(File file, User initiator) throws FilenameAlreadyExistsException {
         throw new IsNotCdAbleException(getFullPath() + " isn't CdAble'");
     }

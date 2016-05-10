@@ -25,7 +25,7 @@ public class ListCommand extends MyDriveCommand {
           lds.execute();
         }
         else if( args.length>1 ){
-          throw new RuntimeException("USAGE: "+name()+"list [path]");
+          throw new RuntimeException("USAGE: "+name()+" [path]");
         }
         else{
           MydriveShell mds = (MydriveShell) shell();

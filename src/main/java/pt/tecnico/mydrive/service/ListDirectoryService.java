@@ -40,64 +40,42 @@ public class ListDirectoryService extends MyDriveService {
         Session s = fs.getSession(_token);
         User    u = s.getUser();
 
-        // BEWARE XXX This code doesn't allow listing a single file
-        // FIXME: This needs refactor asap
-        String workingPath="";
         File wf;
-        if(_path.equals("") || _path.equals(".")){
-          workingPath=s.getWorkDir().getFullPath();
-          wf = fs.getFile(workingPath);
-        }
-        else if(_path.equals("..")){
-          Directory d = s.getWorkDir();
-          String workPath=d.getFullPath();
-          workingPath="Parent of "+workPath;
-          wf=d.getParentDir();
-        }
-        else if( _path.startsWith("/")){
-          wf= fs.getFile(_path);
-          workingPath = _path;
-        }
-        else{
-          Directory workingDir = s.getWorkDir();
-          wf = workingDir.getFileByName(_path);
+        if(_path.equals("") || _path.equals(".")) {
+            wf = s.getWorkDir();
+        } else if( FileSystem.PathHelper.isAbsolute(_path) ){
+            wf = fs.getFile(_path, u);
+        } else {
+            Directory workingDir = s.getWorkDir();
+            wf = workingDir.getFile(_path, u);
         }
 
-
-        if(!wf.isCdAble()) {
-            // should never happen, but who knows?
-            throw new IsNotCdAbleException("Working path '"+workingPath+"' is not a Directory!");
+        _files = new ArrayList<FileDto>();
+        // add all Files in workingDir // should this be done in domain?
+        for( File f : wf.getFileSet(u)) {
+            _files.add(new FileDto(f.getName(),
+                                   f.getId(),
+                                   f.getPermissions(),
+                                   f.getLastMod(),
+                                   getFileType(f) ));
         }
+        // add '.'
+        _files.add(new FileDto(".",
+                               wf.getId(),
+                               wf.getPermissions(),
+                               wf.getLastMod(),
+                               getFileType(wf) ));
 
-        else {
-            Directory workingDir = (Directory)wf;
-            _files = new ArrayList<FileDto>();
-            // add all Files in workingDir
-            for( File f : workingDir.getFileSet(u)) {
-                _files.add(new FileDto(f.getName(),
-                                       f.getId(),
-                                       f.getPermissions(),
-                                       f.getLastMod(),
-                                       getFileType(f) ));
-            }
-            // add '.'
-            _files.add(new FileDto(".",
-                                   workingDir.getId(),
-                                   workingDir.getPermissions(),
-                                   workingDir.getLastMod(),
-                                   getFileType(workingDir) ));
+        // add '..'
+        Directory parent = wf.getParentDir();
+        _files.add(new FileDto("..",
+                               parent.getId(),
+                               parent.getPermissions(),
+                               parent.getLastMod(),
+                               getFileType(parent) ));
 
-            // add '..'
-            Directory parent = workingDir.getParentDir();
-            _files.add(new FileDto("..",
-                                   parent.getId(),
-                                   parent.getPermissions(),
-                                   parent.getLastMod(),
-                                   getFileType(parent) ));
-
-            // sort files
-            Collections.sort(_files);
-        }
+        // sort files
+        Collections.sort(_files);
     }
 
     public List<FileDto> result() {
