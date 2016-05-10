@@ -3,12 +3,15 @@ package pt.tecnico.mydrive.domain;
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
+import java.util.Set;
+import java.util.HashSet;
 import pt.tecnico.mydrive.domain.xml.Visitable;
 import pt.tecnico.mydrive.domain.xml.Visitor;
 import pt.tecnico.mydrive.exception.InvalidFileNameException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.FileNameTooLongException;
 import pt.tecnico.mydrive.exception.WriteDirectoryException;
+import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 
 import java.util.List;
 
@@ -25,7 +28,8 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
     protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm) {
         logger.trace("init name: " + name);
         setName(name);
-        setParentDir(parent); // must be called after setName!
+        setOwner(owner);
+        setParentDir(parent); // must be called after setName and setOwner!
         String path = getFullPath();
         if(path.length() > MAX_PATH) {
             // undo what we did. Note that we needed the parent to be set in order for getFullPath to work
@@ -33,7 +37,6 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
             throw new FileNameTooLongException(path, MAX_PATH);
         }
         setPermissions(perm);
-        setOwner(owner);
         setLastMod(new DateTime());
         setId(fs.commitNewFileId()); // commitNewFileId must be called only when we're sure the File was successfully created
     }
@@ -126,13 +129,6 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
         return getParentDir().getFullPath() + "/" + getName();
     }
 
-    public File getFileByName(String name) {
-        throw new UnsupportedOperationException();
-    }
-
-    public File getFileByName(String name, User initiator) {
-        throw new UnsupportedOperationException();
-    }
 
     public void assertIsWritable() {
         if (isCdAble()) {
@@ -140,7 +136,6 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
         }
     }
 
-    public abstract List<String> showContent();
 
     @Override
     public void setName(String name) throws InvalidFileNameException {
@@ -159,11 +154,11 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
     @Override
     public void setParentDir(Directory parent) {
         logger.trace("setParentDir name: " + getName());
-        if (parent == null) { // root dir
-            super.setParentDir(parent);
-            return;
+        if(parent == null) { // used by remove()
+            super.setParentDir(null);
+        } else {
+            parent.addFile(this, getOwner());
         }
-        parent.addFile(this);
     }
 
     @Override
@@ -200,7 +195,16 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
     public String getANDedStringPermissions(IPermissionable other) {
         return MaskHelper.getStringPermissions(getANDedByteMask(other));
     }
-    
-    public abstract String getContent(User initiator);
 
+
+    public File getFile(String path, User initiator) {
+        Set<File> visited = new HashSet<File>();
+        return getFile(path, initiator, visited);
+    }
+
+    public abstract File getFile(String path, User initiator, Set<File> visited);
+    public abstract void addFile(File file, User initiator);
+    public abstract String getContent(User initiator);
+    public abstract void setContent(String content, User initiator);
+    /* TODO: execute ? */
 }

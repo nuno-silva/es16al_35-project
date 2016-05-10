@@ -14,9 +14,11 @@ import pt.tecnico.mydrive.domain.FileSystem;
 import pt.tecnico.mydrive.domain.PlainFile;
 import pt.tecnico.mydrive.domain.User;
 import pt.tecnico.mydrive.domain.Session;
+import pt.tecnico.mydrive.domain.File;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Arrays;
 
 /**
  * Hello world!
@@ -48,7 +50,7 @@ public class MyDriveApplication {
 
     @Atomic
     public static void init() {
-        /* TODO? */
+        /* TODO ? */
     }
 
     @Atomic
@@ -65,9 +67,11 @@ public class MyDriveApplication {
         Directory local = fs.createFileParents("/usr/local/bin");
         new Directory(fs, local, "bin");
         // Print content of "/home/README":
-        printContent("Content of PlainFile README: ", fs.fileContent("/home/README"));
+        File f = fs.getFile("/home/README");
+        printContent("Content of PlainFile README: ", f.getContent(fs.getSuperUser()));
         // Remove "/usr/local/bin":
-        fs.removeFile("/usr/local/bin");
+        f = fs.getFile("/usr/local/bin");
+        f.remove();
         //TODO: propagate exception
         Document doc = fs.xmlExport();
         XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
@@ -79,9 +83,14 @@ public class MyDriveApplication {
             e.printStackTrace();
         }
         // Remove "/home/README":
-        fs.removeFile("/home/README");
+        f = fs.getFile("/home/README");
+        f.remove();
         // Print content of "/home":
-        printContent("Content of directory /home: ", fs.fileContent("/home"));
+        Directory home = (Directory)fs.getFile("/home");
+        System.out.println("Content of directory /home: ");
+        for(File ff : home.getFileSet() ) {
+            System.out.println(ff.getName());
+        }
         /*try {
             fs.xmlExportToFile("exported.xml");
         } catch (IOException e) {
@@ -89,8 +98,9 @@ public class MyDriveApplication {
         }*/
     }
 
-    public static void printContent(String description, List<String> content) {
+    public static void printContent(String description, String c) {
         System.out.println(description);
+        List<String> content = Arrays.asList(c.split(PlainFile.LINE_SEPARATOR));
         for (String line : content) {
             System.out.println(line);
         }

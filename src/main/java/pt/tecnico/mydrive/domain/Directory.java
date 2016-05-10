@@ -9,6 +9,8 @@ import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.ReadDirectoryException;
+import pt.tecnico.mydrive.exception.WriteDirectoryException;
+import pt.tecnico.mydrive.exception.LinkCycleException;
 
 import java.lang.UnsupportedOperationException;
 
@@ -95,19 +97,18 @@ public class Directory extends Directory_Base implements Visitable {
 
     @Override
     public String getContent(User initiator) throws ReadDirectoryException {
-	throw new ReadDirectoryException("Cannot read " + this.getFullPath() + " since it's a directory.");
+        throw new ReadDirectoryException("Cannot read " + getFullPath() + " since it's a directory.");
+    }
 
+    @Override
+    public void setContent(String content, User initiator) throws WriteDirectoryException {
+        throw new WriteDirectoryException("Cannot write to " + getFullPath() + " since it's a directory.");
     }
 
     @Override
     public String getFullPath() {
-        if (getParentDir() == this) { // we're the root dir
-            logger.trace("getFullPath() reached root dir");
-            return "";
-        } else {
-            logger.trace("getFullPath() " + super.getName());
-            return super.getFullPath();
-        }
+        logger.trace("getFullPath() " + super.getName());
+        return super.getFullPath();
     }
 
     public void addFile(File file, User initiator) throws FilenameAlreadyExistsException, PermissionDeniedException {
@@ -118,8 +119,8 @@ public class Directory extends Directory_Base implements Visitable {
         addFile(file);
     }
 
-    @Override
-    public void addFile(File file) throws FilenameAlreadyExistsException {
+    @Deprecated // should be protected
+    public void addFile(File file) {
         String filename = file.getName();
         logger.debug("addFile: '" + filename + "' in '" + getName() + "'");
         if (hasFile(filename)) {
@@ -141,33 +142,30 @@ public class Directory extends Directory_Base implements Visitable {
         }
     }
 
-    public void removeFile(File file, User initiator) throws FileNotFoundException, PermissionDeniedException {
-        if(!initiator.hasWritePermission(this)) {
-            throw new PermissionDeniedException("User '" + initiator.getUsername()
-                    + "' can not write to '"+getFullPath()+"'");
-        }
-        removeFile(file);
-    }
-
     @Override
-    public void removeFile(File file) throws FileNotFoundException {
-        String filename = file.getName();
-        if (!hasFile(filename)) {
-            throw new FileNotFoundException(filename);
+    public File getFile(String path, User initiator, Set<File> visited) {
+        logger.debug("getFile: '" + path+"'");
+        String head = FileSystem.PathHelper.getHead(path);
+        String tail = FileSystem.PathHelper.getTail(path);
+
+        File f = getFileByName(head, initiator);
+
+        if (tail == "") {
+            /*while( f instanceof Link ) {
+                f = ((Link)f).getPointedFile(initiator);
+                if(visited.contains(f)) {
+                    throw new LinkCycleException(f.getFullPath());
+                } else {
+                    visited.add(f);
+                }
+            }*/ // we're overriding File operations in Link
+            return f;
         } else {
-            super.removeFile(file);
+            return f.getFile(tail, initiator, visited);
         }
     }
 
-
-    public File getFile(String path, boolean followLinks) {
-        /* TODO*/
-        /* se n seguir links e passar por um link dá filenotfoundexception */
-        return null;
-    }
-
-    @Override
-    public File getFileByName(String name) throws FileNotFoundException {
+    protected File getFileByName(String name) throws FileNotFoundException {
         logger.debug("getFileByName: '" + name + "' in '" + getName() + "'");
         if (name.equals(".")) {
             return this;
@@ -180,10 +178,10 @@ public class Directory extends Directory_Base implements Visitable {
                 return f;
             }
         }
-        throw new FileNotFoundException(name);
+        throw new FileNotFoundException(name, getFullPath());
     }
 
-    public File getFileByName(String name, User initiator) throws FileNotFoundException, PermissionDeniedException {
+    protected File getFileByName(String name, User initiator) throws FileNotFoundException, PermissionDeniedException {
         if(!initiator.hasExecutePermission(this)) {
             throw new PermissionDeniedException("User '" + initiator.getUsername()
                     + "' can not read '"+getFullPath()+"'");
@@ -209,19 +207,6 @@ public class Directory extends Directory_Base implements Visitable {
         }
     }
 
-    @Override
-    public List<String> showContent() {
-        //TODO: should we use a Visitor for this?
-        List<String> files = new ArrayList<String>();
-
-        files.add(".");
-        files.add("..");
-        for (File f : getFileSet()) {
-            files.add(f.getName());
-        }
-        // TODO: the format should be "<type> <perm> <dim> <owner> <date> <name>", but not for the first sprint, I think
-        return files;
-    }
 
     @Override
     public void remove(User initiator) throws PermissionDeniedException {

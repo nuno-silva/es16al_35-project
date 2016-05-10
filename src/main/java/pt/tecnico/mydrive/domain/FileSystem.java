@@ -18,7 +18,9 @@ import pt.tecnico.mydrive.domain.xml.XMLVisitor;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.*;
+
 
 public class FileSystem extends FileSystem_Base {
 
@@ -163,43 +165,24 @@ public class FileSystem extends FileSystem_Base {
         }
     }
 
-    public List<String> pathContent(String path) throws FileNotFoundException {
-        /* FIXME duplicate of fileContent() ? */
-        return getFile(path).showContent();
-    }
 
-    public List<String> fileContent(String path) throws FileNotFoundException {
-        return getFile(path).showContent();
-    }
-
-    public void removeFile(String path) throws FileNotFoundException {
-        getFile(path).remove();
-    }
-
-    /*
-    public void createReadMe() {
-        List<String> users = pathContent("/home");
-        Directory home = (Directory) getFile("/home");
-        numFiles+=1;
-
-        PlainFile readMe = new PlainFile(home, "README", (byte) 0b00000000, numFiles);
-        readMe.setLines(users);
-    }
-    */
-    public File getFile(String path) throws FileNotFoundException {
-        logger.debug("getFile: " + path);
-        File currentDir = getRootDir();
-
-        if (!path.substring(0, 1).matches("/")) // check if root directory is used, otherwise ERROR!
-            throw new FileNotFoundException(path);
-
-        path = path.substring(1); // remove '/'
-        for (String dir : path.split("/")) {
-            logger.trace("getFile: entering " + dir);
-            currentDir = currentDir.getFileByName(dir);
+    public File getFile(String path, User initiator) {
+        if(PathHelper.isAbsolute(path)) {
+            String head = PathHelper.getHead(path);
+            String tail = PathHelper.getTail(path);
+            if(head.equals("/") && tail.equals("")) {
+                return getRootDir();
+            } else {
+                return getRootDir().getFile(tail, initiator);
+            }
+        } else {
+            throw new UnsupportedOperationException("Can not get relative path from FS: '"+path+"'. Absolute Path expected.");
         }
-        logger.debug("getFileResult: " + currentDir.getFullPath());
-        return currentDir;
+    }
+
+    @Deprecated
+    public File getFile(String path) throws FileNotFoundException {
+        return getFile(path, getSuperUser());
     }
 
     public Document xmlExport() {
@@ -590,6 +573,28 @@ public class FileSystem extends FileSystem_Base {
             OWNER = owner;
 
             return this;
+        }
+    }
+    public static class PathHelper {
+        public static boolean isAbsolute(String path) { return path.startsWith("/"); }
+        public static String getHead(String path) {
+            if(path.equals("/")) {
+                return "/";
+            }
+            String[] p = path.split("/");
+            if( p.length == 0 ) {
+                throw new RuntimeException("Path '"+path+"' is empty or malformed?");
+            }
+            return p[0];
+        }
+        public static String getTail(String path) {
+            int separator = path.indexOf("/");
+            if( separator == -1 ) {
+                return "";
+            } else {
+                return path.substring(separator+1);
+            }
+
         }
     }
 }

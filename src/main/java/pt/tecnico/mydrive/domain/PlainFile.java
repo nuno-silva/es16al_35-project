@@ -7,10 +7,12 @@ import pt.tecnico.mydrive.domain.xml.Visitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.WriteDirectoryException;
+import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class PlainFile extends PlainFile_Base implements Visitable {
     public static final String LINE_SEPARATOR = "\n";
@@ -104,7 +106,7 @@ public class PlainFile extends PlainFile_Base implements Visitable {
             throw new PermissionDeniedException(initiator.getUsername() + " has no read permissions for "
                     + this.getFullPath());
         }
-	
+
         return getContent();
     }
 
@@ -117,16 +119,6 @@ public class PlainFile extends PlainFile_Base implements Visitable {
         // TODO: method not needed for the first sprint
     }
 
-    /**
-     * sets the content of the PlainFile as a List of lines
-     */
-    public void setLines(List<String> lines) {
-        String content = "";
-        for (String line : lines) {
-            content += line + LINE_SEPARATOR;
-        }
-        super.setContent(content);
-    }
 
     @Override
     public void setContent(String content) {
@@ -139,6 +131,7 @@ public class PlainFile extends PlainFile_Base implements Visitable {
      * @param content
      * @param initiator
      */
+    @Override
     public void setContent(String content, User initiator) {
 
         assertIsWritable();
@@ -151,24 +144,19 @@ public class PlainFile extends PlainFile_Base implements Visitable {
         super.setContent(content);
     }
 
-    /**
-     * @returns the content of the PlainFile as a List of lines
-     */
-    @Override
-    public List<String> showContent() {
-        String content = getContent();
-        List<String> lines = Arrays.asList(content.split(LINE_SEPARATOR));
-        return lines;
-    }
-
-    @Override
-    public File getFileByName(String name) {
-        /* FIXME wtf is this? */
-        return this;
-    }
 
     @Override
     public Element accept(Visitor visitor) {
         return visitor.visit(this);
+    }
+
+    @Override
+    public File getFile(String path, User initiator, Set<File> visited) {
+        throw new IsNotCdAbleException(getFullPath() + " isn't CdAble'");
+    }
+
+    @Override
+    public void addFile(File file, User initiator) throws FilenameAlreadyExistsException {
+        throw new IsNotCdAbleException(getFullPath() + " isn't CdAble'");
     }
 }

@@ -20,15 +20,15 @@ public class WriteFileService extends MyDriveService {
     protected void dispatch() {
         FileSystem fs = getFileSystem();
         Session s = fs.getSession(token);
+        User activeUser = s.getUser();
         File f;
         if (fileName.contains("/"))
         	f = fs.getFile(fileName);
         else {
             Directory d = s.getWorkDir();
-            f = d.getFileByName(fileName);
+            f = d.getFile(fileName, activeUser);
         }
         f.assertIsWritable(); // make sure that it's a not a directory
-        User activeUser = s.getUser();
         PlainFile pf = (PlainFile) f;
         pf.setContent(content, activeUser);
     }

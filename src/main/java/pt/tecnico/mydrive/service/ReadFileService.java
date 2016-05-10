@@ -29,14 +29,10 @@ public class ReadFileService extends MyDriveService {
     	FileSystem fs = getFileSystem();
         Session session = fs.getSession(token);
 
-        Directory d = session.getWorkDir();
-        File f = d.getFileByName(fileName);
-
         User activeUser = session.getUser();
 
-        String fullpathtofile = d.getFullPath() + "/" + fileName;
-
-        File file = fs.getFile(fullpathtofile);
-        file.getContent(activeUser);
+        Directory d = session.getWorkDir();
+        File f = d.getFile(fileName, activeUser);
+        f.getContent(activeUser);
     }
 }
