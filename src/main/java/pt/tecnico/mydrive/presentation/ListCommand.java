@@ -8,8 +8,9 @@ import pt.tecnico.mydrive.service.ListDirectoryService;
 import pt.tecnico.mydrive.service.dto.FileDto;
 
 /*Other stuff*/
-
-
+import pt.tecnico.mydrive.domain.FileSystem;
+import pt.tecnico.mydrive.domain.Session;
+import pt.tecnico.mydrive.domain.Directory;
 
 public class ListCommand extends MyDriveCommand {
 
@@ -18,12 +19,12 @@ public class ListCommand extends MyDriveCommand {
       ListDirectoryService lds;
       /* Check if argument length is at least the size of the obligatory */
       try{
-        if( args.length==0 ||  args[0].trim()=="."){
+        if( args.length <= 0 ){
           MydriveShell mds = (MydriveShell) shell();
-          lds = new ListDirectoryService(mds.getToken());
+          lds = new ListDirectoryService(mds.getToken(), ".");
           lds.execute();
         }
-        if( args.length>1 ){
+        else if( args.length>1 ){
           throw new RuntimeException("USAGE: "+name()+"list [path]");
         }
         else{
