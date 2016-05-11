@@ -35,12 +35,5 @@ public abstract class CreateFileService extends MyDriveService {
     protected void dispatch() throws EmptyFileNameException, IsNotCdAbleException, PermissionDeniedException {
         if (fileName.trim() == "")
             throw new EmptyFileNameException();
-        /* Retrieve the user through the token received */
-        FileSystem fs = getFileSystem();
-        Session s = fs.getSession(token);
-        File d = s.getWorkDir();
-        User u = s.getUser();
-        if (!d.checkWritePermission(u))
-            throw new PermissionDeniedException("creating file.");
-    }
+          }
 }
