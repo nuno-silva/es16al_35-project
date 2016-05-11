@@ -21,7 +21,7 @@ public class CreateLinkService extends CreatePlainFileService {
         super.dispatchAux();
         FileSystem fs = getFileSystem();
         Session s = fs.getSession(getToken());
-        Directory workDir = s.getWorkDir();
+        File workDir = s.getWorkDir();
         new Link(fs, workDir, s.getUser(), getFileName(), getContent());
 
     }

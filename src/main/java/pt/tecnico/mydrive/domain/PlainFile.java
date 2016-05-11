@@ -25,54 +25,54 @@ public class PlainFile extends PlainFile_Base implements Visitable {
     }
 
     //all params
-    public PlainFile(FileSystem fs, Directory parent, User owner, String name, byte perm, String content) {
+    public PlainFile(FileSystem fs, File parent, User owner, String name, byte perm, String content) {
         super();
         init(fs, parent, owner, name, perm, content);
     }
 
     //all but content
-    public PlainFile(FileSystem fs, Directory parent, User owner, String name, byte perm) {
+    public PlainFile(FileSystem fs, File parent, User owner, String name, byte perm) {
         super();
         init(fs, parent, owner, name, perm, "");
     }
 
     //all but owner
-    public PlainFile(FileSystem fs, Directory parent, String name, byte perm, String content) {
+    public PlainFile(FileSystem fs, File parent, String name, byte perm, String content) {
         super();
         init(fs, parent, fs.getSuperUser(), name, perm, content);
     }
 
     //all but permissions
-    public PlainFile(FileSystem fs, Directory parent, User owner, String name, String content) {
+    public PlainFile(FileSystem fs, File parent, User owner, String name, String content) {
         super();
         init(fs, parent, owner, name, owner.getMask(), content);
     }
 
     //all but content and owner
-    public PlainFile(FileSystem fs, Directory parent, String name, byte perm) {
+    public PlainFile(FileSystem fs, File parent, String name, byte perm) {
         super();
         init(fs, parent, fs.getSuperUser(), name, perm, "");
     }
 
     //all but content and permissions
-    public PlainFile(FileSystem fs, Directory parent, User owner, String name) {
+    public PlainFile(FileSystem fs, File parent, User owner, String name) {
         super();
         init(fs, parent, owner, name, owner.getMask(), "");
     }
 
     //all permissions and owner
-    public PlainFile(FileSystem fs, Directory parent, String name, String content) {
+    public PlainFile(FileSystem fs, File parent, String name, String content) {
         super();
         init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), content);
     }
 
     //all permissions, owner and content
-    public PlainFile(FileSystem fs, Directory parent, String name) {
+    public PlainFile(FileSystem fs, File parent, String name) {
         super();
         init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), "");
     }
 
-    public static Optional<? extends PlainFile> createIfNotExists(FileSystem fs, Directory parent, User owner,
+    public static Optional<? extends PlainFile> createIfNotExists(FileSystem fs, File parent, User owner,
                                                                   String name, byte perm, String content) {
         Optional<PlainFile> opt = Optional.empty();
         if (owner == null) {
@@ -89,7 +89,7 @@ public class PlainFile extends PlainFile_Base implements Visitable {
         return opt;
     }
 
-    protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm, String content) {
+    protected void init(FileSystem fs, File parent, User owner, String name, byte perm, String content) {
         logger.trace("init name: " + name);
         super.init(fs, parent, owner, name, perm);
         super.setContent(content);

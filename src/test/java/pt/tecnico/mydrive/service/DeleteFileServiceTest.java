@@ -37,7 +37,7 @@ public final class DeleteFileServiceTest extends AbstractServiceTest {
         // anyone can do anything with his files
         theGame = new User(fs, "TheGame", "Dr.Dresssss", "The Protegé Of The D.R.E.", (byte)0b11111111);
 
-        Directory gameHome = (Directory) fs.getFile(theGame.getHomePath());
+        File gameHome = theGame.getHome();
         new PlainFile(fs, gameHome, theGame, FILE_PERM_REMOVE, theGame.getByteMask(), "Dr.Dre, Dr.Dre, Dr.Dre, Compton");
         new PlainFile(fs, gameHome, theGame, FILE_NO_PERM_REMOVE, (byte)0b11101110, "Touch Dre, catch an exception");
 

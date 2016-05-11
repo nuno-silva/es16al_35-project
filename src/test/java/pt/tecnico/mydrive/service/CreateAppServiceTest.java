@@ -15,7 +15,7 @@ public class CreateAppServiceTest extends AbstractServiceTest {
     @Override
     protected void populate() {
         FileSystem fs = FileSystem.getInstance();
-        Directory f = (Directory) fs.getFile("/home");  // FIXME : nao gosto do cast!
+        File f = fs.getFile("/home");
         new App(fs, f, fs.getSuperUser(), "Work", "pt.tecnico.mydrive.exception.MyDriveException.class");
     }
 
@@ -58,11 +58,11 @@ public class CreateAppServiceTest extends AbstractServiceTest {
     	 * App with existing name cannot be created in same directory - maybe this could on the CreateFileTest
     	 */
         File f = fs.getFile("/home");
-        fs.getSession(lser.result()).setWorkDir((Directory)f);
+        fs.getSession(lser.result()).setWorkDir(f);
         CreateFileService service = new CreateAppService("Work", lser.result(), "pt.tecnico.mydrive.domain.App.class");
         service.execute();
     }
-    
+
    // change expected Exception
    @Ignore @Test (expected = MyDriveException.class)
    public void appCreationFail() {
@@ -74,9 +74,9 @@ public class CreateAppServiceTest extends AbstractServiceTest {
 	   	 * Creating App with incorrect content - Not a java fully qualified name
 	   	 */
 	   	File f = fs.getFile("/home");
-	   	fs.getSession(lser.result()).setWorkDir((Directory)f);
+	   	fs.getSession(lser.result()).setWorkDir(f);
 	   	CreateFileService service = new CreateAppService("TestApp", lser.result(), "Do stuff...");
 	   	service.execute();
-    	
+
     }
 }

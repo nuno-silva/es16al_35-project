@@ -25,7 +25,7 @@ public class WriteFileService extends MyDriveService {
         if (fileName.contains("/"))
         	f = fs.getFile(fileName);
         else {
-            Directory d = s.getWorkDir();
+            File d = s.getWorkDir();
             f = d.getFile(fileName, activeUser);
         }
         f.assertIsWritable(); // make sure that it's a not a directory

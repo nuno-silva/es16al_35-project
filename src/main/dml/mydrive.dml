@@ -61,7 +61,7 @@ relation FileSystemHasRootDir {
 }
 
 relation DirectoryHasFiles {
-	Directory playsRole parentDir { multiplicity 1; }
+	File playsRole parentDir { multiplicity 1; }
 	File playsRole file { multiplicity *; }
 }
 
@@ -87,5 +87,5 @@ relation UserHasHomeDir{
 
 relation SessionHasWorkDir {
 	Session playsRole session { multiplicity 0..1; }
-	Directory playsRole workDir { multiplicity 1; }
+	File playsRole workDir { multiplicity 1; }
 }

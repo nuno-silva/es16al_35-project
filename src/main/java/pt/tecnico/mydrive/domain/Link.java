@@ -17,38 +17,38 @@ public class Link extends Link_Base implements Visitable {
     public static final String XML_TAG = "link";
 
     //all params
-    public Link(FileSystem fs, Directory parent, User owner, String name, byte perm, String content) {
+    public Link(FileSystem fs, File parent, User owner, String name, byte perm, String content) {
         super();
         init(fs, parent, owner, name, perm, content);
     }
 
     //all but perm
-    public Link(FileSystem fs, Directory parent, User owner, String name, String content) {
+    public Link(FileSystem fs, File parent, User owner, String name, String content) {
         this(fs, parent, owner, name, owner.getMask(), content);
     }
 
     //all but owner
-    public Link(FileSystem fs, Directory parent, String name, byte perm, String content) {
+    public Link(FileSystem fs, File parent, String name, byte perm, String content) {
         this(fs, parent, fs.getSuperUser(), name, perm, content);
     }
 
     //all but content
-    public Link(FileSystem fs, Directory parent, User owner, String name, byte perm) {
+    public Link(FileSystem fs, File parent, User owner, String name, byte perm) {
         this(fs, parent, owner, name, perm, "");
     }
 
     //all but content and perm
-    public Link(FileSystem fs, Directory parent, User owner, String name) {
+    public Link(FileSystem fs, File parent, User owner, String name) {
         this(fs, parent, owner, name, owner.getMask(), "");
     }
 
     //all but content and owner
-    public Link(FileSystem fs, Directory parent, String name, byte perm) {
+    public Link(FileSystem fs, File parent, String name, byte perm) {
         this(fs, parent, fs.getSuperUser(), name, perm, "");
     }
 
     //all but owner and perm
-    public Link(FileSystem fs, Directory parent, String name, String content) {
+    public Link(FileSystem fs, File parent, String name, String content) {
         this(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), content);
     }
 
@@ -120,7 +120,7 @@ public class Link extends Link_Base implements Visitable {
         return visitor.visit(this);
     }
 
-    public static Optional<Link> createIfNotExists(FileSystem fs, Directory parent, User owner,
+    public static Optional<Link> createIfNotExists(FileSystem fs, File parent, User owner,
                                                                   String name, byte perm, String content) {
         Optional<Link> opt = Optional.empty();
         if (owner == null) {

@@ -21,15 +21,15 @@ public class ChangeDirectoryService extends MyDriveService {
 
     public ChangeDirectoryService(long token, String path) {
         this.token = token;
-        this.path = path;   
+        this.path = path;
     }
 
     public ChangeDirectoryService(long token) {
         this.token = token;
         //this.path = path;
     }
-    
-    
+
+
     @Override
     protected void dispatch() {
         if (path.trim() == "") {
@@ -41,23 +41,23 @@ public class ChangeDirectoryService extends MyDriveService {
 
 	    if (path.charAt(0) == '/' ) {//path is absolute
 		File f = fs.getFile(path);
-		session.setWorkDir((Directory)f);
+		session.setWorkDir(f);
 		newPath = path;
 	    }
 	    else { //relative
-	    	Directory workDir = session.getWorkDir();
+	    	File workDir = session.getWorkDir();
 	    	newPath = workDir.getFullPath() + "/" + path;
         	File f = fs.getFile(newPath);
-        	session.setWorkDir((Directory)f);
-	
+        	session.setWorkDir(f);
+
         }
-	
+
         User activeUser = session.getUser();
         if (!activeUser.getStringPermissions().equals(session.getWorkDir().getStringPermissions()))
             throw new PermissionDeniedException(activeUser.getUsername() + " has no read permissions for "
                     + session.getWorkDir().getFullPath());
     }
-    
+
     public String result() {
     	assertExecuted();
     	return newPath;

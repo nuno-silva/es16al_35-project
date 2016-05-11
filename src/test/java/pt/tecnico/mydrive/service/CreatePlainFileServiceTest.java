@@ -32,7 +32,7 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
 	@Override
 	protected void populate() {
         FileSystem fs = FileSystem.getInstance();
-        Directory f = (Directory) fs.getFile("/home");
+        File f = fs.getFile("/home");
         //new Link(fs, f, fs.getSuperUser(), "Test1", "I have a lot of work to do during this week!");
         new App(fs, f, fs.getSuperUser(), "Test1", "I have a lot of work to do during this week!");
         new User(fs, "bbranco", "es2016ssssss", "Bernardo", DEFAULT_MASK);
@@ -113,7 +113,7 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
         LoginService lser = new LoginService( "root", "***" );
         lser.execute();
 				File f = fs.getFile("/home");
-    		fs.getSession(lser.result()).setWorkDir((Directory)f);
+    		fs.getSession(lser.result()).setWorkDir(f);
         CreateFileService service = new CreateAppService("Test2/", lser.result(), "I have a lot of work to do during this week!");
         service.execute();
 
@@ -126,7 +126,7 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
         LoginService lser = new LoginService( "bbranco", "es2016ssssss" );
         lser.execute();
 				File f = fs.getFile("/home/jorge");
-    	fs.getSession(lser.result()).setWorkDir((Directory)f);
+    	fs.getSession(lser.result()).setWorkDir(f);
         CreatePlainFileService service = new CreatePlainFileService("TestBernardo", lser.result(), "I have a lot of work to do during this week!");
         service.execute();
 
@@ -142,7 +142,7 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
         LoginService lser = new LoginService( "root", "***" );
         lser.execute();
 				File f = fs.getFile("/home");
-    	fs.getSession(lser.result()).setWorkDir((Directory)f);
+    	fs.getSession(lser.result()).setWorkDir(f);
         CreateFileService service = new CreateAppService("Test1", lser.result(), "I have a lot of work to do during this week!");
         service.execute();
     }
@@ -153,19 +153,19 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
 		LoginService lser = new LoginService( "root", "***" );
 		lser.execute();
 		File f = fs.getFile("/home");
-		fs.getSession(lser.result()).setWorkDir((Directory)f);
+		fs.getSession(lser.result()).setWorkDir(f);
 		CreateFileService service = new CreateAppService("", lser.result(), "I have a lot of work to do during this week!");
 		service.execute();
 	}
-	
-	
-	
-     /* Create File with invalid path size: 
-     * 
+
+
+
+     /* Create File with invalid path size:
+     *
      * valid token and name bigger than 1024
-     * 
+     *
      */
-     
+
     @Test (expected=InvalidFileNameException.class)
     public void bigName() {
 
@@ -173,17 +173,17 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
         LoginService lser = new LoginService( "root", "***" );
         lser.execute();
 		File f = fs.getFile("/home");
-    	fs.getSession(lser.result()).setWorkDir((Directory)f);
+    	fs.getSession(lser.result()).setWorkDir(f);
         String filename = createBigName();
         CreatePlainFileService service = new CreatePlainFileService(filename, lser.result(), "I have a lot of work to do during this week!");
         service.execute();
 
     }
-    
-    /* Create Link with loop: 
-     * 
+
+    /* Create Link with loop:
+     *
      * Exception will not be MyDriveException but instead LoopCreatedException for example
-     * 
+     *
      */
 
 	// @Test (expected = MyDriveException.class)
@@ -192,11 +192,11 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
 		LoginService lser = new LoginService( "root", "***" );
 		lser.execute();
 		File f = fs.getFile("/home");
-		fs.getSession(lser.result()).setWorkDir((Directory) f);
+		fs.getSession(lser.result()).setWorkDir(f);
 		CreateFileService service = new CreateLinkService("LinkTest2", lser.result(), "/home/LinkTest1");
 		service.execute();
 	}
-    
+
     private String createBigName(){
     	String res = "";
     	for (int i=0 ; i<1050 ; i++)

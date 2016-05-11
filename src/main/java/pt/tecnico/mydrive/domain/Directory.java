@@ -27,25 +27,25 @@ public class Directory extends Directory_Base implements Visitable {
 	}
 
     //all params
-    public Directory(FileSystem fs, Directory parent, User owner, String name, byte perm) {
+    public Directory(FileSystem fs, File parent, User owner, String name, byte perm) {
         super();
         init(fs, parent, owner, name, perm);
     }
 
     //all but owner
-    public Directory(FileSystem fs, Directory parent, String name, byte perm) {
+    public Directory(FileSystem fs, File parent, String name, byte perm) {
         super();
         init(fs, parent, fs.getSuperUser(), name, perm);
     }
 
     //all but perm
-    public Directory(FileSystem fs, Directory parent, User owner, String name) {
+    public Directory(FileSystem fs, File parent, User owner, String name) {
         super();
         init(fs, parent, owner, name, owner.getMask());
     }
 
     //all but owner and perm
-    public Directory(FileSystem fs, Directory parent, String name) {
+    public Directory(FileSystem fs, File parent, String name) {
         super();
         init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask());
     }
@@ -58,7 +58,7 @@ public class Directory extends Directory_Base implements Visitable {
      * @return {@link Optional} containing the {@link Directory} if it was created or one with such a name was found
      * or an empty Option, in case a {@link File} with such path and name exists, but it's not a Directory.
      */
-    protected static Optional<Directory> createIfNotExists(FileSystem fs, Directory parent,
+    protected static Optional<Directory> createIfNotExists(FileSystem fs, File parent,
                                                            User owner, String name, byte perm) {
         try {
             Directory dir = new Directory(fs, parent, name, perm);
@@ -70,7 +70,7 @@ public class Directory extends Directory_Base implements Visitable {
             return Optional.of(dir);
         } catch (FilenameAlreadyExistsException _) {
             logger.debug("File(possibly a directory) with name *[" + name + "]* already exists!");
-            File f = parent.getFileByName(name);
+            File f = parent.getFile(name, owner);
             if (f.isCdAble()) {
                 // File exists and it's a Directory
                 return Optional.of((Directory)f);
@@ -210,7 +210,7 @@ public class Directory extends Directory_Base implements Visitable {
 
     @Override
     public void remove(User initiator) throws PermissionDeniedException {
-        Directory parent = getParentDir();
+        File parent = getParentDir();
         if(!initiator.hasWritePermission(parent)) {
             throw new PermissionDeniedException("User '" + initiator.getUsername()
                     + "' can not write to '"+parent.getFullPath()+"'");

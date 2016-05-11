@@ -95,7 +95,7 @@ public class FileSystem extends FileSystem_Base {
                 }
                 logger.debug("createFileParents directory already exists: " + dirName
                         + " | full path: " + dir.getFullPath());
-                dir = (Directory) f;
+                dir = (Directory) f; // XXX after having links working, this is not safe anymore (Links are cdAble too)
             } catch (FileNotFoundException e) {
                 logger.debug("createFileParents creating directory: " + dirName + " | full path: " +
                         dir.getFullPath() + dirName);
@@ -133,7 +133,7 @@ public class FileSystem extends FileSystem_Base {
      * @return {@link java.util.Optional} with either the newly created directory or with the already existing directory
      * This Optional will contain the specified directory either way, it can never contain null.
      */
-    public Optional<Directory> createDirectoryIfNotExists(Directory parent, User owner, String name, byte permission) {
+    public Optional<Directory> createDirectoryIfNotExists(File parent, User owner, String name, byte permission) {
         Optional<Directory> opt = Directory.createIfNotExists(this, parent, owner, name, permission);
         if (!opt.isPresent()) {
             // Assuming that getFile() will succeed, since createIfNotExists() reported that the directory
@@ -150,12 +150,12 @@ public class FileSystem extends FileSystem_Base {
         return opt;
     }
 
-    public PlainFile createPlainFile(Directory parent, String name, byte permission) {
+    public PlainFile createPlainFile(File parent, String name, byte permission) {
         PlainFile newPlainFile = new PlainFile(this, parent, name, permission);
         return newPlainFile;
     }
 
-    public PlainFile createPlainFileIfNotExists(Directory parent, String name, byte permission) {
+    public PlainFile createPlainFileIfNotExists(File parent, String name, byte permission) {
         try {
             return createPlainFile(parent, name, permission);
         } catch (FilenameAlreadyExistsException _) {
@@ -195,7 +195,7 @@ public class FileSystem extends FileSystem_Base {
             doc.getRootElement().addContent(e);
         }
 
-        Directory rootDir = getRootDir();
+        File rootDir = getRootDir();
         File file;
         Queue<File> queue = new LinkedList<>();
         queue.add(getRootDir());
@@ -206,7 +206,7 @@ public class FileSystem extends FileSystem_Base {
             doc.getRootElement().addContent(e);
             if (file.isCdAble()) {
                 // if file is CDable, add all of it's children to the queue
-                for (File f : ((Directory) file).getFileSet()) {
+                for (File f : file.getFileSet()) {
                     logger.info("Adding " + f.getName() + " to directory queue");
                     if (file != f) {
                         /* this prevents infinite loops, since the root directory contains itself as
@@ -349,10 +349,10 @@ public class FileSystem extends FileSystem_Base {
                 content = "";
             }
 
-            PlainFile newPlainFile;
+            File newPlainFile;
             Optional<? extends PlainFile> opt;
 
-            Directory parent = createFileParents(fp.PATH);
+            File parent = createFileParents(fp.PATH);
 
             // if it's an App, all the App's constructor, otherwise use PlainFile's
             if (isApp) {
@@ -406,7 +406,7 @@ public class FileSystem extends FileSystem_Base {
             fp = parseFileParams(dir, fp);
             logger.trace("XML_DIR_IMPORT: begin import \"" + fp.NAME + "\" in path \"" + fp.PATH + "\"");
             createFileParents(fp.PATH + "/" + fp.NAME);
-            Optional<Directory> newDir = Directory.createIfNotExists(this, (Directory) getFile(fp.PATH), getUser(fp.OWNER), fp.NAME,
+            Optional<Directory> newDir = Directory.createIfNotExists(this, getFile(fp.PATH), getUser(fp.OWNER), fp.NAME,
                     MaskHelper.getByteMask(fp.MASK));
 
             if (newDir.isPresent()) {

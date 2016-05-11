@@ -25,7 +25,7 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
         super();
     }
 
-    protected void init(FileSystem fs, Directory parent, User owner, String name, byte perm) {
+    protected void init(FileSystem fs, File parent, User owner, String name, byte perm) {
         logger.trace("init name: " + name);
         setName(name);
         setOwner(owner);
@@ -104,7 +104,7 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
     }
 
     public void remove(User initiator) throws PermissionDeniedException {
-        Directory parent = getParentDir();
+        File parent = getParentDir();
         if(!initiator.hasWritePermission(parent)) {
             throw new PermissionDeniedException("User '" + initiator.getUsername()
                                                 + "' can not write to '"+parent.getFullPath()+"'");
@@ -146,13 +146,13 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
     }
 
     @Override
-    public Directory getParentDir() {
+    public File getParentDir() {
         logger.trace("getParentDir: " + getName());
         return super.getParentDir();
     }
 
     @Override
-    public void setParentDir(Directory parent) {
+    public void setParentDir(File parent) {
         logger.trace("setParentDir name: " + getName());
         if(parent == null) { // used by remove()
             super.setParentDir(null);

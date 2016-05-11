@@ -9,7 +9,7 @@ public class SpecialDirectory extends SpecialDirectory_Base {
     private static final Logger logger = Logger.getLogger(SpecialDirectory.class);
 
 
-    public SpecialDirectory(FileSystem fs, Directory parent, User owner, String name, byte perm) {
+    public SpecialDirectory(FileSystem fs, File parent, User owner, String name, byte perm) {
         super();
         init(fs, parent, owner, name, perm);
     }
@@ -50,7 +50,7 @@ public class SpecialDirectory extends SpecialDirectory_Base {
     }
 
     @Override
-    public void setParentDir(Directory parent) {
+    public void setParentDir(File parent) {
         if(parent == null) { // used by remove()
             super.setParentDir(null);
         } else {

@@ -17,10 +17,10 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
         FileSystem fs = FileSystem.getInstance();
         User user = new User(fs, "mike", "MIKEssssss", "Ronald McDonald", (byte) 0xff);
-        File home = fs.getFile(user.getHomePath());
-        new PlainFile(fs, (Directory) home, user, "TestPlainFile", (byte) 0xff, "Just a test string.");
-        new Link(fs, (Directory) home, user, "TestLink", (byte) 0xff, "/home/mike/TestPlainFile");
-        new App(fs, (Directory) home, user, "TestApp", (byte) 0xff, "pt.tecnico.mydrive.service.populate");
+        File home = user.getHome();
+        new PlainFile(fs, home, user, "TestPlainFile", (byte) 0xff, "Just a test string.");
+        new Link(fs, home, user, "TestLink", (byte) 0xff, "/home/mike/TestPlainFile");
+        new App(fs, home, user, "TestApp", (byte) 0xff, "pt.tecnico.mydrive.service.populate");
     	new Link(fs, user.getHome(), user, "TestLinkToLink", (byte) 0xff, "/home/mike/TestLink");
     }
 
@@ -62,7 +62,7 @@ public class ReadFileServiceTest extends AbstractServiceTest {
 
         assertEquals("Just a test string.", service.result());
     }
-    
+
     @Test
     public void linkPointsToLink() {
         final String fileName = "TestLinkToLink";
@@ -208,7 +208,7 @@ public class ReadFileServiceTest extends AbstractServiceTest {
         Session session = new Session(fs, user, "MIKEssssss");
         token = session.getToken();
 
-        Directory d = fs.createFileParents("/home/mike/Test");
+        File d = user.getHome();
         new Directory(fs, d, fileName);
 
         //Call ReadFileService
@@ -229,7 +229,7 @@ public class ReadFileServiceTest extends AbstractServiceTest {
         token = session.getToken();
 
         File home = fs.getFile(user.getHomePath());
-        new PlainFile(fs, (Directory) home, user, fileName, (byte) 0x00, "Just a test string.");
+        new PlainFile(fs, home, user, fileName, (byte) 0x00, "Just a test string.");
 
         //Call ReadFileService
         ReadFileService service = new ReadFileService(token, fileName);

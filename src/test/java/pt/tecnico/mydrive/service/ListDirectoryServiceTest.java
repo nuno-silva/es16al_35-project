@@ -34,22 +34,15 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 
         FileSystem fs = FileSystem.getInstance();
         File f = fs.getFile("/home");
-        Directory d;
-        if (f.isCdAble()) {
-            d = (Directory) f;
-        } else throw new IsNotCdAbleException();
         User u = new User( fs, "mrtesty", "123ssssss", "Monsiour Testy", (byte) 0b10100010);
-        Directory dir = new Directory(fs, d, "testyDir", (byte) 0b11100000);
-        dir = new Directory(fs, d, "Sluty Dir", (byte) 0b00001111);
-        dir = new Directory(fs, d, "Unlistable Dir", (byte) 0b11110111);
-        dir = new Directory(fs, d, "Listable Dir", (byte) 0b11111111);
+        Directory dir = new Directory(fs, f, "testyDir", (byte) 0b11100000);
+        dir = new Directory(fs, f, "Sluty Dir", (byte) 0b00001111);
+        dir = new Directory(fs, f, "Unlistable Dir", (byte) 0b11110111);
+        dir = new Directory(fs, f, "Listable Dir", (byte) 0b11111111);
         f = fs.getFile("/home/mrtesty");
-        if (f.isCdAble()) {
-            d = (Directory) f;
-        } else throw new IsNotCdAbleException();
-        new App(fs, d, u, "MyApp");
-        new PlainFile(fs, d, "RootFile", (byte) 0b00000000 );
-        new Link(fs, d, u, "MyLink");
+        new App(fs, f, u, "MyApp");
+        new PlainFile(fs, f, "RootFile", (byte) 0b00000000 );
+        new Link(fs, f, u, "MyLink");
     }
 
     @org.junit.Ignore("the test is creating a dir where it has no permission to do so (notice the user's mask)")
@@ -89,7 +82,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
         login.execute();
 
         File f = fs.getFile("/home/testyDir");
-        fs.getSession( login.result() ).setWorkDir((Directory)f);
+        fs.getSession( login.result() ).setWorkDir(f);
         ListDirectoryService lsSer = new ListDirectoryService( login.result() );
         lsSer.execute();
         List<FileDto> results = lsSer.result();
@@ -142,7 +135,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
       LoginService login = new LoginService("mrtesty", "123ssssss");
       login.execute();
       File f = fs.getFile("/home/Unlistable Dir");
-      fs.getSession( login.result() ).setWorkDir((Directory)f);
+      fs.getSession( login.result() ).setWorkDir(f);
       ListDirectoryService lsSer = new ListDirectoryService( login.result() );
       lsSer.execute();
     }
@@ -155,7 +148,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
       LoginService login = new LoginService("mrtesty", "123ssssss");
       login.execute();
       File f = fs.getFile("/home/Listable Dir");
-      fs.getSession( login.result() ).setWorkDir((Directory)f);
+      fs.getSession( login.result() ).setWorkDir(f);
       ListDirectoryService lsSer = new ListDirectoryService( login.result() );
       lsSer.execute();
 

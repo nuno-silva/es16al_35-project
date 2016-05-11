@@ -13,7 +13,7 @@ public class ReadFileService extends MyDriveService {
 
     private String fileName;
     private long token;
-    private String content;   
+    private String content;
 
     public ReadFileService(long token, String fileName) {
         this.token = token;
@@ -31,11 +31,11 @@ public class ReadFileService extends MyDriveService {
 
         User activeUser = session.getUser();
 
-        Directory d = session.getWorkDir();
+        File d = session.getWorkDir();
         File f = d.getFile(fileName, activeUser);
         content = f.getContent(activeUser);
     }
-    
+
     public String result() {
     	assertExecuted();
     	return content;

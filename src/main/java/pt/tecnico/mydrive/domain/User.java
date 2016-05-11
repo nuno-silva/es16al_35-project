@@ -81,7 +81,7 @@ public class User extends User_Base implements Visitable, IPermissionable {
 
             File home = fs.getFile("/home");
             if (home.isCdAble()) {
-                Directory homeD = new Directory(fs, (Directory) home, this, username);
+                Directory homeD = new Directory(fs, home, this, username);
                 super.setHome(homeD);
                 super.setHomePath(homeD.getFullPath());
             } else {

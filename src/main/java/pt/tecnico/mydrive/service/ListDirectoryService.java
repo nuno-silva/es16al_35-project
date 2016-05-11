@@ -46,7 +46,7 @@ public class ListDirectoryService extends MyDriveService {
         } else if( FileSystem.PathHelper.isAbsolute(_path) ){
             wf = fs.getFile(_path, u);
         } else {
-            Directory workingDir = s.getWorkDir();
+            File workingDir = s.getWorkDir();
             wf = workingDir.getFile(_path, u);
         }
 
@@ -67,7 +67,7 @@ public class ListDirectoryService extends MyDriveService {
                                getFileType(wf) ));
 
         // add '..'
-        Directory parent = wf.getParentDir();
+        File parent = wf.getParentDir();
         _files.add(new FileDto("..",
                                parent.getId(),
                                parent.getPermissions(),

@@ -29,7 +29,7 @@ public class Session extends Session_Base {
         long token = generateToken(fs);
         DateTime expirationDate = u.renewExpirationDate();
         fs.removeExpiredTokens();
-        Directory d = u.getHome();
+        File d = u.getHome();
         if(d==null) throw new RuntimeException("BUG: User's home is NULL");
         init(fs, u, token, d, expirationDate);
         logger.debug("new Session: token " + tokenToString(token));
@@ -39,7 +39,7 @@ public class Session extends Session_Base {
         return Long.toHexString(token);
     }
 
-    protected void init(FileSystem fs, User u, long token, Directory wd, DateTime expirationDate) {
+    protected void init(FileSystem fs, User u, long token, File wd, DateTime expirationDate) {
         super.setWorkDir(wd);
         super.setExpirationDate(expirationDate);
         super.setToken(token);
@@ -102,6 +102,14 @@ public class Session extends Session_Base {
     @Override
     public void setUser(User u) {
         throw new PermissionDeniedException("change Session's User");
+    }
+
+    @Override
+    public void setWorkDir(File f) {
+        if( !f.isCdAble() ) {
+            throw new IsNotCdAbleException(f.getFullPath() + "is not CdAble");
+        }
+        super.setWorkDir(f);
     }
 
     @Override

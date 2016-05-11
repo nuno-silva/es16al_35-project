@@ -38,7 +38,7 @@ public abstract class CreateFileService extends MyDriveService {
         /* Retrieve the user through the token received */
         FileSystem fs = getFileSystem();
         Session s = fs.getSession(token);
-        Directory d = s.getWorkDir();
+        File d = s.getWorkDir();
         User u = s.getUser();
         if (!d.checkWritePermission(u))
             throw new PermissionDeniedException("creating file.");

@@ -14,13 +14,13 @@ import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 
 public class CreateDirectoryServiceTest extends AbstractServiceTest {
 	private static final byte DEFAULT_MASK = (byte) 0b11110000;
-
+	private User u;
 	@Override
 	protected void populate() {
 		// TODO Auto-generated method stub
 		 FileSystem fs = FileSystem.getInstance();
-		 new User(fs, "bbranco", "es2016ssssss", "Bernardo", DEFAULT_MASK);
-		 Directory f = (Directory) fs.getFile("/home/bbranco");
+		 u = new User(fs, "bbranco", "es2016ssssss", "Bernardo", DEFAULT_MASK);
+		 File f =  fs.getFile("/home/bbranco");
 
 	}
 
@@ -38,7 +38,7 @@ public class CreateDirectoryServiceTest extends AbstractServiceTest {
     	assertNotNull("Directory was not created", dir);
         assertEquals("Directory created with wrong name", "TestDir", dir.getName());
         assertEquals("Directory created with wrong owner", fs.getUser("bbranco"), dir.getOwner());
-        assertEquals("Directory created with wrong content", 0, ((Directory) dir).getFileCount());
+        assertEquals("Directory created with wrong content", true, dir.getFileSet(u).isEmpty());
 	}
 
 
