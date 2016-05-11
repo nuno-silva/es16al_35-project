@@ -107,12 +107,7 @@ public class Link extends Link_Base implements Visitable {
 
     protected File getPointedFile() {
         FileSystem fs = FileSystem.getInstance();
-        String content = super.getContent().trim();
-        if (FileSystem.PathHelper.isAbsolute(content)) {
-            return fs.getFile(content);
-        } else {
-            return getParentDir().getFile(content, fs.getSuperUser());
-        }
+        return getPointedFile(fs.getSuperUser());
     }
 
     @Override

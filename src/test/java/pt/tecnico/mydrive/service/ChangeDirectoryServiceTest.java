@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 /* Other stuff */
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.Ignore;
 
 /* Domain */
@@ -33,6 +34,7 @@ import mockit.Mock;
 import mockit.MockUp;
 import mockit.integration.junit4.JMockit;
 
+@RunWith(JMockit.class)
 public class ChangeDirectoryServiceTest extends AbstractServiceTest {
 
 	String _username = "user";
@@ -159,18 +161,18 @@ public class ChangeDirectoryServiceTest extends AbstractServiceTest {
         service.execute();
     }
 
-    @Ignore
     @Test
     public void linkWithEnvVars() {
 
     	FileSystem fs = FileSystem.getInstance();
-        User u = new User(fs, "ola", "adeussssss", "Nomee", (byte) 0x00);
+        User u = new User(fs, "ola", "adeussssss", "Nomee", (byte) 0xff);
 
     	Session s = new Session(fs, fs.getUser("ola"), "adeussssss");
         _validToken = s.getToken();
         AddVariableService avs = new AddVariableService( _validToken, "USER", "ola" );
         avs.execute();
         Directory d = u.getHome();
+
         Link l = new Link( fs, d, u, "env_link", "/home/$USER" );
         ChangeDirectoryService service = new ChangeDirectoryService( _validToken, "/home/ola/env_link" );
 
@@ -178,6 +180,7 @@ public class ChangeDirectoryServiceTest extends AbstractServiceTest {
             @Mock
             File getPointedFile(User u) { return fs.getFile("/home/ola"); }
         };
+
         service.execute();
     }
 
