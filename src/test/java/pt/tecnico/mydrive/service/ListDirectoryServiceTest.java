@@ -88,7 +88,6 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
         List<FileDto> results = lsSer.result();
     }
 
-    @org.junit.Ignore("the test is creating a dir where it has no permission to do so (notice the user's mask)")
     @Test
     public void PopulatedDir() {
         FileSystem fs = FileSystem.getInstance();
@@ -102,7 +101,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
         assertEquals("Too much files here",results.size(),5);
 
 		assertEquals( "dot(.) Name incorrect", results.get(0).getName(), "." );
-		assertEquals("dot(.) permissions incorrect", results.get(0).getPermissions(), (byte) 0b10100010);
+		assertEquals("dot(.) permissions incorrect", results.get(0).getPermissions(), (byte) 0b11110010);
 		assertNotNull("dot(.) lastMod null", results.get(0).getLastMod());
 		assertEquals("dot(.) fileType incorrect", results.get(0).getType(),FileDto.FileType.DIRECTORY);
 
@@ -112,7 +111,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		assertEquals("parent(..) fileType incorrect", results.get(1).getType(),FileDto.FileType.DIRECTORY);
 
 		assertEquals( "Name incorrect", results.get(2).getName(), "MyApp" );
-		assertEquals("permissions incorrect", results.get(2).getPermissions(), (byte) 0b10100010);
+		assertEquals("permissions incorrect", results.get(2).getPermissions(), (byte) 0b11110010);
 		assertNotNull("lastMod null", results.get(2).getLastMod());
 		assertEquals("fileType incorrect", results.get(2).getType(),FileDto.FileType.APP);
 
@@ -122,7 +121,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 		assertEquals("fileType incorrect", results.get(4).getType(),FileDto.FileType.PLAINFILE);
 
     assertEquals( "Name incorrect ", results.get(3).getName(), "MyLink" );
-    assertEquals("permissions incorrect", results.get(3).getPermissions(), (byte) 0b10100010);
+    assertEquals("permissions incorrect", results.get(3).getPermissions(), (byte) 0b11110010);
     assertNotNull("lastMod null", results.get(3).getLastMod());
     assertEquals("fileType incorrect", results.get(3).getType(),FileDto.FileType.LINK);
     }
