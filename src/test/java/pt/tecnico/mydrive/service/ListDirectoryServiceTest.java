@@ -34,7 +34,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 
         FileSystem fs = FileSystem.getInstance();
         File f = fs.getFile("/home");
-        User u = new User( fs, "mrtesty", "123ssssss", "Monsiour Testy", (byte) 0b10100010);
+        User u = new User( fs, "mrtesty", "123ssssss", "Monsiour Testy", (byte) 0b11110010);
         Directory dir = new Directory(fs, f, "testyDir", (byte) 0b11100000);
         dir = new Directory(fs, f, "Sluty Dir", (byte) 0b00001111);
         dir = new Directory(fs, f, "Unlistable Dir", (byte) 0b11110111);
@@ -45,7 +45,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
         new Link(fs, f, u, "MyLink");
     }
 
-    @org.junit.Ignore("the test is creating a dir where it has no permission to do so (notice the user's mask)")
+    
     @Test
     public void successEmptyDir() {
         FileSystem fs = FileSystem.getInstance();
@@ -73,7 +73,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
 
     }
 
-    @org.junit.Ignore("the test is creating a dir where it has no permission to do so (notice the user's mask)")
+
     @Test (expected = PermissionDeniedException.class)
     public void wrongPermissions() {
         FileSystem fs = FileSystem.getInstance();
@@ -127,7 +127,6 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
     assertEquals("fileType incorrect", results.get(3).getType(),FileDto.FileType.LINK);
     }
 
-    @org.junit.Ignore("the test is creating a dir where it has no permission to do so (notice the user's mask)")
     @Test ( expected = PermissionDeniedException.class )
     public void failListingOtherUserDir(){
       FileSystem fs = FileSystem.getInstance();
@@ -140,7 +139,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
       lsSer.execute();
     }
 
-    @org.junit.Ignore("the test is creating a dir where it has no permission to do so (notice the user's mask)")
+
     @Test
     public void successWithOtherUserDir(){
       FileSystem fs = FileSystem.getInstance();
