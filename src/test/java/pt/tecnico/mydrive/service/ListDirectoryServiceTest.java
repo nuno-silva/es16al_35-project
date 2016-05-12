@@ -45,7 +45,7 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
         new Link(fs, f, u, "MyLink");
     }
 
-    
+
     @Test
     public void successEmptyDir() {
         FileSystem fs = FileSystem.getInstance();
@@ -149,6 +149,82 @@ public class ListDirectoryServiceTest extends AbstractServiceTest {
       File f = fs.getFile("/home/Listable Dir");
       fs.getSession( login.result() ).setWorkDir(f);
       ListDirectoryService lsSer = new ListDirectoryService( login.result() );
+      lsSer.execute();
+
+      List<FileDto> results = lsSer.result();
+      /* Asserts */
+      assertEquals("Too much files here",results.size(),2);
+
+      assertEquals( "dot(.) Name incorrect", results.get(0).getName(), "." );
+      assertEquals("dot(.) permissions incorrect", results.get(0).getPermissions(), (byte) 0b11111111);
+      assertNotNull("dot(.) lastMod null", results.get(0).getLastMod());
+      assertEquals("dot(.) fileType incorrect", results.get(0).getType(),FileDto.FileType.DIRECTORY);
+
+      assertEquals( "parent(..) Name incorrect", results.get(1).getName(), ".." );
+      assertEquals("parent(..) permissions incorrect", results.get(1).getPermissions(), (byte) 0b11111010);
+      assertNotNull("parent(..) lastMod null", results.get(1).getLastMod());
+      assertEquals("parent(..) fileType incorrect", results.get(1).getType(),FileDto.FileType.DIRECTORY);
+    }
+
+    @Test
+    public void successWithPath(){
+      FileSystem fs = FileSystem.getInstance();
+      /* LOGIN */
+      LoginService login = new LoginService("mrtesty", "123ssssss");
+      login.execute();
+      ListDirectoryService lsSer = new ListDirectoryService( login.result(), "/home/Listable Dir" );
+      lsSer.execute();
+
+      List<FileDto> results = lsSer.result();
+      /* Asserts */
+      assertEquals("Too much files here",results.size(),2);
+
+      assertEquals( "dot(.) Name incorrect", results.get(0).getName(), "." );
+      assertEquals("dot(.) permissions incorrect", results.get(0).getPermissions(), (byte) 0b11111111);
+      assertNotNull("dot(.) lastMod null", results.get(0).getLastMod());
+      assertEquals("dot(.) fileType incorrect", results.get(0).getType(),FileDto.FileType.DIRECTORY);
+
+      assertEquals( "parent(..) Name incorrect", results.get(1).getName(), ".." );
+      assertEquals("parent(..) permissions incorrect", results.get(1).getPermissions(), (byte) 0b11111010);
+      assertNotNull("parent(..) lastMod null", results.get(1).getLastMod());
+      assertEquals("parent(..) fileType incorrect", results.get(1).getType(),FileDto.FileType.DIRECTORY);
+    }
+
+    @Test
+    public void successWithDotInFileName(){
+      FileSystem fs = FileSystem.getInstance();
+      /* LOGIN */
+      LoginService login = new LoginService("mrtesty", "123ssssss");
+      login.execute();
+      File f = fs.getFile("/home/Listable Dir");
+      fs.getSession( login.result() ).setWorkDir(f);
+      ListDirectoryService lsSer = new ListDirectoryService( login.result(), "." );
+      lsSer.execute();
+
+      List<FileDto> results = lsSer.result();
+      /* Asserts */
+      assertEquals("Too much files here",results.size(),2);
+
+      assertEquals( "dot(.) Name incorrect", results.get(0).getName(), "." );
+      assertEquals("dot(.) permissions incorrect", results.get(0).getPermissions(), (byte) 0b11111111);
+      assertNotNull("dot(.) lastMod null", results.get(0).getLastMod());
+      assertEquals("dot(.) fileType incorrect", results.get(0).getType(),FileDto.FileType.DIRECTORY);
+
+      assertEquals( "parent(..) Name incorrect", results.get(1).getName(), ".." );
+      assertEquals("parent(..) permissions incorrect", results.get(1).getPermissions(), (byte) 0b11111010);
+      assertNotNull("parent(..) lastMod null", results.get(1).getLastMod());
+      assertEquals("parent(..) fileType incorrect", results.get(1).getType(),FileDto.FileType.DIRECTORY);
+    }
+
+    @Test
+    public void successWithRelativePath(){
+      FileSystem fs = FileSystem.getInstance();
+      /* LOGIN */
+      LoginService login = new LoginService("mrtesty", "123ssssss");
+      login.execute();
+      File f = fs.getFile("/home");
+      fs.getSession( login.result() ).setWorkDir(f);
+      ListDirectoryService lsSer = new ListDirectoryService( login.result(), "Listable Dir" );
       lsSer.execute();
 
       List<FileDto> results = lsSer.result();
