@@ -22,20 +22,6 @@ public abstract class MyDriveService {
         return FileSystem.getInstance();
     }
 
-    static User getUser(String username) {
-        if (username == null) {
-            throw new InvalidUsernameException("(null)", "it cannot be 'null'");
-        }
-        Optional<User> opt = getFileSystem().getUserByUsername(username);
-
-        if (!opt.isPresent()) {
-            /* @Illya, if you didn't use Optionals, you'd save 4 lines of code here (getUser(String username) does just this) */
-            throw new UserNotFoundException(username);
-        }
-
-        return opt.get();
-    }
-
     @Atomic
     public final void execute() throws MyDriveException {
         dispatch();

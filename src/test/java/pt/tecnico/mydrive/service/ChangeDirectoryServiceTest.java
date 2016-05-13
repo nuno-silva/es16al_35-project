@@ -38,6 +38,7 @@ import mockit.integration.junit4.JMockit;
 public class ChangeDirectoryServiceTest extends AbstractServiceTest {
 
 	String _username = "user";
+	String _username2 = "user2";
 	String _password = "passsssssss";
 
 	long _validToken;
@@ -45,11 +46,13 @@ public class ChangeDirectoryServiceTest extends AbstractServiceTest {
     final String _validAbsPath = "/home/user";
     final String _validRelPath = ".";
     final String _linkPath="/home/$USER";
+    private User x;
 
     protected void populate() {
 
     	FileSystem fs = FileSystem.getInstance();
     	User u = new User(fs, _username, _password, "Nome", (byte) 0xff);
+    	x = new User(fs, _username2, _password, "Nome", (byte) 0x00);
 
 
     }
@@ -85,8 +88,9 @@ public class ChangeDirectoryServiceTest extends AbstractServiceTest {
         ChangeDirectoryService service = new ChangeDirectoryService(_validToken, _validRelPath);
         service.execute();
 
+
         assertNotNull("Session was not found", s);
-        assertEquals("Working Directory could not be changed", workDir, workDir);
+        assertEquals("Working Directory could not be changed", workDir, service.result());
     }
 
 
@@ -146,19 +150,36 @@ public class ChangeDirectoryServiceTest extends AbstractServiceTest {
         service.execute();
     }
 
-   //test 7: valid token and valid path but no permissions
+    //test 7: valid token and valid path but no permissions
     @Test (expected=PermissionDeniedException.class)
     public void permissionDenied() {
 
     	FileSystem fs = FileSystem.getInstance();
-        User u = new User(fs, "ola", "adeussssss", "Nomee", (byte) 0x00);
-
-    	Session s = new Session(fs, fs.getUser("ola"), "adeussssss");
+        User user = fs.getUser(_username);
+                
+        
+        
+    	//Login
+        Session s = new Session(fs, user, _password);
         _validToken = s.getToken();
+
+        File home = x.getHome();
+        
+        new Directory(fs, home, x, "dir", (byte) 0xff);
+
+
+        s = new Session(fs, user, _password);
+          
+    	_validToken = s.getToken();
+    	
+    	
+    	
         System.out.println("token: "+ _validToken);
 
-        ChangeDirectoryService service = new ChangeDirectoryService(_validToken, "/home/user");
+        
+        ChangeDirectoryService service = new ChangeDirectoryService(_validToken, "/home/"+_username2+"/dir");
         service.execute();
+    
     }
 
     @Test
@@ -166,8 +187,9 @@ public class ChangeDirectoryServiceTest extends AbstractServiceTest {
 
     	FileSystem fs = FileSystem.getInstance();
         User u = new User(fs, "ola", "adeussssss", "Nomee", (byte) 0xff);
-
     	Session s = new Session(fs, fs.getUser("ola"), "adeussssss");
+    	
+    	
         _validToken = s.getToken();
         AddVariableService avs = new AddVariableService( _validToken, "USER", "ola" );
         avs.execute();
@@ -178,10 +200,28 @@ public class ChangeDirectoryServiceTest extends AbstractServiceTest {
 
         new MockUp<Link>() {
             @Mock
-            File getPointedFile(User u) { return fs.getFile("/home/ola"); }
+            File getPointedFile(User u) { return fs.getFile("/home/ola", u); }
         };
 
         service.execute();
+    }
+    
+    //test 9: valid token and omitted path
+    @Test
+    public void successWithOmittedPath() {
+    	FileSystem fs = FileSystem.getInstance();
+    	Session s = new Session(fs, fs.getUser(_username), _password);
+        _validToken = s.getToken();
+        System.out.println("token: "+ _validToken);
+
+        String workDir = s.getWorkDir().getFullPath();
+
+        ChangeDirectoryService service = new ChangeDirectoryService(_validToken);
+        service.execute();
+
+
+        assertNotNull("Session was not found", s);
+        assertEquals("Working Directory could not be changed", workDir, service.result());
     }
 
 

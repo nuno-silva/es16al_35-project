@@ -33,6 +33,10 @@ public class ReadFileService extends MyDriveService {
 
         File d = session.getWorkDir();
         File f = d.getFile(fileName, activeUser);
+        
+
+        
+        
         content = f.getContent(activeUser);
     }
 
