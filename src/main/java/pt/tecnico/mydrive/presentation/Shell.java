@@ -11,6 +11,10 @@ public abstract class Shell {
   private PrintWriter out;
   private String name;
 
+  protected void onQuit(){
+        System.exit(0);
+  };
+
   public Shell(String n) { this(n, new PrintWriter(System.out, true), true); }
   public Shell(String n, Writer w) { this(n, w, true); }
   public Shell(String n, Writer w, boolean flush) {
@@ -20,7 +24,7 @@ public abstract class Shell {
     new Command(this, "quit", "Quit the command interpreter") {
       void execute(String[] args) {
 	System.out.println(name+" quit");
-        System.exit(0);
+        onQuit();
       }
     };
 

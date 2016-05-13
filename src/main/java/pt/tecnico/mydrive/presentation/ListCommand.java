@@ -21,7 +21,7 @@ public class ListCommand extends MyDriveCommand {
       try{
         if( args.length <= 0 ){
           MydriveShell mds = (MydriveShell) shell();
-          lds = new ListDirectoryService(mds.getToken(), ".");
+          lds = new ListDirectoryService(mds.getActiveToken(), ".");
           lds.execute();
         }
         else if( args.length>1 ){
@@ -29,7 +29,7 @@ public class ListCommand extends MyDriveCommand {
         }
         else{
           MydriveShell mds = (MydriveShell) shell();
-          lds = new ListDirectoryService(mds.getToken(),args[0]);
+          lds = new ListDirectoryService(mds.getActiveToken(),args[0]);
           lds.execute();
         }
         for( FileDto f : lds.result() ){
