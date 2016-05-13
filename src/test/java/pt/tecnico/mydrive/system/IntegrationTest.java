@@ -49,7 +49,7 @@ public class IntegrationTest extends AbstractServiceTest {
       logservice.execute();
 
       new CreateDirectoryService( "testyDir", logservice.result() ).execute();
-      new CreateAppService( "testyApp", logservice.result(), "pt.tecnico.ulisboa.mydrive.segfault;" ).execute();
+      new CreateAppService( "testyApp", logservice.result(), "pt.tecnico.mydrive.domain.App" ).execute();
       new CreatePlainFileService( "testyPlainFile", logservice.result(), "Somethin in this file." ).execute();
       new CreateLinkService( "testyLink", logservice.result(), "/home/nobody/testyPlainFile").execute();
 

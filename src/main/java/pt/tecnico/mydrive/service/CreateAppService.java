@@ -17,10 +17,10 @@ public class CreateAppService extends CreatePlainFileService {
 
     @Override
     protected void dispatch() throws EmptyFileNameException, IsNotCdAbleException, PermissionDeniedException {
-        super.dispatchAux();
-        FileSystem fs = getFileSystem();
-        Session s = fs.getSession(getToken());
-        File workDir = s.getWorkDir();
-        new App(fs, workDir, s.getUser(), getFileName(), getContent());
+	        super.dispatchAux();
+	        FileSystem fs = getFileSystem();
+	        Session s = fs.getSession(getToken());
+	        File workDir = s.getWorkDir();
+	        new App(fs, workDir, s.getUser(), getFileName(), getContent());
     }
 }

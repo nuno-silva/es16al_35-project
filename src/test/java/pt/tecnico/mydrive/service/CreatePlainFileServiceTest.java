@@ -24,6 +24,7 @@ import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.EmptyFileNameException;
 import pt.tecnico.mydrive.exception.EmptyPathException;
+import pt.tecnico.mydrive.exception.LinkCycleException;
 
 
 public class CreatePlainFileServiceTest extends AbstractServiceTest {
@@ -34,7 +35,7 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
         FileSystem fs = FileSystem.getInstance();
         File f = fs.getFile("/home");
         //new Link(fs, f, fs.getSuperUser(), "Test1", "I have a lot of work to do during this week!");
-        new App(fs, f, fs.getSuperUser(), "Test1", "I have a lot of work to do during this week!");
+        new App(fs, f, fs.getSuperUser(), "Test1", "pt.tecnico.mydrive.exception.MyDriveException");        
         new User(fs, "bbranco", "es2016ssssss", "Bernardo", DEFAULT_MASK);
         new User(fs, "jorge", "es2016ssssss", "jorgeheleno", DEFAULT_MASK);
         new Link(fs, f, fs.getSuperUser(), "LinkTest1", "/home/LinkTest2");
@@ -48,7 +49,7 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
     	lser.execute();
     	CreatePlainFileService service = new CreatePlainFileService("PlainFileTest", lser.result(), "Contains stuff...");
     	service.execute();
-			service = new CreatePlainFileService("PlainFileTest2", lser.result());
+		service = new CreatePlainFileService("PlainFileTest2", lser.result());
     	service.execute();
 
         PlainFile textFile = (PlainFile) fs.getFile("/home/root/PlainFileTest");
@@ -114,7 +115,7 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
         lser.execute();
 				File f = fs.getFile("/home");
     		fs.getSession(lser.result()).setWorkDir(f);
-        CreateFileService service = new CreateAppService("Test2/", lser.result(), "I have a lot of work to do during this week!");
+        CreateFileService service = new CreateAppService("Test2/", lser.result(), "pt.tecnico.mydrive.exception.MyDriveException");
         service.execute();
 
     }
@@ -127,7 +128,7 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
         lser.execute();
 				File f = fs.getFile("/home/jorge");
     	fs.getSession(lser.result()).setWorkDir(f);
-        CreatePlainFileService service = new CreatePlainFileService("TestBernardo", lser.result(), "I have a lot of work to do during this week!");
+        CreatePlainFileService service = new CreatePlainFileService("TestBernardo", lser.result(), "pt.tecnico.mydrive.exception.MyDriveException");
         service.execute();
 
     }
@@ -143,7 +144,7 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
         lser.execute();
 				File f = fs.getFile("/home");
     	fs.getSession(lser.result()).setWorkDir(f);
-        CreateFileService service = new CreateAppService("Test1", lser.result(), "I have a lot of work to do during this week!");
+        CreateFileService service = new CreateAppService("Test1", lser.result(), "pt.tecnico.mydrive.exception.MyDriveException");
         service.execute();
     }
 
@@ -154,7 +155,7 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
 		lser.execute();
 		File f = fs.getFile("/home");
 		fs.getSession(lser.result()).setWorkDir(f);
-		CreateFileService service = new CreateAppService("", lser.result(), "I have a lot of work to do during this week!");
+		CreateFileService service = new CreateAppService("", lser.result(), "pt.tecnico.mydrive.exception.MyDriveException");
 		service.execute();
 	}
 
@@ -175,27 +176,10 @@ public class CreatePlainFileServiceTest extends AbstractServiceTest {
 		File f = fs.getFile("/home");
     	fs.getSession(lser.result()).setWorkDir(f);
         String filename = createBigName();
-        CreatePlainFileService service = new CreatePlainFileService(filename, lser.result(), "I have a lot of work to do during this week!");
+        CreatePlainFileService service = new CreatePlainFileService(filename, lser.result(), "pt.tecnico.mydrive.exception.MyDriveException");
         service.execute();
 
     }
-
-    /* Create Link with loop:
-     *
-     * Exception will not be MyDriveException but instead LoopCreatedException for example
-     *
-     */
-
-	// @Test (expected = MyDriveException.class)
-	public void createLinkLoopTest() {
-		FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
-		LoginService lser = new LoginService( "root", "***" );
-		lser.execute();
-		File f = fs.getFile("/home");
-		fs.getSession(lser.result()).setWorkDir(f);
-		CreateFileService service = new CreateLinkService("LinkTest2", lser.result(), "/home/LinkTest1");
-		service.execute();
-	}
 
     private String createBigName(){
     	String res = "";

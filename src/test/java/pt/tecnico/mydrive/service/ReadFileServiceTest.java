@@ -20,7 +20,7 @@ public class ReadFileServiceTest extends AbstractServiceTest {
         File home = user.getHome();
         new PlainFile(fs, home, user, "TestPlainFile", (byte) 0xff, "Just a test string.");
         new Link(fs, home, user, "TestLink", (byte) 0xff, "/home/mike/TestPlainFile");
-        new App(fs, home, user, "TestApp", (byte) 0xff, "pt.tecnico.mydrive.service.populate");
+        new App(fs, home, user, "TestApp", (byte) 0xff, "pt.tecnico.mydrive.domain.User");
     	new Link(fs, user.getHome(), user, "TestLinkToLink", (byte) 0xff, "/home/mike/TestLink");
     }
 
@@ -98,7 +98,7 @@ public class ReadFileServiceTest extends AbstractServiceTest {
         ReadFileService service = new ReadFileService(token, fileName);
         service.execute();
 
-        assertEquals("pt.tecnico.mydrive.service.populate", service.result());
+        assertEquals("pt.tecnico.mydrive.domain.User", service.result());
     }
 
     @Test

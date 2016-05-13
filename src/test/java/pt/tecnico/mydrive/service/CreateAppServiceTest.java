@@ -6,6 +6,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.mydrive.domain.*;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.MyDriveException;
+import pt.tecnico.mydrive.exception.NotJavaFullyQualifiedNameException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -16,7 +17,7 @@ public class CreateAppServiceTest extends AbstractServiceTest {
     protected void populate() {
         FileSystem fs = FileSystem.getInstance();
         File f = fs.getFile("/home");
-        new App(fs, f, fs.getSuperUser(), "Work", "pt.tecnico.mydrive.exception.MyDriveException.class");
+        new App(fs, f, fs.getSuperUser(), "Work", "pt.tecnico.mydrive.exception.MyDriveException");
     }
 
     @Test
@@ -25,9 +26,9 @@ public class CreateAppServiceTest extends AbstractServiceTest {
         FileSystem fs = FileSystem.getInstance();
         LoginService lser = new LoginService( "root", "***" );
         lser.execute();
-        CreateFileService service = new CreateAppService("ApplicationTest", lser.result(), "pt.tecnico.mydrive.exception.MyDriveException.class");
+        CreateFileService service = new CreateAppService("ApplicationTest", lser.result(), "pt.tecnico.mydrive.exception.MyDriveException");
         service.execute();
-        service = new CreateAppService("ApplicationTest2", lser.result());
+        service = new CreateAppService("ApplicationTest2", lser.result(), "pt.tecnico.mydrive.exception.MyDriveException");
         service.execute();
 
         File work = fs.getFile("/home/root/ApplicationTest");
@@ -44,7 +45,7 @@ public class CreateAppServiceTest extends AbstractServiceTest {
         assertNotNull("App was not created", work);
         assertEquals("App created with wrong name", "ApplicationTest", work.getName());
         assertEquals("App created with wrong owner", fs.getSuperUser(), work.getOwner());
-        assertEquals("App created with wrong content", "pt.tecnico.mydrive.exception.MyDriveException.class", ((App) work).getContent()); // ha outra maneira de fazer isto sem cast?
+        assertEquals("App created with wrong content", "pt.tecnico.mydrive.exception.MyDriveException", ((App) work).getContent()); // ha outra maneira de fazer isto sem cast?
 
     }
 
@@ -59,12 +60,12 @@ public class CreateAppServiceTest extends AbstractServiceTest {
     	 */
         File f = fs.getFile("/home");
         fs.getSession(lser.result()).setWorkDir(f);
-        CreateFileService service = new CreateAppService("Work", lser.result(), "pt.tecnico.mydrive.domain.App.class");
+        CreateFileService service = new CreateAppService("Work", lser.result(), "pt.tecnico.mydrive.domain.App");
         service.execute();
     }
 
    // change expected Exception
-   @Ignore @Test (expected = MyDriveException.class)
+   @Test (expected = NotJavaFullyQualifiedNameException.class)
    public void appCreationFail() {
 	   	FileSystem fs = FenixFramework.getDomainRoot().getFileSystem();
 	   	LoginService lser = new LoginService( "root", "***" );
