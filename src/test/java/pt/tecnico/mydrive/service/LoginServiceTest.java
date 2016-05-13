@@ -25,6 +25,7 @@ public class LoginServiceTest extends AbstractServiceTest {
     private final String invalid_password = "I'm wrong";
     private final String root_username    = "root";
     private final String root_password    = "***";
+    private final String guest_username = "nobody";
     private User valid_user;
     private FileSystem fs;
 
@@ -82,6 +83,20 @@ public class LoginServiceTest extends AbstractServiceTest {
         assertEquals("Session not created", token, s.getToken());
         assertEquals("Session with wrong user", root, s.getUser());
         assertFalse("Session expired", s.isExpired());
+    }
+    
+    @Test
+    public void successWithGuestLogin() {
+        LoginService service = new LoginService(guest_username, "");
+        service.execute();
+
+        long token = service.result();
+
+        Session s = fs.getSession(token);
+        User guest = fs.getUser(guest_username);
+        
+        assertEquals("Session not created", token, s.getToken());
+        assertEquals("Session with wrong user", guest, s.getUser());
     }
 
     @Test(expected = WrongPasswordException.class)
