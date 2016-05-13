@@ -115,17 +115,17 @@ public class PlainFile extends PlainFile_Base implements Visitable {
     /**
      * Execute the file: each line is interpreted as "<app path> <args>*"
      * and each app is executed
-     * @throws NoSuchMethodException 
-     * @throws InvocationTargetException 
-     * @throws IllegalAccessException 
-     * @throws IllegalArgumentException 
-     * @throws ClassNotFoundException 
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws ClassNotFoundException
      */
     @Override
     public void execute(User initiator, String[] args) throws NoSuchMethodException, ClassNotFoundException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         if(!initiator.hasExecutePermission(this))
         	throw new PermissionDeniedException(initiator.getUsername() + " has no execute permissions for "+ this.getFullPath());
-        
+
         String content = this.getContent();
         List<String> separateLines = Arrays.asList(content.split( "\n" ));
 
@@ -141,8 +141,8 @@ public class PlainFile extends PlainFile_Base implements Visitable {
             for(int i =0; i<size; i++) {
                 arguments = line.toArray(arguments);
             }
-            
-            File file = getFile(path, initiator);
+
+            File file = FileSystem.getInstance().getFile(path, initiator);
             file.execute(initiator, arguments);
         }
     }
