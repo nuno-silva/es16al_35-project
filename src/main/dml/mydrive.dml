@@ -1,5 +1,10 @@
 package pt.tecnico.mydrive.domain;
 
+class Extension {
+	String extension;
+	String appPath;
+}
+
 class Session {
 	long token; // long is 64 bits in Java (signed or not, doesn't matter)
 	DateTime expirationDate;
@@ -88,4 +93,9 @@ relation UserHasHomeDir{
 relation SessionHasWorkDir {
 	Session playsRole session { multiplicity 0..1; }
 	File playsRole workDir { multiplicity 1; }
+}
+
+relation UserHasExtensions {
+	User playsRole user { multiplicity 0..1; }
+	Extension playsRole { multiplicity *; }
 }
