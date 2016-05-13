@@ -47,6 +47,10 @@ public class MydriveShell extends Shell {
     //new WriteCommand(this);
     new EnvironmentCommand(this);
     new KeyCommand(this);
+    //new Import(this);
+    //new Export(this);
+    new ExecuteCommand(this);
+
   }
 
   public void setActiveUser(String user) {

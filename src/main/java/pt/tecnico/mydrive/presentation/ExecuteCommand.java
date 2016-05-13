@@ -1,19 +1,30 @@
 package pt.tecnico.mydrive.presentation;
 
+import pt.tecnico.mydrive.service.ExecuteAppService;
+
+import java.util.Arrays;
+
 /**
  * ExecuteCommand. <strong>Format:</strong> <i>do</i> path [args]
  */
 public class ExecuteCommand extends MyDriveCommand {
-    public ExecuteCommand(Shell sh, String n) {
-        super(sh, n);
-    }
+    private static final String SHELL_STR = "do";
 
-    public ExecuteCommand(Shell sh, String n, String h) {
-        super(sh, n, h);
-    }
+    private String path;
+    private String[] args;
+    public ExecuteCommand(Shell sh) { super(sh, SHELL_STR, "execute an App file"); }
 
     @Override
-    public void execute(String[] args) {
+    void execute(String[] args) {
+        if (args.length < 1) {
+            throw new RuntimeException("USAGE: " + SHELL_STR + " path [args]");
+        }
 
+        path = args[0];
+        this.args = Arrays.copyOfRange(args, 1, args.length);
+
+
+        // TODO: treat invalid token case
+        new ExecuteAppService(((MydriveShell)shell()).getActiveToken(), this.path, this.args).execute();
     }
 }
