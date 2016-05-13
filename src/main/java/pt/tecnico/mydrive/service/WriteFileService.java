@@ -23,13 +23,12 @@ public class WriteFileService extends MyDriveService {
         User activeUser = s.getUser();
         File f;
         if (fileName.contains("/"))
-        	f = fs.getFile(fileName);
+        	f = fs.getFile(fileName, activeUser);
         else {
             File d = s.getWorkDir();
             f = d.getFile(fileName, activeUser);
         }
-        f.assertIsWritable(); // make sure that it's a not a directory
-        PlainFile pf = (PlainFile) f;
-        pf.setContent(content, activeUser);
+        //PlainFile pf = (PlainFile) f;
+        f.setContent(content, activeUser);
     }
 }

@@ -54,5 +54,4 @@ public class CreateLinkServiceTest extends AbstractServiceTest {
       assertEquals("Link created with wrong content", "/home/root/hello", linkFile.getContent());
 
     }
-
 }
