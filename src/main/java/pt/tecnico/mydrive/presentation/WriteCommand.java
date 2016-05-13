@@ -10,7 +10,7 @@ public class WriteCommand extends Command {
 	public WriteCommand(Shell sh) {
 		super(sh, "write", "writes text to a file");
 	}
-	
+
 	@Override
 	public void execute(String[] args) {
 		WriteFileService wfs;
@@ -19,7 +19,7 @@ public class WriteCommand extends Command {
 		else {
 			try{
 				MydriveShell mds = (MydriveShell) shell();
-				wfs = new WriteFileService(mds.getToken(), args[0], args[1]);
+				wfs = new WriteFileService(mds.getActiveToken(), args[0], args[1]);
 				wfs.execute();
 			} catch (InvalidTokenException e){
 				shell().println("You need to login first!");

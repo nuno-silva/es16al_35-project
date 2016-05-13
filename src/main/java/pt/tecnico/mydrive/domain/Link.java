@@ -8,6 +8,7 @@ import pt.tecnico.mydrive.domain.xml.Visitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.LinkCycleException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -90,6 +91,11 @@ public class Link extends Link_Base implements Visitable {
         return f.getFile(path, initiator, visited);
     }
 
+    @Override
+    public void execute(User initiator, String[] args) throws NoSuchMethodException, ClassNotFoundException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        File f = getPointedFile(initiator);
+        f.execute(initiator, args);
+    }
 
     /**
      * Gets the actual {@link File} that the {@link Link} points to.

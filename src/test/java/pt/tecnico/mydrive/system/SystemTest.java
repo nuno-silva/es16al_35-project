@@ -12,18 +12,18 @@ import pt.tecnico.mydrive.service.AbstractServiceTest;
 
 public class SystemTest extends AbstractServiceTest {
 	private MydriveShell shell;
-	
+
 	@Override
 	protected void populate() {
-		shell = new MydriveShell();		
+		shell = new MydriveShell();
 	}
-	
+
     @Test
     public void success() {
         new LoginCommand(shell).execute(new String[] { "root", "***" } );
         new ChangeWorkingDirectoryCommand(shell).execute(new String[] { "/home/nobody" } );
         new LoginCommand(shell).execute(new String[] { "nobody", "" } );
-        //new EnvironmentCommand(shell).execute(new String[] { "$QWERTY", "/home/nobody" } );
+        new EnvironmentCommand(shell).execute(new String[] { "$QWERTY", "/home/nobody" } );
         new ListCommand(shell).execute(new String[] { "/home" } );
         //new ExecuteCommand(shell).execute(new String[] { "other.xml" } );
         //new WriteCommand(shell).execute(new String[] { "other.xml" } );
