@@ -5,6 +5,7 @@ import org.jdom2.Element;
 import java.util.Set;
 import pt.tecnico.mydrive.domain.xml.Visitable;
 import pt.tecnico.mydrive.domain.xml.Visitor;
+import pt.tecnico.mydrive.exception.FileExecutionException;
 import pt.tecnico.mydrive.exception.FileNotFoundException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.PermissionDeniedException;
@@ -205,6 +206,11 @@ public class Directory extends Directory_Base implements Visitable {
         } catch (FileNotFoundException e) {
             return false;
         }
+    }
+
+    @Override
+    public void execute(User initiator, String[] args) {
+    	throw new FileExecutionException("Directories can't be executed");
     }
 
 
