@@ -5,6 +5,7 @@ import org.jdom2.Element;
 import pt.tecnico.mydrive.domain.xml.Visitable;
 import pt.tecnico.mydrive.domain.xml.Visitor;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
+import pt.tecnico.mydrive.exception.NotJavaFullyQualifiedNameException;
 
 import java.util.Optional;
 
@@ -15,18 +16,21 @@ public class App extends App_Base implements Visitable {
     //all params
     public App(FileSystem fs, File parent, User owner, String name, byte perm, String content) {
         super();
+        checkContent(content);
         init(fs, parent, owner, name, perm, content);
     }
 
     //all but perm
     public App(FileSystem fs, File parent, User owner, String name, String content) {
         super();
+        checkContent(content);
         init(fs, parent, owner, name, owner.getMask(), content);
     }
 
     //all but owner
     public App(FileSystem fs, File parent, String name, byte perm, String content) {
         super();
+        checkContent(content);
         init(fs, parent, fs.getSuperUser(), name, perm, content);
     }
 
@@ -51,6 +55,7 @@ public class App extends App_Base implements Visitable {
     //all but owner and perm
     public App(FileSystem fs, File parent, String name, String content) {
         super();
+        checkContent(content);
         init(fs, parent, fs.getSuperUser(), name, fs.getSuperUser().getMask(), content);
     }
 
@@ -75,6 +80,14 @@ public class App extends App_Base implements Visitable {
             logger.debug("App with name *[" + name + "]* already exists!");
         }
         return opt;
+    }
+    
+    public void checkContent(String content) {
+    	try {
+			Class.forName(content);
+		} catch (ClassNotFoundException e) {
+			throw new NotJavaFullyQualifiedNameException();
+		}
     }
 
     @Override
