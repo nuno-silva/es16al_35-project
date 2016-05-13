@@ -8,7 +8,7 @@ public class LoginCommand extends Command{
 		super(sh, "login", "logs in a user");
 	}
 	@Override
-	void execute(String[] args) {
+	public void execute(String[] args) {
 		LoginService ls;
 		if (args.length == 0 || args.length > 2)
 		    throw new RuntimeException("USAGE: "+name()+" login <username> [<password>]");

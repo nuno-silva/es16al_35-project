@@ -11,7 +11,7 @@ public class MydriveShell extends Shell {
   private String lastUser;
   private long token;
   
-  private Map<String, Long> users = new TreeMap<String, Long>();
+  public Map<String, Long> users = new TreeMap<String, Long>();
 
   public static void main(String[] args) throws Exception {
     MydriveShell sh = new MydriveShell();
@@ -29,18 +29,13 @@ public class MydriveShell extends Shell {
 
   public MydriveShell() {
     super("MyDrive");
-    /* Add commands from here below */
     new LoginCommand(this);
-    //new CreatePerson(this);
-    //new CreateContact(this);
-    //new RemovePerson(this);
-    //new RemoveContact(this);
     new ChangeWorkingDirectoryCommand(this);
-    new EnvironmentCommand(this);
     new ListCommand(this);
+    //new ExecuteCommand(this);
+    //new WriteCommand(this);
+    new EnvironmentCommand(this);
     new KeyCommand(this);
-    //new Import(this);
-    //new Export(this);
   }
   
   public void setLastLogin(String user) {
@@ -58,6 +53,7 @@ public class MydriveShell extends Shell {
   
   public void setUser(String username, Long token) {
 	  users.put(username, token);
+	  setLastLogin(username);
   }
 
   public long getTokenFromUsername(String username){

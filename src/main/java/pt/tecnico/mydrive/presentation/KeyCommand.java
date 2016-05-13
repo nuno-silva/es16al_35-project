@@ -8,7 +8,8 @@ public class KeyCommand extends MyDriveCommand {
         super(sh, "token", "switch between active sessions");
     }
     
-	void execute(String[] args) {
+    @Override
+	public void execute(String[] args) {
 		try {
 			MydriveShell mds = (MydriveShell) shell();
 			if(args.length == 0) {

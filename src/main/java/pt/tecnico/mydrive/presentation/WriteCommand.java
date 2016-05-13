@@ -10,8 +10,9 @@ public class WriteCommand extends Command {
 	public WriteCommand(Shell sh) {
 		super(sh, "write", "writes text to a file");
 	}
+	
 	@Override
-	void execute(String[] args) {
+	public void execute(String[] args) {
 		WriteFileService wfs;
 		if (args.length != 2)
 		    throw new RuntimeException("USAGE: "+name()+" update <path> <text>");

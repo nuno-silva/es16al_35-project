@@ -13,7 +13,7 @@ public class EnvironmentCommand extends MyDriveCommand {
     }
 
     @Override
-    void execute(String[] args) {
+    public void execute(String[] args) {
         MydriveShell sh = (MydriveShell) shell();
         if(args.length == 0) { // print all vars
             AddVariableService av = new AddVariableService(sh.getToken());
