@@ -4,9 +4,14 @@ import org.apache.log4j.Logger;
 import org.jdom2.Element;
 import pt.tecnico.mydrive.domain.xml.Visitable;
 import pt.tecnico.mydrive.domain.xml.Visitor;
+import pt.tecnico.mydrive.exception.FileExecutionException;
 import pt.tecnico.mydrive.exception.FilenameAlreadyExistsException;
 import pt.tecnico.mydrive.exception.NotJavaFullyQualifiedNameException;
+import pt.tecnico.mydrive.exception.PermissionDeniedException;
+import pt.tecnico.mydrive.presentation.MydriveShell;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Optional;
 
 public class App extends App_Base implements Visitable {
@@ -93,5 +98,24 @@ public class App extends App_Base implements Visitable {
     @Override
     public Element accept(Visitor visitor) {
         return visitor.visit(this);
+    }
+    
+    @Override
+    public void execute(User initiator, String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        if(!initiator.hasExecutePermission(this))
+        	throw new PermissionDeniedException(initiator.getUsername() + " has no execute permissions for "+ this.getFullPath());
+        
+        Class<?> cls;
+        Method meth;
+        try { // name is a class: call main()
+          cls = Class.forName(this.getName());
+          meth = cls.getMethod("main", String[].class);
+        } catch (ClassNotFoundException cnfe) { // name is a method
+          int pos;
+          if ((pos = this.getName().lastIndexOf('.')) < 0) throw cnfe;
+          cls = Class.forName(this.getName().substring(0, pos));
+          meth = cls.getMethod(this.getName().substring(pos+1), String[].class);
+        }
+        meth.invoke(null, (Object)args); // static method (ignore return)
     }
 }

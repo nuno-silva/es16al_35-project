@@ -9,6 +9,8 @@ import pt.tecnico.mydrive.exception.PermissionDeniedException;
 import pt.tecnico.mydrive.exception.WriteDirectoryException;
 import pt.tecnico.mydrive.exception.IsNotCdAbleException;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -113,10 +115,36 @@ public class PlainFile extends PlainFile_Base implements Visitable {
     /**
      * Execute the file: each line is interpreted as "<app path> <args>*"
      * and each app is executed
+     * @throws NoSuchMethodException 
+     * @throws InvocationTargetException 
+     * @throws IllegalAccessException 
+     * @throws IllegalArgumentException 
+     * @throws ClassNotFoundException 
      */
-    public void execute() {
-        // FIXME: not sure what this should return
-        // TODO: method not needed for the first sprint
+    @Override
+    public void execute(User initiator, String[] args) throws NoSuchMethodException, ClassNotFoundException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        if(!initiator.hasExecutePermission(this))
+        	throw new PermissionDeniedException(initiator.getUsername() + " has no execute permissions for "+ this.getFullPath());
+        
+        String content = this.getContent();
+        List<String> separateLines = Arrays.asList(content.split( "\n" ));
+
+        for(String separate : separateLines) {
+            System.out.println("One line: "+ separate);
+            List<String> line = new ArrayList<String>(Arrays.asList( separate.split( " " )));
+
+            String path = line.get(0);
+            line.remove(0);
+
+            int size = line.size();
+            String[] arguments = new String[size];
+            for(int i =0; i<size; i++) {
+                arguments = line.toArray(arguments);
+            }
+            
+            File file = getFile(path, initiator);
+            file.execute(initiator, arguments);
+        }
     }
 
 

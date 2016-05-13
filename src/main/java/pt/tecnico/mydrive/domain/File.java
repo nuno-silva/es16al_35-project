@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 import java.util.Set;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import pt.tecnico.mydrive.domain.xml.Visitable;
 import pt.tecnico.mydrive.domain.xml.Visitor;
@@ -207,5 +208,6 @@ public abstract class File extends File_Base implements Visitable, IPermissionab
     public abstract void addFile(File file, User initiator);
     public abstract String getContent(User initiator);
     public abstract void setContent(String content, User initiator);
+    public abstract void execute(User initiator, String[] args) throws NoSuchMethodException, ClassNotFoundException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
     /* TODO: execute ? */
 }
